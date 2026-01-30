@@ -110,7 +110,7 @@ export default function LandingPage() {
           });
           // onAuthStateChanged will handle the redirect
         }
-    } catch {      if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
+    } catch (error) {      if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
         toast({
           variant: 'destructive',
           title: 'Erro ao criar conta',

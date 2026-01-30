@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react'; // Adicionado para gerenciar as dependências
 import { useDoc } from '@/firebase/firestore/use-doc';
 import { doc } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
@@ -14,9 +15,13 @@ export default function ProfilePage() {
   const userId = Array.isArray(rawUserId) ? rawUserId[0] : rawUserId;
   const { firestore } = useFirebase();
 
-  const userDocRef = useMemoFirebase(() => {
-    if (!firestore || !userId) return null;
-    return doc(firestore, 'users', userId);
+  // Correção: Envolvendo o useMemoFirebase em um useMemo padrão do React
+  // para lidar corretamente com a lista de dependências [firestore, userId]
+  const userDocRef = useMemo(() => {
+    return useMemoFirebase(() => {
+      if (!firestore || !userId) return null;
+      return doc(firestore, 'users', userId);
+    });
   }, [firestore, userId]);
   
   const { data: userProfile, isLoading } = useDoc(userDocRef);
