@@ -36,6 +36,24 @@ const PersonalizedLessonRecommendationsOutputSchema = z.array(z.object({
 export type PersonalizedLessonRecommendationsOutput = z.infer<typeof PersonalizedLessonRecommendationsOutputSchema>;
 
 export async function personalizedLessonRecommendations(input: PersonalizedLessonRecommendationsInput): Promise<PersonalizedLessonRecommendationsOutput> {
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+
+  if (!GEMINI_API_KEY) {
+    // Fallback rápido quando não há API key configurada
+    const { learningHistory, availableLessons } = input;
+    const completedIds = new Set(learningHistory.map(item => item.lessonId));
+
+    const recommended = availableLessons
+      .filter(lesson => !completedIds.has(lesson.lessonId))
+      .slice(0, 3)
+      .map(lesson => ({
+        lessonId: lesson.lessonId,
+        reason: `Recomendado para reforçar o tópico ${lesson.topic} de dificuldade ${lesson.difficulty}.`,
+      }));
+
+    return recommended;
+  }
+
   return personalizedLessonRecommendationsFlow(input);
 }
 

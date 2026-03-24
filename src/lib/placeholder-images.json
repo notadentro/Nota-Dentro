@@ -15,7 +15,7 @@
     {
       "id": "about-logo",
       "description": "The 'Nota Dentro' logo with a white background.",
-      "imageUrl": "https://storage.googleapis.com/studio-assets/misc/Notadentro-logo-white-bg.png",
+      "imageUrl": "/Notadentro-logo-white-bg.png.png",
       "imageHint": "company logo"
     }
   ]

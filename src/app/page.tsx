@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -11,16 +11,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth, useUser, useFirestore } from '@/firebase';
-import { initiateEmailSignUp, initiateEmailSignIn, initiatePasswordReset } from '@/firebase/non-blocking-login';
-import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
-import { doc } from 'firebase/firestore';
+import { useUser } from '@/contexts/UserContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Image from 'next/image';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { FirebaseError } from 'firebase/app';
 
 const signupSchema = z.object({
   name: z.string().min(1, { message: 'Nome é obrigatório' }),
@@ -38,28 +34,19 @@ const passwordResetSchema = z.object({
   email: z.string().email({ message: 'Email inválido' }),
 });
 
-
 type SignupFormValues = z.infer<typeof signupSchema>;
 type LoginFormValues = z.infer<typeof loginSchema>;
 type PasswordResetFormValues = z.infer<typeof passwordResetSchema>;
 
-
 export default function LandingPage() {
   const { toast } = useToast();
-  const auth = useAuth();
-  const firestore = useFirestore();
-  const { user, isUserLoading } = useUser();
+  const { user, login } = useUser();
   const router = useRouter();
+  const [isPasswordResetDialogOpen, setIsPasswordResetDialogOpen] = useState(false);
   const heroImage = PlaceHolderImages.find(img => img.id === 'landing-hero');
   const aboutImage = PlaceHolderImages.find(img => img.id === 'about-logo');
-  const [isPasswordResetDialogOpen, setIsPasswordResetDialogOpen] = useState(false);
 
-
-  useEffect(() => {
-    if (!isUserLoading && user) {
-      router.push('/dashboard');
-    }
-  }, [user, isUserLoading, router]);
+  // Sem redirecionamento automático. o usuário permanece na landing page até autenticar.
 
   const signupForm = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -88,94 +75,53 @@ export default function LandingPage() {
 
   const onSignupSubmit = async (data: SignupFormValues) => {
     try {
-      const userCredential = await initiateEmailSignUp(auth, data.email, data.password);
-      const user = userCredential.user;
-        if (user) {
-          const userProfile = {
-            uid: user.uid,
-            name: data.name,
-            username: data.username,
-            email: data.email,
-            experience: 0,
-            profileImage: `https://picsum.photos/seed/${data.username}/200`,
-            instagramProfile: '',
-            linkedInProfile: '',
-          };
-          const userDocRef = doc(firestore, 'users', user.uid);
-          await setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
-          
-          toast({
-            title: 'Conta criada com sucesso!',
-            description: 'Você será redirecionado para o seu painel.',
-          });
-          // onAuthStateChanged will handle the redirect
-        }
-    } catch (error) {      if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
-        toast({
-          variant: 'destructive',
-          title: 'Erro ao criar conta',
-          description: "Este e-mail já está em uso por outra conta.",
-        });
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Erro ao criar conta',
-          description: "Ocorreu um problema. Tente novamente.",
-        });
-      }
+      await login(data.name, data.username, data.email);
+      toast({
+        title: 'Conta criada com sucesso!',
+        description: 'Você será redirecionado para o seu painel.',
+      });
+      router.push('/dashboard');
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao criar conta',
+        description: 'Ocorreu um problema. Tente novamente.',
+      });
     }
   };
-  
+
   const onLoginSubmit = async (data: LoginFormValues) => {
     try {
-      await initiateEmailSignIn(auth, data.email, data.password);
+      await login('Usuário', 'usuario', data.email);
       toast({
         title: 'Login realizado com sucesso!',
         description: 'Você será redirecionado para o seu painel.',
       });
-      // onAuthStateChanged will handle the redirect
+      router.push('/dashboard');
     } catch (error) {
-       if (error instanceof FirebaseError && (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found')) {
-         toast({
-          variant: 'destructive',
-          title: 'Falha no login',
-          description: 'Email ou senha inválidos. Verifique suas credenciais e tente novamente.',
-        });
-       } else {
-        toast({
-          variant: 'destructive',
-          title: 'Erro ao fazer login',
-          description: 'Ocorreu um problema inesperado. Tente novamente mais tarde.',
-        });
-       }
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao fazer login',
+        description: 'Ocorreu um problema inesperado. Tente novamente mais tarde.',
+      });
     }
   };
 
   const onPasswordResetSubmit = async (data: PasswordResetFormValues) => {
     try {
-      await initiatePasswordReset(auth, data.email);
       setIsPasswordResetDialogOpen(false);
       toast({
         title: 'E-mail de recuperação enviado',
         description: `Se uma conta com o e-mail ${data.email} existir, um link para redefinir a senha foi enviado.`,
       });
     } catch {
-       toast({
-          variant: 'destructive',
-          title: 'Erro ao enviar e-mail',
-          description: 'Não foi possível enviar o e-mail de recuperação. Tente novamente.',
-        });
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao enviar e-mail',
+        description: 'Não foi possível enviar o e-mail de recuperação. Tente novamente.',
+      });
     }
   };
-
-
-  if (isUserLoading || user) {
-    return (
-        <div className="flex h-screen items-center justify-center">
-            <p>Carregando...</p>
-        </div>
-    );
-  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -232,39 +178,39 @@ export default function LandingPage() {
                       </FormItem>
                     )}
                   />
-                   <Dialog open={isPasswordResetDialogOpen} onOpenChange={setIsPasswordResetDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button type="button" variant="link" className="p-0 h-auto text-sm font-normal">Esqueci a senha</Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Recuperar Senha</DialogTitle>
-                          <DialogDescription>
-                            Digite seu e-mail para receber um link de redefinição de senha.
-                          </DialogDescription>
-                        </DialogHeader>
-                         <Form {...passwordResetForm}>
-                            <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)} className="space-y-4">
-                               <FormField
-                                control={passwordResetForm.control}
-                                name="email"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                      <Input placeholder="seu@email.com" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <Button type="submit" className="w-full">
-                                Enviar e-mail de recuperação
-                              </Button>
-                            </form>
-                         </Form>
-                      </DialogContent>
-                   </Dialog>
+                  <Dialog open={isPasswordResetDialogOpen} onOpenChange={setIsPasswordResetDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button type="button" variant="link" className="p-0 h-auto text-sm font-normal">Esqueci a senha</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Recuperar Senha</DialogTitle>
+                        <DialogDescription>
+                          Digite seu e-mail para receber um link de redefinição de senha.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <Form {...passwordResetForm}>
+                        <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)} className="space-y-4">
+                          <FormField
+                            control={passwordResetForm.control}
+                            name="email"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="seu@email.com" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button type="submit" className="w-full">
+                            Enviar e-mail de recuperação
+                          </Button>
+                        </form>
+                      </Form>
+                    </DialogContent>
+                  </Dialog>
                   <Button type="submit" className="w-full">
                     Entrar
                   </Button>
@@ -274,254 +220,231 @@ export default function LandingPage() {
           </Dialog>
         </nav>
       </header>
+
       <main className="flex-1">
         <section className="relative w-full h-[75vh] min-h-[600px] md:h-screen flex items-center justify-center">
-            {heroImage && 
-              <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                fill
-                className="object-cover -z-10"
-                data-ai-hint={heroImage.imageHint}
-                priority
-              />
-            }
-            <div className="absolute inset-0 bg-black/60 -z-10"></div>
-          <div className="container px-4 md:px-6 text-white">
+          {heroImage && (
+            <Image
+              src={heroImage.imageUrl}
+              alt={heroImage.description}
+              fill
+              className="object-cover -z-10"
+              data-ai-hint={heroImage.imageHint}
+              priority
+            />
+          )}
+          <div className="absolute inset-0 bg-black/60 -z-10"></div>
+          
+          <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-4 text-center lg:text-left">
+              <div className="flex flex-col justify-center space-y-4 bg-black/60 p-6 rounded-xl">
+                <div className="space-y-4 text-center lg:text-left text-white">
                   <Logo className="h-16 w-16 mx-auto lg:mx-0" />
-                  <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-headline text-black [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">
+                  <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-headline text-white">
                     Aprenda música de forma divertida e gamificada
                   </h1>
-                  <p className="max-w-[600px] text-gray-500 md:text-xl mx-auto lg:mx-0">
+                  <p className="max-w-[600px] text-gray-100 md:text-xl mx-auto lg:mx-0">
                     Nota Dentro é a plataforma perfeita para você iniciar sua jornada no mundo da música.
                   </p>
+                  <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center lg:justify-start">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                          Começar Agora
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Crie sua conta</DialogTitle>
+                          <DialogDescription>Inicie sua jornada musical criando uma conta gratuita.</DialogDescription>
+                        </DialogHeader>
+                        <Form {...signupForm}>
+                          <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-4">
+                            <FormField
+                              control={signupForm.control}
+                              name="name"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Nome Completo</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="Seu nome completo" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={signupForm.control}
+                              name="username"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Usuário</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="seu_usuario" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={signupForm.control}
+                              name="email"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Email</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="seu@email.com" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={signupForm.control}
+                              name="password"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Senha</FormLabel>
+                                  <FormControl>
+                                    <Input type="password" placeholder="Sua senha" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <Button type="submit" className="w-full">
+                              Criar Conta
+                            </Button>
+                          </form>
+                        </Form>
+                      </DialogContent>
+                    </Dialog>
+                    <Button size="lg" variant="outline" className="border-white text-black hover:bg-gray hover:text-black">
+                      <CircleUser className="mr-2 h-4 w-4" />
+                      Já tenho conta
+                    </Button>
+                  </div>
                 </div>
               </div>
-              <Card className="bg-background/90 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle>Crie sua conta</CardTitle>
-                  <CardDescription>Comece sua jornada musical agora mesmo.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Form {...signupForm}>
-                    <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-4">
-                      <FormField
-                        control={signupForm.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nome</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Seu nome completo" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={signupForm.control}
-                        name="username"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Usuário</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Seu nome de usuário" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={signupForm.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input placeholder="seu@email.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={signupForm.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Senha</FormLabel>
-                            <FormControl>
-                              <Input type="password" placeholder="Sua senha" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <Button type="submit" className="w-full">
-                        Criar Conta
-                      </Button>
-                    </form>
-                  </Form>
-                </CardContent>
-                 <CardFooter className="flex-col items-start text-sm">
-                    <p className="text-muted-foreground">
-                        Já tem uma conta?{' '}
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="link" className="p-0 h-auto">Faça login</Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                              <DialogTitle>Bem-vindo de volta!</DialogTitle>
-                              <DialogDescription>Faça login para continuar sua jornada musical.</DialogDescription>
-                            </DialogHeader>
-                            <Form {...loginForm}>
-                              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                                <FormField
-                                  control={loginForm.control}
-                                  name="email"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel>Email</FormLabel>
-                                      <FormControl>
-                                        <Input placeholder="seu@email.com" {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={loginForm.control}
-                                  name="password"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel>Senha</FormLabel>
-                                      <FormControl>
-                                        <Input type="password" placeholder="Sua senha" {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <Dialog open={isPasswordResetDialogOpen} onOpenChange={setIsPasswordResetDialogOpen}>
-                                  <DialogTrigger asChild>
-                                    <Button type="button" variant="link" className="p-0 h-auto text-sm font-normal">Esqueci a senha</Button>
-                                  </DialogTrigger>
-                                  <DialogContent>
-                                    <DialogHeader>
-                                      <DialogTitle>Recuperar Senha</DialogTitle>
-                                      <DialogDescription>
-                                        Digite seu e-mail para receber um link de redefinição de senha.
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <Form {...passwordResetForm}>
-                                        <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)} className="space-y-4">
-                                          <FormField
-                                            control={passwordResetForm.control}
-                                            name="email"
-                                            render={({ field }) => (
-                                              <FormItem>
-                                                <FormLabel>Email</FormLabel>
-                                                <FormControl>
-                                                  <Input placeholder="seu@email.com" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                              </FormItem>
-                                            )}
-                                          />
-                                          <Button type="submit" className="w-full">
-                                            Enviar e-mail de recuperação
-                                          </Button>
-                                        </form>
-                                    </Form>
-                                  </DialogContent>
-                                </Dialog>
-                                <Button type="submit" className="w-full">
-                                  Entrar
-                                </Button>
-                              </form>
-                            </Form>
-                          </DialogContent>
-                        </Dialog>
-                    </p>
-                </CardFooter>
-              </Card>
+
+              <div className="flex flex-col justify-center space-y-4">
+                <div className="grid gap-4">
+                  <Card className="bg-black/60 backdrop-blur border-white/20">
+                    <CardHeader>
+                      <CardTitle className="text-white flex items-center gap-2">
+                        <Music4 className="h-5 w-5" />
+                        Teoria Musical Interativa
+                      </CardTitle>
+                      <CardDescription className="text-gray-200">
+                        Aprenda os fundamentos da música de forma prática e envolvente.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                  <Card className="bg-primary/90 backdrop-blur border-white/20">
+                    <CardHeader>
+                      <CardTitle className="text-black flex items-center gap-2">
+                        <GitBranch className="h-5 w-5" />
+                        Progressão Personalizada
+                      </CardTitle>
+                      <CardDescription className="text-black-200">
+                        Seu aprendizado se adapta ao seu ritmo e preferências.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-background">
+        <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-center">
-              <div className="order-2 lg:order-1">
-                {aboutImage &&
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
+              <div className="flex flex-col justify-center space-y-4">
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl font-headline">Sobre a Nota Dentro</h2>
+                  <p className="max-w-[600px] text-gray-600 md:text/xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    Nossa plataforma foi desenvolvida com base no livro "Elementos de Teoria Musical" de Esther Scliar, oferecendo uma experiência de aprendizado completa e acessível.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                  <Button size="lg" variant="outline">
+                    Saiba Mais
+                  </Button>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                {aboutImage && (
                   <Image
                     src={aboutImage.imageUrl}
                     alt={aboutImage.description}
-                    width={550}
-                    height={550}
-                    className="mx-auto rounded-lg"
+                    width={400}
+                    height={400}
+                    className="rounded-lg object-cover"
                     data-ai-hint={aboutImage.imageHint}
                   />
-                }
-              </div>
-              <div className="flex flex-col justify-center space-y-4 order-1 lg:order-2">
-                <div className="space-y-2">
-                  <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Nossa Missão</div>
-                  <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline">A Música ao Alcance de Todos</h2>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Nossa missão é tornar o aprendizado de música acessível, divertido e eficaz. Acreditamos que a música tem o poder de transformar vidas e, com a Nota Dentro, queremos que todos tenham a oportunidade de experimentar essa magia através de uma plataforma gamificada e intuitiva.
-                  </p>
-                </div>
+                )}
               </div>
             </div>
           </div>
         </section>
 
-        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
-            <div className="space-y-3">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">Como Funciona</h2>
-              <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                É simples e divertido. Siga estes passos para começar a aprender.
-              </p>
+        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">Como Funciona</h2>
+                <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Nossa metodologia gamificada torna o aprendizado de música divertido e eficaz.
+                </p>
+              </div>
             </div>
-            <div className="mx-auto w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-8 pt-12">
-              <div className="flex flex-col gap-2 items-center">
-                <div className="flex items-center justify-center rounded-full bg-primary text-primary-foreground h-16 w-16 text-2xl font-bold">
-                  <CircleUser className="size-8" />
+            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
+              <div className="flex flex-col items-center space-y-4 text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <span className="text-2xl font-bold">1</span>
                 </div>
-                <h3 className="text-lg font-bold font-headline">Crie sua conta</h3>
-                <p className="text-sm text-muted-foreground">Cadastre-se rapidamente para começar.</p>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold">Crie sua Conta</h3>
+                  <p className="text-gray-600">
+                    Registre-se gratuitamente e personalize seu perfil de aprendizado.
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col gap-2 items-center">
-                 <div className="flex items-center justify-center rounded-full bg-primary text-primary-foreground h-16 w-16 text-2xl font-bold">
-                  <Music4 className="size-8" />
+              <div className="flex flex-col items-center space-y-4 text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <span className="text-2xl font-bold">2</span>
                 </div>
-                <h3 className="text-lg font-bold font-headline">Escolha uma lição</h3>
-                <p className="text-sm text-muted-foreground">Navegue por nossas lições e comece por onde quiser.</p>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold">Aprenda no Seu Ritmo</h3>
+                  <p className="text-gray-600">
+                    Acesse lições interativas baseadas na teoria de Esther Scliar.
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col gap-2 items-center">
-                 <div className="flex items-center justify-center rounded-full bg-primary text-primary-foreground h-16 w-16 text-2xl font-bold">
-                  <GitBranch className="size-8" />
+              <div className="flex flex-col items-center space-y-4 text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <span className="text-2xl font-bold">3</span>
                 </div>
-                <h3 className="text-lg font-bold font-headline">Pratique e evolua</h3>
-                <p className="text-sm text-muted-foreground">Complete os desafios, ganhe pontos e suba de nível.</p>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold">Ganhe Conquistas</h3>
+                  <p className="text-gray-600">
+                    Desbloqueie badges e acompanhe seu progresso musical.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
       </main>
+
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 Nota Dentro. Todos os direitos reservados.</p>
+        <p className="text-xs text-gray-500">© 2024 Nota Dentro. Todos os direitos reservados.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
+          <Link className="text-xs hover:underline underline-offset-4" href="#">
             Termos de Serviço
           </Link>
-          <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
+          <Link className="text-xs hover:underline underline-offset-4" href="#">
             Privacidade
           </Link>
         </nav>

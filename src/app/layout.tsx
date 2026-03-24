@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Poppins, PT_Sans } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
-import { FirebaseClientProvider } from '@/firebase';
+import { UserProvider } from '@/contexts/UserContext';
 import './globals.css';
 
 const fontBody = Poppins({
@@ -29,9 +29,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${fontBody.variable} ${fontHeading.variable} font-body antialiased`}>
-        <FirebaseClientProvider>
+        <UserProvider>
           {children}
-        </FirebaseClientProvider>
+        </UserProvider>
         <Toaster />
       </body>
     </html>

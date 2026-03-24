@@ -21,7 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useUser } from '@/firebase';
+import { useUser } from '@/contexts/UserContext';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
