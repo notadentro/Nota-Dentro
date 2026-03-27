@@ -69,9 +69,18 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     }
   }
 
+  const hideSidebarOnLessons = pathname.startsWith('/dashboard/licoes');
+
   return (
     <SidebarProvider>
-      <Sidebar>
+      {hideSidebarOnLessons ? (
+        <div className="min-h-screen flex flex-col">
+          <AppHeader />
+          <main className="flex-1">{children}</main>
+        </div>
+      ) : (
+        <>
+          <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2">
             <Logo className="size-8 text-primary" />
@@ -123,11 +132,13 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             </Button>
           </div>
         </SidebarFooter>
-      </Sidebar>
-      <SidebarInset>
-        <AppHeader />
-        <main className="flex-1">{children}</main>
-      </SidebarInset>
+          </Sidebar>
+          <SidebarInset>
+            <AppHeader />
+            <main className="flex-1">{children}</main>
+          </SidebarInset>
+        </>
+      )}
     </SidebarProvider>
   );
 }
