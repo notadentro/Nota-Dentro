@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getPersonalizedRecommendations } from '@/app/actions';
-import type { PersonalizedLessonRecommendationsOutput } from '@/ai/flows/personalized-lesson-recommendations';
+import type { PersonalizedLessonRecommendationsOutput } from '@/app/actions';
 import { ChevronRight, Sparkles } from 'lucide-react';
 
 // Extend the type to include properties added in the server action

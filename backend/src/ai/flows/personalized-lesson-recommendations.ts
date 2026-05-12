@@ -1,4 +1,3 @@
-'use server';
 /**
  * @fileOverview AI-powered lesson personalization flow.
  *
