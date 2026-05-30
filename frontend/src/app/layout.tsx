@@ -1,19 +1,19 @@
 import type { Metadata } from 'next';
-import { Poppins, PT_Sans } from 'next/font/google';
+import { Nunito, Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { UserProvider } from '@/contexts/UserContext';
 import './globals.css';
 
-const fontBody = Poppins({
+const fontHeading = Nunito({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-body',
+  weight: ['700', '800'],
+  variable: '--font-nunito',
 });
 
-const fontHeading = PT_Sans({
+const fontBody = Inter({
   subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-heading',
+  weight: ['400', '500', '600'],
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${fontBody.variable} ${fontHeading.variable} font-body antialiased`}>
+    <html lang="pt-BR" className="dark" suppressHydrationWarning>
+      <body className={`${fontBody.variable} ${fontHeading.variable} font-body antialiased bg-brand-black text-brand-white`}>
         <UserProvider>
           {children}
         </UserProvider>

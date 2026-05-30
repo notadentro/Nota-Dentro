@@ -18,9 +18,9 @@ export default function DashboardPage() {
     ];
 
     return (
-        <div className="p-4 md:p-6 space-y-8 bg-[#FAFAFA] min-h-screen font-body">
+        <div className="p-4 md:p-6 space-y-8 bg-background min-h-screen font-body">
             <header>
-                <h1 className="text-3xl font-bold font-headline text-slate-900">
+                <h1 className="text-3xl font-bold font-headline text-foreground">
                     Olá, {user?.displayName?.split(' ')[0] || 'Aluno'}! 👋
                 </h1>
                 <p className="text-muted-foreground">Pronta para exercitar sua musculatura musical hoje?</p>

@@ -19,11 +19,27 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['var(--font-body)', 'sans-serif'],
-        heading: ['var(--font-heading)', 'sans-serif'],
+        body: ['var(--font-inter)', 'sans-serif'],
+        headline: ['var(--font-nunito)', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
+        brand: {
+          gold:         '#C9A811',
+          'gold-hover': '#A88A0D',
+          'gold-light': '#EDD033',
+          black:        '#1A1A1A',
+          white:        '#F8F6F0',
+          graphite:     '#3A3A3A',
+          gray:         '#6B6B6B',
+          sand:         '#E8E6DF',
+        },
+        system: {
+          success: '#2D8A5C',
+          error:   '#C0392B',
+          warning: '#E67E22',
+          info:    '#5B9BD5',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
