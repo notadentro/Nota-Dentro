@@ -25,6 +25,8 @@ import { useUser } from '@/contexts/UserContext';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
+import { GamificationProvider } from '@/context/GamificationContext';
+
 export default function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -70,64 +72,66 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <SidebarProvider>
-      <Sidebar>
-        <SidebarHeader>
-          <div className="flex items-center gap-2">
-            <Logo className="size-8 text-primary" />
-            <h1 className="font-headline text-2xl font-semibold">Nota Dentro</h1>
-          </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            {navItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  className="font-body"
-                >
-                  <Link href={item.href}>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter>
-          <div
-            className={cn(
-              'flex items-center gap-3 rounded-lg bg-secondary/50 p-2 transition-all',
-              'group-data-[collapsible=icon]:-m-2 group-data-[collapsible=icon]:p-0'
-            )}
-          >
-            <Avatar className="size-9 group-data-[collapsible=icon]:size-8">
-              <AvatarImage src={user.photoURL || `https://picsum.photos/seed/${user.uid}/40/40`} />
-              <AvatarFallback>{user.email?.[0].toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-              <span className="text-sm font-medium text-foreground">
-                {user.displayName || 'Aluno'}
-              </span>
-              <span className="text-xs text-muted-foreground">Nível 5</span>
+    <GamificationProvider>
+      <SidebarProvider>
+        <Sidebar>
+          <SidebarHeader>
+            <div className="flex items-center gap-2">
+              <Logo className="size-8 text-primary" />
+              <h1 className="font-headline text-2xl font-semibold">Nota Dentro</h1>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="ml-auto size-8 group-data-[collapsible=icon]:hidden"
-              onClick={handleProfileClick}
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              {navItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.href}
+                    className="font-body"
+                  >
+                    <Link href={item.href}>
+                      <item.icon />
+                      <span>{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarFooter>
+            <div
+              className={cn(
+                'flex items-center gap-3 rounded-lg bg-secondary/50 p-2 transition-all',
+                'group-data-[collapsible=icon]:-m-2 group-data-[collapsible=icon]:p-0'
+              )}
             >
-              <User className="size-4" />
-            </Button>
-          </div>
-        </SidebarFooter>
-      </Sidebar>
-      <SidebarInset>
-        <AppHeader />
-        <main className="flex-1">{children}</main>
-      </SidebarInset>
-    </SidebarProvider>
+              <Avatar className="size-9 group-data-[collapsible=icon]:size-8">
+                <AvatarImage src={(user as any).photoURL || `https://picsum.photos/seed/${user.uid}/40/40`} />
+                <AvatarFallback>{user.email?.[0].toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col group-data-[collapsible=icon]:hidden">
+                <span className="text-sm font-medium text-foreground">
+                  {user.displayName || 'Aluno'}
+                </span>
+                <span className="text-xs text-muted-foreground">Nível 5</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="ml-auto size-8 group-data-[collapsible=icon]:hidden"
+                onClick={handleProfileClick}
+              >
+                <User className="size-4" />
+              </Button>
+            </div>
+          </SidebarFooter>
+        </Sidebar>
+        <SidebarInset>
+          <AppHeader />
+          <main className="flex-1">{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
+    </GamificationProvider>
   );
 }

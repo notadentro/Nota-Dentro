@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 
 interface TrailMapProps {
   lessons: Lesson[];
+  onLessonClick?: (lesson: Lesson) => void;
 }
 
 const Y_OFFSETS = [
@@ -16,7 +17,7 @@ const Y_OFFSETS = [
    20, -15, -30  // Row 3
 ];
 
-export function TrailMap({ lessons }: TrailMapProps) {
+export function TrailMap({ lessons, onLessonClick }: TrailMapProps) {
   const router = useRouter();
   
   // Divide lessons into chunks of 3 or 4 to create the "Staff Rows"
@@ -41,6 +42,7 @@ export function TrailMap({ lessons }: TrailMapProps) {
             nextRowLength={nextRow ? nextRow.length : 0}
             nextRowOffset={nextRow ? Y_OFFSETS[((rowIndex + 1) * 3) % Y_OFFSETS.length] : 0}
             isLastRow={isLastRow}
+            onLessonClick={onLessonClick}
           />
         );
       })}
@@ -56,9 +58,10 @@ interface StaffRowProps {
   nextRowLength?: number;
   nextRowOffset?: number;
   isLastRow?: boolean;
+  onLessonClick?: (lesson: Lesson) => void;
 }
 
-function StaffRow({ lessons, rowIndex, router, nextRowFirstNode, nextRowLength, nextRowOffset, isLastRow }: StaffRowProps) {
+function StaffRow({ lessons, rowIndex, router, nextRowFirstNode, nextRowLength, nextRowOffset, isLastRow, onLessonClick }: StaffRowProps) {
   // X coordinates for 896px width (max-w-4xl)
   const getXCoord = (index: number, total: number) => {
     return ((index * 2 + 1) / (total * 2)) * 896;
@@ -196,7 +199,13 @@ function StaffRow({ lessons, rowIndex, router, nextRowFirstNode, nextRowLength, 
               <TrailNode 
                 status={lesson.status}
                 title={lesson.title}
-                onClick={() => router.push(`/lesson/${lesson.slug}`)}
+                onClick={() => {
+                  if (onLessonClick) {
+                    onLessonClick(lesson);
+                  } else {
+                    router.push(`/lesson/${lesson.slug}`);
+                  }
+                }}
                 titlePosition={titlePosition}
               />
             </div>
