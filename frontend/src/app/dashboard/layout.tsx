@@ -24,7 +24,6 @@ import { Button } from '@/components/ui/button';
 import { useUser } from '@/contexts/UserContext';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-
 import { GamificationProvider } from '@/context/GamificationContext';
 
 export default function AppLayout({ children }: { children: ReactNode }) {
@@ -99,33 +98,6 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               ))}
             </SidebarMenu>
           </SidebarContent>
-          <SidebarFooter>
-            <div
-              className={cn(
-                'flex items-center gap-3 rounded-lg bg-secondary/50 p-2 transition-all',
-                'group-data-[collapsible=icon]:-m-2 group-data-[collapsible=icon]:p-0'
-              )}
-            >
-              <Avatar className="size-9 group-data-[collapsible=icon]:size-8">
-                <AvatarImage src={(user as any).photoURL || `https://picsum.photos/seed/${user.uid}/40/40`} />
-                <AvatarFallback>{user.email?.[0].toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-                <span className="text-sm font-medium text-foreground">
-                  {user.displayName || 'Aluno'}
-                </span>
-                <span className="text-xs text-muted-foreground">Nível 5</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="ml-auto size-8 group-data-[collapsible=icon]:hidden"
-                onClick={handleProfileClick}
-              >
-                <User className="size-4" />
-              </Button>
-            </div>
-          </SidebarFooter>
         </Sidebar>
         <SidebarInset>
           <AppHeader />

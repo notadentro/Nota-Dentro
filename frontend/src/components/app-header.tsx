@@ -5,6 +5,7 @@ import { UserNav } from '@/components/user-nav';
 import { Flame, Heart, Star } from 'lucide-react';
 import { useGamification } from '@/context/GamificationContext';
 import { motion } from 'framer-motion';
+import { NotificationsPopover } from '@/modules/dashboard/components/notifications-popover';
 
 export function AppHeader() {
   const { lives, xp, streak, isHydrated } = useGamification();
@@ -40,7 +41,10 @@ export function AppHeader() {
           </div>
         )}
 
-        <UserNav />
+        <div className="flex items-center gap-2">
+          <NotificationsPopover />
+          <UserNav />
+        </div>
       </div>
     </header>
   );

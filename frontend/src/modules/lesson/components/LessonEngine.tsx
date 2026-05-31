@@ -7,14 +7,14 @@ import { useGamification } from '@/context/GamificationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { SCLIAR_CURRICULUM } from '@/constants/curriculum';
 
 interface LessonEngineProps {
   lesson: Lesson;
+  nextLessonId?: string;
   onClose: () => void;
 }
 
-export function LessonEngine({ lesson, onClose }: LessonEngineProps) {
+export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>({});
   const [showVictory, setShowVictory] = useState(false);
@@ -30,9 +30,7 @@ export function LessonEngine({ lesson, onClose }: LessonEngineProps) {
       setCurrentIndex(prev => prev + 1);
     } else {
       // Finalize the lesson
-      const lessonIndex = SCLIAR_CURRICULUM.findIndex(l => l.id === lesson.id);
-      const nextLesson = SCLIAR_CURRICULUM[lessonIndex + 1];
-      completeLesson(lesson.id, nextLesson?.id, 50);
+      completeLesson(lesson.id, nextLessonId, 50);
       setShowVictory(true);
     }
   };
