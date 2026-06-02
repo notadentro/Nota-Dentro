@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Nunito, Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { UserProvider } from '@/contexts/UserContext';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 const fontHeading = Nunito({
@@ -80,6 +81,7 @@ export default function RootLayout({
           {children}
         </UserProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
