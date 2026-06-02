@@ -19,8 +19,14 @@ interface User {
   displayName?: string;
   username: string;
   email: string;
-  profileImage: string;
-  experience: number;
+  photoURL: string;
+  stats: {
+    xp: number;
+    level: number;
+    streak: number;
+  };
+  achievements: string[];
+  progress?: Record<string, any>;
   instagramProfile?: string;
   linkedInProfile?: string;
 }
@@ -59,8 +65,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
             displayName: data.displayName || data.name || firebaseUser.displayName || 'Aluno',
             username: data.username || `user_${firebaseUser.uid.substring(0,5)}`,
             email: firebaseUser.email || data.email || '',
-            profileImage: data.profileImage || firebaseUser.photoURL || `https://picsum.photos/seed/${firebaseUser.uid}/200`,
-            experience: data.experience || 0,
+            photoURL: data.photoURL || firebaseUser.photoURL || `https://picsum.photos/seed/${firebaseUser.uid}/200`,
+            stats: data.stats || { xp: 0, level: 1, streak: 0 },
+            achievements: data.achievements || [],
+            progress: data.progress || {},
             instagramProfile: data.instagramProfile || '',
             linkedInProfile: data.linkedInProfile || '',
           });
@@ -70,8 +78,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
             name: firebaseUser.displayName || 'Aluno',
             email: firebaseUser.email || '',
             username: `user_${firebaseUser.uid.substring(0,5)}`,
-            experience: 0,
-            profileImage: firebaseUser.photoURL || `https://picsum.photos/seed/${firebaseUser.uid}/200`,
+            photoURL: firebaseUser.photoURL || `https://picsum.photos/seed/${firebaseUser.uid}/200`,
+            stats: { xp: 0, level: 1, streak: 0 },
+            achievements: [],
+            progress: {},
             createdAt: new Date().toISOString()
           };
           
@@ -107,8 +117,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
       name,
       username,
       email,
-      experience: 0,
-      profileImage: `https://picsum.photos/seed/${username}/200`,
+      photoURL: `https://picsum.photos/seed/${username}/200`,
+      stats: { xp: 0, level: 1, streak: 0 },
+      achievements: [],
+      progress: {},
       createdAt: new Date().toISOString()
     });
   };
@@ -126,17 +138,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (!user?.uid) return;
 
     // Atualização otimista na tela (UI)
-    setUser(prev => prev ? { ...prev, experience: prev.experience + amount } : null);
+    setUser(prev => prev ? { ...prev, stats: { ...prev.stats, xp: prev.stats.xp + amount } } : null);
 
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
-        experience: increment(amount)
+        'stats.xp': increment(amount)
       });
     } catch (error) {
       console.error('Failed to add XP to Firestore:', error);
       // Reverte caso dê erro no banco
-      setUser(prev => prev ? { ...prev, experience: prev.experience - amount } : null);
+      setUser(prev => prev ? { ...prev, stats: { ...prev.stats, xp: prev.stats.xp - amount } } : null);
     }
   };
 
