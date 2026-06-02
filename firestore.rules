@@ -1,22 +1,20 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check if the user is signed in
-    function isSignedIn() {
-      return request.auth != null;
+    // Bloqueia qualquer acesso por padrão
+    match /{document=**} {
+      allow read, write: if false;
     }
 
-    // Helper function to check if the user is the owner of the profile
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-    
+    // Coleção users
     match /users/{userId} {
-      // Anyone can read user profiles
-      allow get;
-      // Only the owner can create, update or delete their profile
-      allow write: if isOwner(userId);
+      // O usuário pode ler apenas o próprio documento
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // O usuário pode criar o próprio documento (apenas no momento do cadastro)
+      // e pode atualizar campos como stats.xp, progress e achievements.
+      allow write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
