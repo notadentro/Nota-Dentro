@@ -17,7 +17,7 @@ const fontBody = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Nota Dentro | O Duolingo da Teoria Musical',
+  title: 'Nota Dentro | Teoria Musical Gamificada',
   description: 'Aprenda teoria musical do zero ao avançado. Plataforma interativa e gamificada focada em preparatório militar e THE de música. Metodologia baseada em Esther Scliar, Bohumil Med e Maria Luiza de Mattos Priolli.',
   keywords: [
     'teoria musical', 'aprender música online', 'percepção musical', 
