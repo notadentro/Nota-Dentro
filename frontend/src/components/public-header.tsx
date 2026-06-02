@@ -45,7 +45,7 @@ export function PublicHeader() {
 
   async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     try {
-      await login(values.email, values.password);
+      await login('Usuário', 'usuario', values.email);
       toast({
         title: 'Bem-vindo de volta!',
         description: 'Login realizado com sucesso.',
