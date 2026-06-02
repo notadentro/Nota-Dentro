@@ -1,13 +1,21 @@
+'use client';
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Star } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
 export function UserProgress() {
-    const currentLevel = 5;
-    const currentXp = 450;
-    const xpToNextLevel = 1000;
-    const progress = (currentXp / xpToNextLevel) * 100;
+    const { user } = useUser();
+    
+    const currentLevel = user?.stats?.level || 1;
+    const currentXp = user?.stats?.xp || 0;
+    const currentStreak = user?.stats?.streak || 0;
+    
+    // Fórmula de XP para o próximo nível (exemplo simples: nível atual * 1000)
+    const xpToNextLevel = currentLevel * 1000;
+    const progress = Math.min((currentXp / xpToNextLevel) * 100, 100);
 
     return (
         <Card>
@@ -24,12 +32,14 @@ export function UserProgress() {
                     </div>
                      <div className="flex items-center gap-1 text-primary">
                         <Star className="size-5 fill-current" />
-                        <span className="font-bold">12</span>
+                        <span className="font-bold">{currentStreak}</span>
                     </div>
                 </div>
                 <Progress value={progress} className="h-3" />
                 <p className="text-center text-xs text-muted-foreground">
-                    Faltam {xpToNextLevel - currentXp} XP para o próximo nível!
+                    {currentXp >= xpToNextLevel 
+                      ? "Você pode subir de nível!" 
+                      : `Faltam ${xpToNextLevel - currentXp} XP para o próximo nível!`}
                 </p>
             </CardContent>
         </Card>

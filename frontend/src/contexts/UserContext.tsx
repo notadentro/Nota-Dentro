@@ -39,6 +39,7 @@ interface UserContextType {
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   addXP: (amount: number) => Promise<void>;
+  updateProgress: (completedLessons: string[], unlockedLessons: string[]) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -152,8 +153,33 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateProgress = async (completedLessons: string[], unlockedLessons: string[]) => {
+    if (!user?.uid) return;
+
+    // Atualização otimista na tela (UI)
+    setUser(prev => prev ? {
+      ...prev,
+      progress: {
+        ...prev.progress,
+        completedLessons,
+        unlockedLessons
+      }
+    } : null);
+
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        'progress.completedLessons': completedLessons,
+        'progress.unlockedLessons': unlockedLessons
+      });
+    } catch (error) {
+      console.error('Failed to update progress in Firestore:', error);
+      // Aqui idealmente reverteríamos, mas por simplicidade mantemos otimista
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, isUserLoading, login, signup, loginWithGoogle, logout, addXP }}>
+    <UserContext.Provider value={{ user, isUserLoading, login, signup, loginWithGoogle, logout, addXP, updateProgress }}>
       {children}
     </UserContext.Provider>
   );
