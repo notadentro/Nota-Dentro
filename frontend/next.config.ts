@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  serverExternalPackages: ['genkit', '@genkit-ai/core', 'express', 'nodemailer'],
+  serverExternalPackages: ['nodemailer'],
 
   images: {
     remotePatterns: [

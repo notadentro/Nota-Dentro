@@ -1,7 +1,5 @@
 'use server';
 
-import { personalizedLessonRecommendations } from '@/ai/flows/personalized-lesson-recommendations';
-
 export type PersonalizedLessonRecommendationsInput = {
     userId: string;
     learningHistory: Array<{
@@ -47,17 +45,19 @@ export async function getPersonalizedRecommendations(): Promise<PersonalizedLess
     };
 
     try {
-        const recommendations = await personalizedLessonRecommendations(input);
-        
-        // Add topic and difficulty to recommendations for frontend use
-        return recommendations.map(rec => {
-            const lessonDetails = availableLessons.find(l => l.lessonId === rec.lessonId);
-            return {
-                ...rec,
-                topic: lessonDetails?.topic || 'Tópico Desconhecido',
-                difficulty: lessonDetails?.difficulty || 'normal',
-            };
-        });
+        const completedIds = new Set(learningHistory.map(item => item.lessonId));
+
+        const recommended = availableLessons
+            .filter(lesson => !completedIds.has(lesson.lessonId))
+            .slice(0, 3)
+            .map(lesson => ({
+                lessonId: lesson.lessonId,
+                reason: `Recomendado para avançar no tópico ${lesson.topic}.`,
+                topic: lesson.topic,
+                difficulty: lesson.difficulty,
+            }));
+
+        return recommended;
 
     } catch (error) {
         console.error('Error fetching personalized recommendations:', error);
