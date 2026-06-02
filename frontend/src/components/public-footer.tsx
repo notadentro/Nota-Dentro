@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const contactSchema = z.object({
   name: z.string().min(1, { message: 'Nome é obrigatório' }),
@@ -66,11 +67,11 @@ export function PublicFooter() {
   };
 
   return (
-    <footer className="w-full bg-zinc-950 border-t border-zinc-900 pt-16 pb-8">
+    <footer className="w-full bg-zinc-950 border-t border-zinc-900 pt-8 md:pt-16 pb-6 md:pb-8">
       <div className="container px-4 md:px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div className="flex flex-col md:grid md:grid-cols-4 gap-2 md:gap-12 mb-8 md:mb-12">
           {/* Branding Column */}
-          <div className="md:col-span-1 space-y-4 text-center md:text-left">
+          <div className="md:col-span-1 space-y-4 text-center md:text-left mb-6 md:mb-0">
             <div className="flex justify-center md:justify-start">
               <Logo className="h-10 w-auto grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all" />
             </div>
@@ -90,9 +91,9 @@ export function PublicFooter() {
             </div>
           </div>
           
-          {/* Plataforma */}
-          <div className="text-center md:text-left">
-            <h3 className="font-semibold text-white mb-4">Plataforma</h3>
+          {/* DESKTOP: Plataforma */}
+          <div className="hidden md:block col-span-1 text-left">
+            <h3 className="font-semibold text-white mb-4 text-base">Plataforma</h3>
             <ul className="space-y-3">
               <li><Link href="/#how-it-works" className="text-sm text-zinc-400 hover:text-primary transition-colors">Como Funciona</Link></li>
               <li><Link href="/#features" className="text-sm text-zinc-400 hover:text-primary transition-colors">Funcionalidades</Link></li>
@@ -100,9 +101,9 @@ export function PublicFooter() {
             </ul>
           </div>
 
-          {/* Links Úteis */}
-          <div className="text-center md:text-left">
-            <h3 className="font-semibold text-white mb-4">Links Úteis</h3>
+          {/* DESKTOP: Links Úteis */}
+          <div className="hidden md:block col-span-1 text-left">
+            <h3 className="font-semibold text-white mb-4 text-base">Links Úteis</h3>
             <ul className="space-y-3">
               <li><Link href="#" className="text-sm text-zinc-400 hover:text-primary transition-colors">Materiais Gratuitos</Link></li>
               <li><Link href="#" className="text-sm text-zinc-400 hover:text-primary transition-colors">Guia do THE</Link></li>
@@ -172,18 +173,59 @@ export function PublicFooter() {
             </ul>
           </div>
 
-          {/* Legal */}
-          <div className="text-center md:text-left">
-            <h3 className="font-semibold text-white mb-4">Legal</h3>
+          {/* DESKTOP: Legal */}
+          <div className="hidden md:block col-span-1 text-left">
+            <h3 className="font-semibold text-white mb-4 text-base">Legal</h3>
             <ul className="space-y-3">
               <li><Link href="/termos-de-uso" className="text-sm text-zinc-400 hover:text-primary transition-colors">Termos de Uso</Link></li>
               <li><Link href="/politica-de-privacidade" className="text-sm text-zinc-400 hover:text-primary transition-colors">Política de Privacidade</Link></li>
             </ul>
           </div>
+
+          {/* MOBILE: Accordions */}
+          <div className="block md:hidden w-full">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="plataforma" className="border-zinc-800">
+                <AccordionTrigger className="text-white hover:text-primary py-3 font-semibold">Plataforma</AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-3 pt-2 pb-4">
+                    <li><Link href="/#how-it-works" className="text-sm text-zinc-400 hover:text-primary transition-colors block">Como Funciona</Link></li>
+                    <li><Link href="/#features" className="text-sm text-zinc-400 hover:text-primary transition-colors block">Funcionalidades</Link></li>
+                    <li><Link href="/blog" className="text-sm text-zinc-400 hover:text-primary transition-colors block">Blog</Link></li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="links-uteis" className="border-zinc-800">
+                <AccordionTrigger className="text-white hover:text-primary py-3 font-semibold">Links Úteis</AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-3 pt-2 pb-4">
+                    <li><Link href="#" className="text-sm text-zinc-400 hover:text-primary transition-colors block">Materiais Gratuitos</Link></li>
+                    <li><Link href="#" className="text-sm text-zinc-400 hover:text-primary transition-colors block">Guia do THE</Link></li>
+                    <li>
+                      <button onClick={() => setIsContactDialogOpen(true)} className="text-sm text-zinc-400 hover:text-primary transition-colors focus:outline-none w-full text-left">
+                        Contato Comercial
+                      </button>
+                    </li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="legal" className="border-zinc-800 border-b-0">
+                <AccordionTrigger className="text-white hover:text-primary py-3 font-semibold">Legal</AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-3 pt-2 pb-4">
+                    <li><Link href="/termos-de-uso" className="text-sm text-zinc-400 hover:text-primary transition-colors block">Termos de Uso</Link></li>
+                    <li><Link href="/politica-de-privacidade" className="text-sm text-zinc-400 hover:text-primary transition-colors block">Política de Privacidade</Link></li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
         </div>
         
-        <div className="pt-8 border-t border-zinc-900 flex flex-col items-center justify-center text-center">
-          <span className="text-sm text-zinc-600">© {new Date().getFullYear()} Nota Dentro. Todos os direitos reservados.</span>
+        <div className="pt-6 md:pt-8 border-t border-zinc-900 flex flex-col items-center justify-center text-center">
+          <span className="text-xs md:text-sm text-zinc-600">© {new Date().getFullYear()} Nota Dentro. Todos os direitos reservados.</span>
         </div>
       </div>
     </footer>

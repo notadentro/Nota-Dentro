@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   ].join(', '),
   authors: [{ name: 'Nota Dentro' }],
   openGraph: {
-    title: 'Nota Dentro | O Duolingo da Teoria Musical',
+    title: 'Nota Dentro | Teoria Musical Gamificada',
     description: 'Transforme o estudo maçante da teoria musical em um jogo viciante. Focado em preparatório militar e THE.',
     url: 'https://notadentro.com/',
     siteName: 'Nota Dentro',

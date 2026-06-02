@@ -18,6 +18,7 @@ import Image from 'next/image';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { motion, Variants } from 'framer-motion';
+import { PublicFooter } from '@/components/public-footer';
 
 const signupSchema = z.object({
   name: z.string().min(1, { message: 'Nome é obrigatório' }),
@@ -709,65 +710,7 @@ export default function LandingPage() {
       </main>
 
       {/* FOOTER */}
-      <footer className="w-full bg-zinc-950 border-t border-zinc-900 pt-16 pb-8">
-        <div className="container px-4 md:px-6 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            {/* Branding Column */}
-            <div className="md:col-span-1 space-y-4 text-center md:text-left">
-              <div className="flex justify-center md:justify-start">
-                <Logo className="h-10 w-auto grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all" />
-              </div>
-              <p className="text-sm text-zinc-500 leading-relaxed max-w-xs mx-auto md:mx-0">
-                A plataforma gamificada definitiva para você dominar a teoria musical.
-              </p>
-              <div className="flex gap-4 pt-2 justify-center md:justify-start">
-                <Link href="#" className="text-zinc-500 hover:text-primary transition-colors">
-                  <Instagram className="h-5 w-5" />
-                </Link>
-                <Link href="#" className="text-zinc-500 hover:text-primary transition-colors">
-                  <Youtube className="h-5 w-5" />
-                </Link>
-                <Link href="#" className="text-zinc-500 hover:text-primary transition-colors">
-                  <Twitter className="h-5 w-5" />
-                </Link>
-              </div>
-            </div>
-            
-            {/* Plataforma */}
-            <div className="text-center md:text-left">
-              <h3 className="font-semibold text-white mb-4">Plataforma</h3>
-              <ul className="space-y-3">
-                <li><Link href="#how-it-works" className="text-sm text-zinc-400 hover:text-primary transition-colors">Como Funciona</Link></li>
-                <li><Link href="#features" className="text-sm text-zinc-400 hover:text-primary transition-colors">Funcionalidades</Link></li>
-                <li><Link href="/blog" className="text-sm text-zinc-400 hover:text-primary transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-
-            {/* Links Úteis */}
-            <div className="text-center md:text-left">
-              <h3 className="font-semibold text-white mb-4">Links Úteis</h3>
-              <ul className="space-y-3">
-                <li><Link href="#" className="text-sm text-zinc-400 hover:text-primary transition-colors">Materiais Gratuitos</Link></li>
-                <li><Link href="#" className="text-sm text-zinc-400 hover:text-primary transition-colors">Guia do THE</Link></li>
-                <li><button onClick={() => setIsContactDialogOpen(true)} className="text-sm text-zinc-400 hover:text-primary transition-colors">Contato Comercial</button></li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div className="text-center md:text-left">
-              <h3 className="font-semibold text-white mb-4">Legal</h3>
-              <ul className="space-y-3">
-                <li><Link href="/termos-de-uso" className="text-sm text-zinc-400 hover:text-primary transition-colors">Termos de Uso</Link></li>
-                <li><Link href="/politica-de-privacidade" className="text-sm text-zinc-400 hover:text-primary transition-colors">Política de Privacidade</Link></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="pt-8 border-t border-zinc-900 flex flex-col items-center justify-center text-center">
-            <span className="text-sm text-zinc-600">© {new Date().getFullYear()} Nota Dentro. Todos os direitos reservados.</span>
-          </div>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
