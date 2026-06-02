@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { Logo } from '@/components/logo';
+import { PublicHeader } from '@/components/public-header';
+import { PublicFooter } from '@/components/public-footer';
 
 export const metadata = {
   title: 'Termos de Uso | Nota Dentro',
@@ -9,17 +9,9 @@ export const metadata = {
 export default function TermosDeUsoPage() {
   return (
     <div className="min-h-screen flex flex-col bg-black text-gray-100 selection:bg-primary selection:text-black">
-      <header className="px-4 lg:px-6 h-16 flex items-center border-b border-zinc-900 sticky top-0 z-20 bg-black/90 backdrop-blur">
-        <Link href="/" className="flex items-center justify-center">
-          <Logo className="h-8 w-auto text-white" />
-          <span className="sr-only">Nota Dentro</span>
-        </Link>
-        <nav className="ml-auto flex items-center gap-4">
-          <Link href="/" className="text-sm text-gray-300 hover:text-white transition-colors">Voltar ao Início</Link>
-        </nav>
-      </header>
+      <PublicHeader />
 
-      <main className="flex-1 container mx-auto px-4 py-12 md:py-16 max-w-3xl">
+      <main className="flex-1 container mx-auto px-4 pt-32 pb-12 md:pt-40 md:pb-16 max-w-3xl">
         <div className="mb-12 space-y-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold font-headline text-white">Termos de Uso</h1>
           <p className="text-xl text-zinc-400">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
@@ -63,9 +55,7 @@ export default function TermosDeUsoPage() {
         </div>
       </main>
 
-      <footer className="w-full py-6 bg-zinc-950 border-t border-zinc-900 mt-auto text-center">
-        <span className="text-sm text-zinc-600">© {new Date().getFullYear()} Nota Dentro. Todos os direitos reservados.</span>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
