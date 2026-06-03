@@ -1,6 +1,6 @@
 # 🎵 Nota Dentro
 
-O **Nota Dentro** é o *"Duolingo da Teoria Musical"*. Uma plataforma interativa e gamificada focada na preparação de excelência para **Concursos Militares** (Sargentos, Oficiais, ESA, EAGS, Fuzileiros Navais) e **THE** (Teste de Habilidade Específica das Universidades).
+O **Nota Dentro** é o _"Duolingo da Teoria Musical"_. Uma plataforma interativa e gamificada focada na preparação de excelência para **Concursos Militares** (ESA, EAGS, Fuzileiros Navais) e **THE** (Teste de Habilidade Específica das Universidades).
 
 Abandonamos a leitura densa e massante dos livros teóricos tradicionais e transformamos o aprendizado de música em uma jornada interativa: com níveis, pontos de experiência (XP), ofensivas e vidas, estimulando a constância e o aprendizado ativo.
 
@@ -23,17 +23,20 @@ Com essa base, abrangemos desde Acordes, Escalas e Intervalos até Ornamentos e 
 Nós construímos o Nota Dentro visando performance, estética imersiva e escalabilidade:
 
 ### Frontend
+
 - **Next.js 15 (App Router) & React 18**: Motor principal da aplicação web.
-- **Tailwind CSS & shadcn/ui**: Estilização robusta e componentes modernos. O visual prioriza *Dark Mode*, *glassmorphism* e micro-animações fluidas (utilizando `framer-motion`) para entregar uma UX "premium".
+- **Tailwind CSS & shadcn/ui**: Estilização robusta e componentes modernos. O visual prioriza _Dark Mode_, _glassmorphism_ e micro-animações fluidas (utilizando `framer-motion`) para entregar uma UX "premium".
 - **TypeScript**: Tipagem forte para garantir integridade do código.
 
 ### Backend / Infraestrutura (Firebase)
+
 A plataforma gerencia a progressão via nuvem (BaaS), de maneira isolada e segura, utilizando o ecossistema Google:
+
 - **Firebase Authentication**: Login social seguro com Google (OAuth) e Email/Senha.
 - **Firestore Database**: Banco de dados NoSQL que armazena os esquemas de perfil (`stats: xp, level, streak`) e salva em tempo real as vitórias de `progress` do aluno.
-- **Security Rules**: Toda transação de dados é bloqueada e checada no servidor. O usuário só consegue ler e editar o *seu próprio progresso* (`request.auth.uid == userId`).
+- **Security Rules**: Toda transação de dados é bloqueada e checada no servidor. O usuário só consegue ler e editar o _seu próprio progresso_ (`request.auth.uid == userId`).
 
-*(Nota: a aplicação é formatada utilizando o padrão de **npm Workspaces**, organizando a `frontend` como workspace principal, mas preparado para escalabilidade com microserviços futuros).*
+_(Nota: a aplicação é formatada utilizando o padrão de **npm Workspaces**, organizando a `frontend` como workspace principal, mas preparado para escalabilidade com microserviços futuros)._
 
 ---
 
@@ -42,6 +45,7 @@ A plataforma gerencia a progressão via nuvem (BaaS), de maneira isolada e segur
 É incrivelmente rápido subir a plataforma na sua máquina.
 
 ### 1. Requisitos
+
 - Node.js (versão 18+ recomendada)
 - Git
 
@@ -82,9 +86,11 @@ A aplicação estará disponível em [http://localhost:3000](http://localhost:30
 
 Seja bem-vindo a evoluir a plataforma conosco!
 Lembre-se sempre das premissas:
+
 1. **Aesthetics First:** Nenhuma nova tela deve parecer um formulário burocrático. Use gradientes, animações sutis e seja visual.
 2. **Didática Inclusiva:** Todo texto deve encorajar o aluno, mesmo no erro.
 3. **Segurança:** Nunca acesse o Firestore no cliente sem passar pelas verificações de `uid` e Regras de Segurança.
 
 ---
-*Desenvolvido com ❤️ para transformar músicos em sargentos, oficiais e universitários!*
+
+_Desenvolvido com ❤️ para democratizar o acesso à teoria musical_
