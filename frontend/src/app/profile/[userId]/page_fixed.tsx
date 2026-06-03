@@ -30,7 +30,7 @@ export default function ProfilePage() {
         <CardHeader>
           <div className="flex items-center gap-4">
             <Avatar className="h-24 w-24">
-              <AvatarImage src={userProfile.profileImage} alt={userProfile.name} />
+              <AvatarImage src={userProfile.photoURL} alt={userProfile.name} />
               <AvatarFallback>{userProfile.name.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div>
@@ -46,7 +46,7 @@ export default function ProfilePage() {
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Experiência</p>
-            <p>{userProfile.experience} pontos</p>
+            <p>{userProfile.stats?.xp || 0} pontos</p>
           </div>
           <div className="flex gap-4 pt-4">
             {userProfile.instagramProfile && (

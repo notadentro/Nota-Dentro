@@ -1,0 +1,24 @@
+rules_version = '2';
+
+// Regras de Segurança do Firebase Storage
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Bloqueia qualquer acesso por padrão
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Coleção users (onde guardaremos as fotos de perfil)
+    match /users/{userId}/{allPaths=**} {
+      // Qualquer pessoa autenticada pode ver a foto dos outros (necessário se tivermos ranking/perfil público)
+      // Se quiser que apenas a pessoa veja a própria foto, troque por "request.auth.uid == userId"
+      allow read: if request.auth != null;
+      
+      // O usuário só pode fazer upload dentro da própria pasta
+      // E o arquivo deve ter menos de 5MB
+      allow write: if request.auth != null 
+                   && request.auth.uid == userId 
+                   && request.resource.size < 5 * 1024 * 1024;
+    }
+  }
+}
