@@ -8,6 +8,7 @@ import { useUser } from '@/contexts/UserContext';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { GamificationProvider } from '@/context/GamificationContext';
+import { OnboardingModal } from '@/modules/onboarding/components/OnboardingModal';
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -37,6 +38,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <GamificationProvider>
       <div className="min-h-screen flex flex-col bg-background relative overflow-x-hidden">
+        {/* Renderiza o modal por cima de tudo e bloqueia o layout se não tiver completado */}
+        {!user.hasCompletedOnboarding && <OnboardingModal />}
+        
         <AppHeader />
         <main className="flex-1 w-full max-w-7xl mx-auto">{children}</main>
       </div>

@@ -29,6 +29,8 @@ interface User {
   progress?: Record<string, any>;
   instagramProfile?: string;
   linkedInProfile?: string;
+  hasCompletedOnboarding?: boolean;
+  onboardingData?: { goal: string; level: string; };
 }
 
 interface UserContextType {
@@ -40,6 +42,7 @@ interface UserContextType {
   logout: () => Promise<void>;
   addXP: (amount: number) => Promise<void>;
   updateProgress: (completedLessons: string[], unlockedLessons: string[]) => Promise<void>;
+  completeOnboarding: (goal: string, level: string) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -72,6 +75,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
             progress: data.progress || {},
             instagramProfile: data.instagramProfile || '',
             linkedInProfile: data.linkedInProfile || '',
+            hasCompletedOnboarding: data.hasCompletedOnboarding ?? false,
+            onboardingData: data.onboardingData || { goal: '', level: '' },
           });
         } else {
           // Se o usuário logou pela primeira vez (ex: Google) e não tem perfil no Firestore, criamos um!
@@ -83,6 +88,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             stats: { xp: 0, level: 1, streak: 0 },
             achievements: [],
             progress: {},
+            hasCompletedOnboarding: false,
             createdAt: new Date().toISOString()
           };
           
@@ -122,6 +128,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       stats: { xp: 0, level: 1, streak: 0 },
       achievements: [],
       progress: {},
+      hasCompletedOnboarding: false,
       createdAt: new Date().toISOString()
     });
   };
@@ -178,8 +185,28 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const completeOnboarding = async (goal: string, level: string) => {
+    if (!user?.uid) return;
+
+    setUser(prev => prev ? {
+      ...prev,
+      hasCompletedOnboarding: true,
+      onboardingData: { goal, level }
+    } : null);
+
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        hasCompletedOnboarding: true,
+        onboardingData: { goal, level }
+      });
+    } catch (error) {
+      console.error('Failed to update onboarding status in Firestore:', error);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, isUserLoading, login, signup, loginWithGoogle, logout, addXP, updateProgress }}>
+    <UserContext.Provider value={{ user, isUserLoading, login, signup, loginWithGoogle, logout, addXP, updateProgress, completeOnboarding }}>
       {children}
     </UserContext.Provider>
   );
