@@ -38,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navItems = [
     { name: 'Visão Geral', href: '/admin', icon: LayoutDashboard },
     { name: 'Gerenciar Lições', href: '/admin/lessons', icon: BookOpen },
-    { name: 'Blog', href: '/admin/blog', icon: PenTool },
+    { name: 'Artigos', href: '/admin/blog', icon: PenTool },
   ];
 
   return (

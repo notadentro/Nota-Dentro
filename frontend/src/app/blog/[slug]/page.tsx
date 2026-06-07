@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { PublicHeader } from '@/components/public-header';
 import { PublicFooter } from '@/components/public-footer';
 import ReactMarkdown from 'react-markdown';
+import { AuthorFooter } from '@/components/author-footer';
+import { BlogComments } from '@/modules/blog/components/BlogComments';
 
 interface Props {
   params: Promise<{
@@ -20,7 +22,7 @@ export async function generateMetadata({ params }: Props) {
   if (!post) return { title: 'Artigo não encontrado | Nota Dentro' };
 
   return {
-    title: `${post.title} | Blog Nota Dentro`,
+    title: `${post.title} | Artigos Nota Dentro`,
     description: post.excerpt,
   };
 }
@@ -49,12 +51,19 @@ export default async function BlogPostPage({ params }: Props) {
         <Button variant="ghost" asChild className="mb-8 -ml-4 text-muted-foreground hover:text-foreground">
           <Link href="/blog">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar para o Blog
+            Voltar para Artigos
           </Link>
         </Button>
 
-        <article className="prose prose-lg dark:prose-invert prose-brand max-w-none">
-          <div className="flex items-center gap-6 text-sm text-muted-foreground mb-8 not-prose">
+        <article className="max-w-none">
+          <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4">{post.title}</h1>
+          {post.subtitle && (
+            <p className="text-xl text-muted-foreground mb-8 font-body leading-relaxed">
+              {post.subtitle}
+            </p>
+          )}
+
+          <div className="flex items-center gap-6 text-sm text-muted-foreground mb-8 pb-8 border-b">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               <span>{new Date(post.date).toLocaleDateString('pt-BR')}</span>
@@ -65,9 +74,14 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </div>
 
-          <ReactMarkdown>
-            {post.content}
-          </ReactMarkdown>
+          <div className="prose prose-lg dark:prose-invert prose-brand max-w-none font-body">
+            <ReactMarkdown>
+              {post.content}
+            </ReactMarkdown>
+          </div>
+          
+          <AuthorFooter />
+          <BlogComments slug={slug} />
         </article>
       </main>
 

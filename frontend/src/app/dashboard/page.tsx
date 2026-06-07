@@ -6,7 +6,7 @@ import { AchievementIcon } from '@/modules/dashboard/components/achievement-icon
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useUser } from '@/contexts/UserContext';
 import Link from 'next/link';
-import { Shield, Anchor, Crosshair, GraduationCap, Music, ArrowRight } from 'lucide-react';
+import { Shield, Anchor, Crosshair, GraduationCap, Music, ArrowRight, PenTool } from 'lucide-react';
 
 const iconMap: Record<string, React.ReactNode> = {
   Shield: <Shield className="w-8 h-8" />,
@@ -90,6 +90,20 @@ export default function DashboardPage() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    <Link href="/blog" className="block group">
+                        <Card className="border-2 border-brand-graphite/20 hover:border-brand-gold transition-all hover:shadow-[0_8px_0_0_#EEBB2E] hover:-translate-y-2 bg-brand-black text-brand-white cursor-pointer">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 font-headline text-lg text-brand-gold">
+                                    <PenTool className="w-5 h-5" />
+                                    Artigos & Dicas
+                                </CardTitle>
+                                <CardDescription className="text-brand-gray font-body mt-2">
+                                    Leia conteúdos complementares, dicas de estudo e análises teóricas.
+                                </CardDescription>
+                            </CardHeader>
+                        </Card>
+                    </Link>
                 </aside>
             </div>
         </div>

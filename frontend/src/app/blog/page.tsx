@@ -7,7 +7,7 @@ import { PublicHeader } from '@/components/public-header';
 import { PublicFooter } from '@/components/public-footer';
 
 export const metadata = {
-  title: 'Blog | Nota Dentro',
+  title: 'Artigos | Nota Dentro',
   description: 'Artigos, tutoriais e dicas sobre teoria musical, harmonia, ritmo e muito mais.',
 };
 
@@ -20,7 +20,7 @@ export default async function BlogListPage() {
 
       <main className="flex-1 container mx-auto px-4 pt-32 pb-12 md:pt-40 md:pb-16 max-w-5xl">
         <div className="mb-12 space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline">Blog Nota Dentro</h1>
+          <h1 className="text-4xl md:text-5xl font-bold font-headline">Artigos Nota Dentro</h1>
           <p className="text-xl text-muted-foreground">Dicas, tutoriais e teoria musical na prática.</p>
         </div>
 

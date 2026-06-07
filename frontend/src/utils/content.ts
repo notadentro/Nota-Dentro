@@ -5,6 +5,7 @@ export interface BlogPost {
   id: string;
   slug: string;
   title: string;
+  subtitle?: string;
   excerpt: string;
   content: string;
   date: string;
@@ -26,10 +27,11 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           id: parsed.id,
           slug: parsed.id, // O ID salvo pelo painel admin é o slug
           title: parsed.title,
-          excerpt: parsed.content.substring(0, 150) + '...', // Gera um resumo automático
+          subtitle: parsed.subtitle,
+          excerpt: parsed.subtitle || parsed.content.substring(0, 150) + '...', // Usa o subtitle como resumo se existir
           content: parsed.content,
           date: parsed.date,
-          author: parsed.author || 'Admin (Nota Dentro)',
+          author: parsed.author || 'Annie Larcher',
         };
       })
     );

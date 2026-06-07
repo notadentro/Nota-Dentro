@@ -7,52 +7,59 @@ import { Input } from '@/components/ui/input';
 
 export default function BlogAdminPage() {
   const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
   const [content, setContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
-    if (!title || !content) return alert('Preencha título e conteúdo!');
-    
+    if (!title || !content) {
+      alert('Título e conteúdo são obrigatórios');
+      return;
+    }
+
     setIsSaving(true);
-    
-    // Transforma o título em um ID/slug (ex: "Meu Artigo" -> "meu-artigo")
-    const id = title.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
-    
     try {
-      const res = await fetch('/api/admin/content', {
+      const id = title.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+      
+      const response = await fetch('/api/admin/content', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'blog',
           id: id,
           data: {
             id,
             title,
+            subtitle,
             date: new Date().toISOString(),
-            content
+            content,
+            author: 'Annie Larcher'
           }
         }),
       });
-      
-      const resData = await res.json();
-      if (!res.ok) throw new Error(resData.error || 'Erro ao salvar');
-      
-      alert('Artigo salvo com sucesso em: ' + resData.path);
+
+      if (!response.ok) throw new Error('Falha ao salvar');
+
+      alert('Artigo salvo com sucesso!');
+      // Limpa o form
       setTitle('');
+      setSubtitle('');
       setContent('');
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao salvar artigo');
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold font-headline">Novo Artigo (Blog)</h1>
+    <div className="max-w-4xl mx-auto">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold font-headline mb-2">Novo Artigo</h1>
+          <p className="text-brand-gray">Crie um novo artigo para a plataforma.</p>
+        </div>
         <Button 
           onClick={handleSave} 
           disabled={isSaving || !title || !content}
@@ -69,6 +76,16 @@ export default function BlogAdminPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ex: Como entender a Teoria de Scliar rapidamente"
+            className="text-lg py-6"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-brand-gray mb-1">Subtítulo (Opcional)</label>
+          <Input 
+            value={subtitle}
+            onChange={(e) => setSubtitle(e.target.value)}
+            placeholder="Ex: Um guia prático para iniciantes no estudo de partituras"
             className="text-lg py-6"
           />
         </div>

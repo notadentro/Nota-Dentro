@@ -11,7 +11,7 @@ export default function AdminPage() {
         </div>
         
         <div className="p-6 bg-[#2D8A5C]/10 border border-[#2D8A5C]/30 rounded-2xl">
-          <h3 className="font-bold text-xl text-[#2D8A5C] mb-2">Artigos do Blog</h3>
+          <h3 className="font-bold text-xl text-[#2D8A5C] mb-2">Artigos</h3>
           <p className="text-brand-gray mb-4">Escreva artigos com suporte a Markdown e Imagens.</p>
         </div>
       </div>
