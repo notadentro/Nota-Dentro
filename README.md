@@ -18,25 +18,36 @@ Com essa base, abrangemos desde Acordes, Escalas e Intervalos até Ornamentos e 
 
 ---
 
+## 🌟 Funcionalidades Core
+
+A plataforma evoluiu para se tornar um verdadeiro CMS (Content Management System) educacional:
+
+- **Dashboard & Trilhas:** Mapeamento visual das aulas e módulos com layout em SVG (pautas musicais interativas).
+- **Gamificação em Tempo Real (Lesson Engine):** Sistema de vidas, ganho de XP e recompensas baseados em acertos.
+- **Minigames Interativos:** Para não ficar preso a múltipla-escolha, implementamos desafios práticos nativos:
+  - Jogo da Memória (Flip Cards em 3D)
+  - Ligar Colunas (Match interativo com glow e validação)
+  - Preencher Lacunas (Botões drag/click nativos no texto)
+- **Painel de Criação (Admin Builder):** Interface visual focada na experiência do professor para criar blocos dinâmicos de desafios sem precisar escrever código.
+- **Blog & Engajamento:** Sistema de Artigos completo, com seção "Sobre a Autora" e fórum de comentários nativo com threads (respostas).
+
+---
+
 ## 🛠️ Stack Tecnológico & Arquitetura
 
 Nós construímos o Nota Dentro visando performance, estética imersiva e escalabilidade:
 
 ### Frontend
-
 - **Next.js 15 (App Router) & React 18**: Motor principal da aplicação web.
 - **Tailwind CSS & shadcn/ui**: Estilização robusta e componentes modernos. O visual prioriza _Dark Mode_, _glassmorphism_ e micro-animações fluidas (utilizando `framer-motion`) para entregar uma UX "premium".
 - **TypeScript**: Tipagem forte para garantir integridade do código.
 
-### Backend / Infraestrutura (Firebase)
+### Backend & Arquitetura de Dados
+A plataforma utiliza um modelo híbrido moderno, combinando BaaS para escalabilidade e Flat-Files para o núcleo educacional:
 
-A plataforma gerencia a progressão via nuvem (BaaS), de maneira isolada e segura, utilizando o ecossistema Google:
-
+- **Git-Backed Content (JSON):** Todos os módulos educacionais (Aulas, Quizzes) e os Artigos do Blog são salvos nativamente em arquivos `.json` locais (`src/content/lessons` e `src/content/blog`). O motor da plataforma une esses arquivos dinamicamente, permitindo versionamento Git perfeito e dispensando a necessidade de gerenciar bancos de dados pesados para o conteúdo.
 - **Firebase Authentication**: Login social seguro com Google (OAuth) e Email/Senha.
-- **Firestore Database**: Banco de dados NoSQL que armazena os esquemas de perfil (`stats: xp, level, streak`) e salva em tempo real as vitórias de `progress` do aluno.
-- **Security Rules**: Toda transação de dados é bloqueada e checada no servidor. O usuário só consegue ler e editar o _seu próprio progresso_ (`request.auth.uid == userId`).
-
-_(Nota: a aplicação é formatada utilizando o padrão de **npm Workspaces**, organizando a `frontend` como workspace principal, mas preparado para escalabilidade com microserviços futuros)._
+- **Firestore Database**: Banco de dados NoSQL focado apenas na persistência do estado global do aluno (armazenando progresso, XP, vidas, comentários no blog).
 
 ---
 
@@ -45,20 +56,17 @@ _(Nota: a aplicação é formatada utilizando o padrão de **npm Workspaces**, o
 É incrivelmente rápido subir a plataforma na sua máquina.
 
 ### 1. Requisitos
-
 - Node.js (versão 18+ recomendada)
 - Git
 
 ### 2. Instalação
-
-Na **raiz do projeto**, execute o comando abaixo para que o npm instale todas as dependências de todos os workspaces automaticamente:
+Na **raiz do projeto**, execute o comando abaixo para instalar as dependências de todos os workspaces (usamos npm workspaces configurado para o frontend):
 
 ```bash
 npm install
 ```
 
 ### 3. Variáveis de Ambiente
-
 Crie um arquivo `.env.local` dentro da pasta `frontend/` com as suas credenciais do Firebase:
 
 ```env
@@ -70,14 +78,14 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="123456789"
 NEXT_PUBLIC_FIREBASE_APP_ID="1:123456789:web:abcdef"
 ```
 
-### 4. Executar o Servidor de Desenvolvimento
+### 4. Gestão de Conteúdo (Uso da Plataforma)
+- O acesso como aluno pode ser feito através de `/dashboard`.
+- Para **Criar Novas Lições** e testar o CMS, acesse `/admin/lessons/create`. Ao preencher o formulário, o sistema de arquivos local criará o novo `.json` do seu curso e ele ficará visível em tempo real no Dashboard (na aba "Cursos Livres").
 
-Basta rodar o comando abaixo na pasta raiz:
-
+### 5. Executar o Servidor de Desenvolvimento
 ```bash
 npm run dev
 ```
-
 A aplicação estará disponível em [http://localhost:3000](http://localhost:3000).
 
 ---
