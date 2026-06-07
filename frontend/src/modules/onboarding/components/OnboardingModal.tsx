@@ -42,7 +42,7 @@ export function OnboardingModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-brand-black/95 backdrop-blur-md flex flex-col">
+    <div className="fixed inset-0 z-[100] overflow-y-auto overflow-x-hidden bg-brand-black/95 backdrop-blur-md flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 min-h-screen">
         <div className="w-full max-w-2xl relative pb-8">
           <AnimatePresence mode="wait">

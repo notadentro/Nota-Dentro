@@ -444,17 +444,9 @@ export default function LandingPage() {
           {/* Animated Background Mesh */}
           <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black -z-20"></div>
           
-          {/* Subtle Glowing Orbs */}
-          <motion.div 
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[20%] left-[15%] w-96 h-96 bg-primary/20 rounded-full blur-[120px] -z-10"
-          />
-          <motion.div 
-            animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[150px] -z-10"
-          />
+          {/* Subtle Glowing Orbs (Static for better mobile/Safari performance) */}
+          <div className="absolute top-[20%] left-[15%] w-72 h-72 md:w-96 md:h-96 bg-primary/20 rounded-full blur-[80px] md:blur-[120px] -z-10 pointer-events-none" />
+          <div className="absolute bottom-[20%] right-[-5%] md:right-[10%] w-72 h-72 md:w-[500px] md:h-[500px] bg-purple-600/20 rounded-full blur-[90px] md:blur-[150px] -z-10 pointer-events-none" />
 
           <div className="container px-4 md:px-6 relative z-10 w-full max-w-7xl mx-auto">
             <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 items-center">
