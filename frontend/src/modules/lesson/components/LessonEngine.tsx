@@ -1,13 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Lesson, TheoryStep, QuizStep, TrueFalseStep } from '@/types/lesson';
+import { Lesson, TheoryStep, QuizStep, TrueFalseStep, MemoryGameStep, MatchColumnsStep, FillBlanksStep } from '@/types/lesson';
 import { X, Heart, Star } from 'lucide-react';
 import { useGamification } from '@/context/GamificationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
+
+import { MemoryGameView } from './MemoryGameView';
+import { MatchColumnsView } from './MatchColumnsView';
+import { FillBlanksView } from './FillBlanksView';
 
 interface LessonEngineProps {
   lesson: Lesson;
@@ -166,12 +170,31 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
                 />
                 )}
                 
-                {/* Fallback for un-implemented steps */}
-                {['match_columns', 'fill_blanks', 'memory_game'].includes(currentStep.type) && (
-                <div className="text-center p-8 bg-brand-graphite/10 rounded-2xl border-2 border-dashed border-brand-gray">
-                    <p>O desafio do tipo <strong className="uppercase">{currentStep.type}</strong> está em construção.</p>
-                    <Button onClick={markStepComplete} variant="outline" className="mt-4 rounded-xl">Pular Desafio (WIP)</Button>
-                </div>
+                {currentStep.type === 'memory_game' && (
+                <MemoryGameView 
+                    data={currentStep.data as MemoryGameStep} 
+                    isCompleted={completedSteps[currentIndex]}
+                    onSuccess={markStepComplete}
+                    onFail={loseLife}
+                />
+                )}
+                
+                {currentStep.type === 'match_columns' && (
+                <MatchColumnsView 
+                    data={currentStep.data as MatchColumnsStep} 
+                    isCompleted={completedSteps[currentIndex]}
+                    onSuccess={markStepComplete}
+                    onFail={loseLife}
+                />
+                )}
+
+                {currentStep.type === 'fill_blanks' && (
+                <FillBlanksView 
+                    data={currentStep.data as FillBlanksStep} 
+                    isCompleted={completedSteps[currentIndex]}
+                    onSuccess={markStepComplete}
+                    onFail={loseLife}
+                />
                 )}
             </div>
             

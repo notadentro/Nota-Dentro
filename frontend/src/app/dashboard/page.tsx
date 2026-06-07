@@ -1,6 +1,6 @@
 'use client';
 
-import { DATABASE } from '@/constants/curriculum';
+import { useState, useEffect } from 'react';
 import { UserProgress } from '@/modules/dashboard/components/user-progress';
 import { AchievementIcon } from '@/modules/dashboard/components/achievement-icon';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -18,6 +18,18 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export default function DashboardPage() {
     const { user } = useUser();
+    const [trails, setTrails] = useState<any[]>([]);
+
+    useEffect(() => {
+      fetch('/api/public/curriculum')
+        .then(res => res.json())
+        .then(data => {
+          if (data.database) {
+            setTrails(data.database);
+          }
+        })
+        .catch(console.error);
+    }, []);
 
     const achievements = [
         { title: "Iniciante", description: "Completou 10 lições" },
@@ -51,7 +63,9 @@ export default function DashboardPage() {
                 <div className="lg:col-span-2 space-y-8 flex flex-col">
                     <section className="w-full">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {DATABASE.map(trail => (
+                            {trails.length === 0 ? (
+                              <p className="text-muted-foreground col-span-2">Carregando trilhas...</p>
+                            ) : trails.map(trail => (
                             <Link href={`/dashboard/trail/${trail.id}`} key={trail.id} className="block group">
                                 <Card className="h-full border-2 border-brand-graphite/20 hover:border-[#2D8A5C] transition-all hover:shadow-[0_8px_0_0_#2D8A5C] hover:-translate-y-2 bg-background cursor-pointer flex flex-col">
                                 <CardHeader className="flex flex-row items-start gap-4">

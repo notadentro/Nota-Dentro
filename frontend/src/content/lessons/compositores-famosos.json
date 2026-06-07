@@ -1,0 +1,34 @@
+{
+  "id": "hrthtxjwz",
+  "status": "available",
+  "steps": [
+    {
+      "id": "nivc3ynd5",
+      "type": "memory_game",
+      "title": "compositores",
+      "data": {
+        "question": "Encontre o compositor e seu período ",
+        "pairs": [
+          {
+            "item1": "Chopin",
+            "item2": "Romantico"
+          },
+          {
+            "item1": "Bach",
+            "item2": "Barroco"
+          },
+          {
+            "item1": "Villa-Lobos",
+            "item2": "Moderno"
+          }
+        ],
+        "explanation": "teste teste"
+      },
+      "source": "Maria Luisa de Mattos Priolli"
+    }
+  ],
+  "module": 1,
+  "title": "compositores",
+  "description": "teste",
+  "slug": "compositores-famosos"
+}

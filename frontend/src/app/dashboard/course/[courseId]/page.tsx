@@ -1,16 +1,17 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { DATABASE } from '@/constants/curriculum';
+import { getDynamicCurriculum } from '@/utils/content';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { CourseMapWrapper } from '@/modules/dashboard/components/CourseMapWrapper';
 
 export default async function CoursePage({ params }: { params: Promise<{ courseId: string }> }) {
   const resolvedParams = await params;
+  const dynamicDb = await getDynamicCurriculum();
   let foundCourse = null;
   let trailId = '';
 
-  for (const trail of DATABASE) {
+  for (const trail of dynamicDb) {
     const course = trail.courses.find(c => c.id === resolvedParams.courseId);
     if (course) {
       foundCourse = course;
