@@ -1,5 +1,5 @@
 /**
- * Matérias-primas da música segundo Esther Scliar.
+ * Matérias-primas da música.
  * O Som é fundamental e o Silêncio é secundário (dependente do som).
  */
 export type MusicalMaterial = 'Som' | 'Silêncio';
@@ -18,7 +18,7 @@ export interface MaterialProperties {
   qualities: MusicalQuality[];
 }
 
-// Exemplo de como usar no código para validar a lógica da Scliar:
+// Exemplo de como usar no código para validar a lógica clássica:
 export const SILENCE_PROPERTIES: MaterialProperties = {
   type: 'Silêncio',
   qualities: ['Duração'] // Única qualidade do silêncio segundo a pág. 7

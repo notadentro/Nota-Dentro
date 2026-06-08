@@ -15,7 +15,7 @@ const SCLIAR_LESSONS: Lesson[] = [
         type: 'theory',
         title: 'A Matéria-Prima',
         data: {
-          content: 'Na obra de Esther Scliar, aprendemos que a **música é a arte dos sons**. Portanto, o som é a matéria-prima da música. Sem som, não há música.'
+          content: 'Na teoria musical clássica, aprendemos que a **música é a arte dos sons**. Portanto, o som é a matéria-prima da música. Sem som, não há música.'
         }
       },
       {
@@ -23,12 +23,12 @@ const SCLIAR_LESSONS: Lesson[] = [
         type: 'quiz',
         title: 'Teste rápido',
         data: {
-          question: 'Segundo Esther Scliar, qual é a matéria-prima da música?',
+          question: 'Segundo a teoria clássica, qual é a matéria-prima da música?',
           options: ['O silêncio', 'Os instrumentos', 'O som', 'A partitura', 'O ritmo'],
           correctAnswer: 'O som',
           explanation: 'O som é a base e a matéria-prima da música. É através dele que a arte musical se materializa.',
           wrongExplanations: {
-            'O silêncio': 'O silêncio faz parte da música, mas Scliar define O Som como a matéria-prima onde o silêncio atua.',
+            'O silêncio': 'O silêncio faz parte da música, mas a teoria clássica define O Som como a matéria-prima onde o silêncio atua.',
             'Os instrumentos': 'Instrumentos são ferramentas que produzem a matéria-prima (o som).',
             'A partitura': 'A partitura é apenas a representação gráfica (escrita) da música, não a sua essência.',
             'O ritmo': 'O ritmo é como organizamos o tempo, mas precisamos do Som para preencher esse tempo.'
@@ -57,7 +57,7 @@ const SCLIAR_LESSONS: Lesson[] = [
             'Volume, Tom, Timbre e Ritmo'
           ],
           correctAnswer: 'Altura, Duração, Intensidade e Timbre',
-          explanation: 'Estas são as propriedades físicas do som descritas por Scliar. Agudo/Grave são tipos de Altura, não propriedades independentes.',
+          explanation: 'Estas são as propriedades físicas do som na teoria musical. Agudo/Grave são tipos de Altura, não propriedades independentes.',
           wrongExplanations: {
             'Agudo, Grave, Forte e Fraco': 'Agudo e Grave são subdivisões da Altura. Forte e Fraco são subdivisões da Intensidade. Não são propriedades raízes.',
             'Ritmo, Melodia, Harmonia e Timbre': 'Ritmo, melodia e harmonia são elementos da música (como organizamos o som), não propriedades físicas do som isolado.',
@@ -180,7 +180,7 @@ const SCLIAR_LESSONS: Lesson[] = [
     id: '5',
     slug: 'prova-modulo-1',
     title: 'Desafio do Módulo 1',
-    description: 'Teste final do primeiro capítulo de Esther Scliar.',
+    description: 'Teste final do primeiro capítulo de Teoria Musical.',
     status: 'locked',
     module: 1,
     steps: []
@@ -197,20 +197,20 @@ export const DATABASE: Trail[] = [
       {
         id: 'esa',
         title: 'Sargento da ESA',
-        description: 'Foco na bibliografia da Escola de Sargentos das Armas (Maria Priolli).',
+        description: 'Foco na bibliografia da Escola de Sargentos das Armas.',
         icon: 'Crosshair',
         modules: [
           {
-            id: 'esa-priolli-1',
+            id: 'esa-teoria-1',
             title: 'Noções Básicas',
             description: 'Introdução à teoria musical focada no edital.',
-            author: 'Maria Priolli',
+            author: 'Teoria Musical',
             lessons: [
               {
                 id: 'esa-l1',
-                slug: 'introducao-priolli',
+                slug: 'introducao-teoria',
                 title: 'O Som e a Música',
-                description: 'Conceitos iniciais segundo Maria Priolli.',
+                description: 'Conceitos iniciais da teoria musical.',
                 status: 'available',
                 module: 1,
                 steps: []
@@ -222,27 +222,27 @@ export const DATABASE: Trail[] = [
       {
         id: 'fuzileiros',
         title: 'Fuzileiros Navais',
-        description: 'Preparação completa para o Corpo de Fuzileiros Navais da Marinha (Bohumil Med e Esther Scliar).',
+        description: 'Preparação completa para o Corpo de Fuzileiros Navais da Marinha.',
         icon: 'Anchor',
         modules: [
           {
-            id: 'fn-scliar-1',
+            id: 'fn-teoria-1',
             title: 'Fundamentos do Som',
             description: 'Matéria-prima e Propriedades do Som',
-            author: 'Esther Scliar',
+            author: 'Teoria Clássica',
             lessons: SCLIAR_LESSONS
           },
           {
-            id: 'fn-med-1',
+            id: 'fn-teoria-2',
             title: 'Notação Musical',
             description: 'Aprofundamento na escrita musical.',
-            author: 'Bohumil Med',
+            author: 'Teoria Contemporânea',
             lessons: [
               {
                 id: 'fn-l2',
-                slug: 'notacao-med',
+                slug: 'notacao-teoria',
                 title: 'O Pentagrama',
-                description: 'Escrita musical detalhada por Bohumil Med.',
+                description: 'Escrita musical detalhada.',
                 status: 'locked',
                 module: 1,
                 steps: []
