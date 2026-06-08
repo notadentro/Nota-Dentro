@@ -21,8 +21,7 @@ interface GamificationContextType extends GamificationState {
 const GamificationContext = createContext<GamificationContextType | undefined>(undefined);
 
 export function GamificationProvider({ children }: { children: ReactNode }) {
-  const { user, addXP, updateProgress } = useUser();
-  const [lives, setLives] = useState(5);
+  const { user, addXP, updateProgress, useLife } = useUser();
   const [isHydrated, setIsHydrated] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [unlockedLessons, setUnlockedLessons] = useState<string[]>(['1']);
@@ -60,17 +59,20 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     await addXP(xpReward);
   };
 
-  const loseLife = () => {
-    setLives((prev) => Math.max(0, prev - 1));
+  const loseLife = async () => {
+    await useLife();
   };
 
   const restoreLives = () => {
-    setLives(5);
+    // Esse será tratado na loja com Cachês futuramente, 
+    // mas a assinatura do método continua aqui.
   };
+
+  const currentLives = user?.isSpalla ? Infinity : (user?.economy?.lives ?? 5);
 
   return (
     <GamificationContext.Provider value={{ 
-      lives, 
+      lives: currentLives, 
       xp: user?.stats?.xp || 0, 
       streak: user?.stats?.streak || 0, 
       completedLessons, 

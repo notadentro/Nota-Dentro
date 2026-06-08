@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useUser } from '@/contexts/UserContext';
 import Link from 'next/link';
 import { Shield, Anchor, Crosshair, GraduationCap, Music, ArrowRight, PenTool } from 'lucide-react';
+import { SpallaBanner } from '@/components/spalla/SpallaBanner';
+import { getRankName } from '@/utils/ranks';
 
 const iconMap: Record<string, React.ReactNode> = {
   Shield: <Shield className="w-8 h-8" />,
@@ -39,11 +41,15 @@ export default function DashboardPage() {
 
     return (
         <div className="p-4 md:p-8 space-y-8 min-h-[calc(100vh-4rem)] font-body overflow-x-hidden">
+            <SpallaBanner />
             <header className="text-center md:text-left">
-                <h1 className="text-3xl font-bold font-headline text-foreground">
+                <h1 className="text-3xl font-bold font-headline text-foreground flex items-center gap-3">
                     Olá, {user?.displayName?.split(' ')[0] || 'Aluno'}! 👋
+                    <span className="text-sm px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full uppercase tracking-wider">
+                        {getRankName(user?.stats?.level || 1)}
+                    </span>
                 </h1>
-                <p className="text-muted-foreground text-lg">Qual o seu objetivo principal hoje?</p>
+                <p className="text-muted-foreground text-lg mt-2">Qual o seu objetivo principal hoje?</p>
                 
                 {user?.onboardingData?.goal === 'livre' && (
                   <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-2 text-sm font-body">

@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserNav } from '@/components/user-nav';
-import { Flame, Heart, Star, BookOpen, Home, Trophy, Menu } from 'lucide-react';
+import { Flame, Heart, Star, BookOpen, Home, Trophy, Menu, Coins, Infinity as InfinityIcon } from 'lucide-react';
 import { useGamification } from '@/context/GamificationContext';
+import { useUser } from '@/contexts/UserContext';
 import { motion } from 'framer-motion';
 import { NotificationsPopover } from '@/modules/dashboard/components/notifications-popover';
 import { Logo } from '@/components/logo';
@@ -21,6 +22,7 @@ const navItems = [
 export function AppHeader() {
   const pathname = usePathname();
   const { lives, xp, streak, isHydrated } = useGamification();
+  const { user } = useUser();
 
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6">
@@ -63,7 +65,13 @@ export function AppHeader() {
                   {/* Vidas */}
                   <div className={`flex flex-col items-center gap-1 font-bold ${lives > 0 ? 'text-red-500' : 'text-gray-400'}`}>
                     <Heart size={20} className={lives > 0 ? "fill-red-500" : "fill-transparent"} />
-                    <span className="text-xs">{lives}</span>
+                    <span className="text-xs">{lives === Infinity ? <InfinityIcon size={14}/> : lives}</span>
+                  </div>
+
+                  {/* Cachês */}
+                  <div className="flex flex-col items-center gap-1 font-bold text-amber-500">
+                    <Coins size={20} className="fill-amber-500" />
+                    <span className="text-xs">{user?.economy?.cache || 0}</span>
                   </div>
 
                   {/* Ofensiva */}
@@ -114,21 +122,27 @@ export function AppHeader() {
         {isHydrated && (
           <div className="hidden sm:flex items-center gap-3 md:gap-4 mr-2">
             {/* Vidas */}
-            <div className={`flex items-center gap-1 font-bold ${lives > 0 ? 'text-red-500' : 'text-gray-400'}`}>
+            <div className={`flex items-center gap-1 font-bold ${lives > 0 ? 'text-red-500' : 'text-gray-400'}`} title="Vidas">
               <Heart size={18} className={lives > 0 ? "fill-red-500" : "fill-transparent"} />
-              <motion.span key={lives} initial={{ scale: 1.5 }} animate={{ scale: 1 }}>
-                {lives}
+              <motion.span key={lives} initial={{ scale: 1.5 }} animate={{ scale: 1 }} className="flex items-center">
+                {lives === Infinity ? <InfinityIcon size={18} /> : lives}
               </motion.span>
             </div>
 
+            {/* Cachês */}
+            <div className="flex items-center gap-1 font-bold text-amber-500" title="Cachês">
+              <Coins size={18} className="fill-amber-500" />
+              <span>{user?.economy?.cache || 0}</span>
+            </div>
+
             {/* Ofensiva */}
-            <div className={`flex items-center gap-1 font-bold ${streak > 0 ? 'text-orange-500' : 'text-gray-400'}`}>
+            <div className={`flex items-center gap-1 font-bold ${streak > 0 ? 'text-orange-500' : 'text-gray-400'}`} title="Ofensiva">
               <Flame size={18} className={streak > 0 ? "fill-orange-500" : "fill-transparent"} />
               <span>{streak}</span>
             </div>
             
             {/* XP */}
-            <div className="flex items-center gap-1 text-[#2D8A5C] font-bold">
+            <div className="flex items-center gap-1 text-[#2D8A5C] font-bold" title="XP Geral">
               <Star size={18} className="fill-[#2D8A5C]" />
               <motion.span key={xp} initial={{ scale: 1.5, color: '#FFD700' }} animate={{ scale: 1, color: '#2D8A5C' }}>
                 {xp}

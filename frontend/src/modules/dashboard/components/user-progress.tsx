@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Star } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
+import { getRankName } from "@/utils/ranks";
 
 export function UserProgress() {
     const { user } = useUser();
@@ -25,8 +26,8 @@ export function UserProgress() {
             <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Badge variant="default" className="bg-primary/20 text-primary-foreground hover:bg-primary/30">
-                            Nível {currentLevel}
+                        <Badge variant="default" className="bg-primary/20 text-primary-foreground hover:bg-primary/30 uppercase tracking-wide">
+                            {getRankName(currentLevel)}
                         </Badge>
                         <p className="text-sm font-medium text-muted-foreground">{currentXp} / {xpToNextLevel} XP</p>
                     </div>

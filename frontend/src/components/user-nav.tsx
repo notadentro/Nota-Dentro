@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useUser } from '@/contexts/UserContext';
-import { CreditCard, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { CreditCard, LogOut, Settings, User as UserIcon, GraduationCap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 
@@ -60,6 +60,12 @@ export function UserNav() {
             <UserIcon className="mr-2 h-4 w-4" />
             <span>Perfil</span>
           </DropdownMenuItem>
+          {(user.role === 'teacher' || user.role === 'admin') && (
+            <DropdownMenuItem onClick={() => router.push('/prof')}>
+              <GraduationCap className="mr-2 h-4 w-4 text-indigo-600" />
+              <span className="text-indigo-600 font-medium">Painel do Professor</span>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem>
             <CreditCard className="mr-2 h-4 w-4" />
             <span>Assinatura</span>

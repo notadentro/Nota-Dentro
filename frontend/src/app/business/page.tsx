@@ -57,25 +57,25 @@ export default function BusinessPlanPage() {
             </ul>
 
             {/* FRONT 2 */}
-            <h3>2. Assinatura "Nota Dentro PRO" (Duolingo Super)</h3>
+            <h3>2. Assinatura "Plano Spalla" (Duolingo Super)</h3>
             <p><strong>Aprofundamento:</strong> A evolução natural da assinatura de trilhas. O usuário paga uma mensalidade recorrente não apenas por conteúdo novo, mas por <strong>conveniência</strong>. O alvo principal aqui é o concurseiro militar (ESA, EsPCEx) que não tem tempo a perder com anúncios ou esperando vidas recarregarem.</p>
             <h4>Estruturação e Plano de Ação:</h4>
             <ul>
               <li><strong>Passo 1:</strong> Criar os planos de assinatura (Mensal, Semestral e Anual) integrados a um gateway como Stripe ou Pagar.me.</li>
-              <li><strong>Passo 2:</strong> Desenvolver o bloqueador de anúncios (flag <code>isProUser: true</code> na modelagem do usuário).</li>
-              <li><strong>Passo 3:</strong> Desenvolver a <strong>"Clínica de Erros"</strong>: uma aba exclusiva PRO que compila as questões onde o aluno mais errou (focando nos "pegas" teóricos clássicos da Scliar).</li>
-              <li><strong>Passo 4:</strong> Adicionar Vidas Ilimitadas para assinantes PRO.</li>
+              <li><strong>Passo 2:</strong> Desenvolver o bloqueador de anúncios (flag <code>isSpalla: true</code> na modelagem do usuário).</li>
+              <li><strong>Passo 3:</strong> Desenvolver a <strong>"Clínica de Erros"</strong>: uma aba exclusiva Spalla que compila as questões onde o aluno mais errou (focando nos "pegas" teóricos clássicos da Scliar).</li>
+              <li><strong>Passo 4:</strong> Adicionar Vidas Ilimitadas para assinantes Spalla.</li>
             </ul>
 
             {/* FRONT 3 */}
             <h3>3. Compra de Vidas Extras e Cosméticos (Microtransações)</h3>
-            <p><strong>Aprofundamento:</strong> Alunos gratuitos frustrados com a perda de vidas e que não querem assinar o plano PRO podem realizar microtransações. Além disso, a venda de itens cosméticos fomenta o desejo de personalização.</p>
+            <p><strong>Aprofundamento:</strong> Alunos gratuitos frustrados com a perda de vidas e que não querem assinar o Plano Spalla podem realizar microtransações. Além disso, a venda de itens cosméticos fomenta o desejo de personalização.</p>
             <h4>Estruturação e Plano de Ação:</h4>
             <ul>
-              <li><strong>Passo 1:</strong> Criar uma moeda virtual (ex: "Semínimas de Ouro").</li>
-              <li><strong>Passo 2:</strong> Vender pacotes dessas moedas via PIX/Cartão (ex: 100 moedas por R$4,90).</li>
-              <li><strong>Passo 3:</strong> Permitir o uso das moedas para refilar a barra de vidas instantaneamente.</li>
-              <li><strong>Passo 4:</strong> Criar uma "Loja do App" onde a moeda pode comprar temas escuros (Dark Mode), avatares de grandes compositores (Mozart, Beethoven) e pacotes de sons de acerto (Piano de Cauda, Violino, etc).</li>
+              <li><strong>Passo 1:</strong> Criar uma moeda virtual chamada "Cachê" (o usuário ganha 1 cachê por acesso diário).</li>
+              <li><strong>Passo 2:</strong> Vender pacotes de cachês via PIX/Cartão (ex: 100 cachês por R$4,90).</li>
+              <li><strong>Passo 3:</strong> Permitir o uso dos cachês para refilar a barra de vidas instantaneamente.</li>
+              <li><strong>Passo 4:</strong> Criar uma "Loja do App" onde os cachês podem comprar temas escuros (Dark Mode), avatares de grandes compositores (Mozart, Beethoven) e pacotes de sons de acerto (Piano de Cauda, Violino, etc).</li>
             </ul>
 
             {/* FRONT 4 */}
@@ -124,7 +124,7 @@ export default function BusinessPlanPage() {
             <hr className="my-8" />
             <div className="bg-indigo-50 p-6 rounded-lg print:bg-transparent print:p-0 print:border-t print:border-slate-200">
               <h3 className="text-indigo-900 mt-0 print:mt-4">Próxima Fase de Engenharia (Visão Técnica)</h3>
-              <p className="mb-0 text-indigo-800 print:text-slate-700">Para suportar este modelo de negócios, o back-end precisará ser refatorado para suportar <strong>Feature Toggling</strong>. Precisaremos injetar variáveis de estado como <code>isPremium</code> em toda a árvore de componentes React, preferencialmente utilizando um Provider Global (Zustand ou Context API), garantindo que as regras de negócio de monetização sejam aplicadas sem quebrar a fluidez (UX) das lições gamificadas.</p>
+              <p className="mb-0 text-indigo-800 print:text-slate-700">Para suportar este modelo de negócios, o back-end precisará ser refatorado para suportar <strong>Feature Toggling</strong>. Precisaremos injetar variáveis de estado como <code>isSpalla</code> em toda a árvore de componentes React, preferencialmente utilizando um Provider Global (Zustand ou Context API), garantindo que as regras de negócio de monetização sejam aplicadas sem quebrar a fluidez (UX) das lições gamificadas.</p>
             </div>
 
           </article>

@@ -12,27 +12,8 @@ import {
   User as FirebaseUser
 } from 'firebase/auth';
 import { db, auth } from '@/lib/firebase';
-
-interface User {
-  uid: string;
-  name: string;
-  displayName?: string;
-  username: string;
-  email: string;
-  photoURL: string;
-  stats: {
-    xp: number;
-    level: number;
-    streak: number;
-  };
-  achievements: string[];
-  progress?: Record<string, any>;
-  instagramProfile?: string;
-  linkedInProfile?: string;
-  hasCompletedOnboarding?: boolean;
-  onboardingData?: { goal: string; level: string; focus?: string; instruments?: string[]; };
-  isAdmin?: boolean;
-}
+import { User, UserEconomy } from '@/types/user';
+import { useToast } from '@/hooks/use-toast';
 
 interface UserContextType {
   user: User | null;
@@ -44,6 +25,12 @@ interface UserContextType {
   addXP: (amount: number) => Promise<void>;
   updateProgress: (completedLessons: string[], unlockedLessons: string[]) => Promise<void>;
   completeOnboarding: (goal: string, level: string, focus?: string, instruments?: string[]) => Promise<void>;
+  
+  // Economy & Monetization
+  useLife: () => Promise<boolean>;
+  addCache: (amount: number) => Promise<void>;
+  spendCache: (amount: number) => Promise<boolean>;
+  upgradeToSpalla: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -51,20 +38,58 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isUserLoading, setIsUserLoading] = useState(true);
+  const { toast } = useToast();
+
+  // Helper to check daily login cache
+  const checkDailyLogin = async (currentUser: User) => {
+    const today = new Date().toISOString().split('T')[0];
+    const lastLoginDay = currentUser.economy?.lastLogin?.split('T')[0];
+
+    if (lastLoginDay !== today) {
+      // It's a new day! Give 1 cachê (Evento: "Passar o Chapéu")
+      const newCache = (currentUser.economy?.cache || 0) + 1;
+      const updatedEconomy: UserEconomy = {
+        ...currentUser.economy,
+        lives: currentUser.economy?.lives || 5,
+        maxLives: currentUser.economy?.maxLives || 5,
+        cache: newCache,
+        lastLogin: new Date().toISOString()
+      };
+
+      setUser(prev => prev ? { ...prev, economy: updatedEconomy } : null);
+      
+      try {
+        const userRef = doc(db, 'users', currentUser.uid);
+        await updateDoc(userRef, {
+          'economy': updatedEconomy
+        });
+        
+        // Disparar o evento "Passar o Chapéu"
+        toast({
+          title: "🎩 Passar o Chapéu!",
+          description: "Você ganhou 1 cachê pelo seu acesso diário!",
+          variant: "default",
+          className: "bg-amber-100 text-amber-900 border-amber-300"
+        });
+      } catch (error) {
+        console.error('Failed to update daily login cache:', error);
+      }
+    }
+  };
 
   useEffect(() => {
-    // Fica escutando se alguém entrou ou saiu da "portaria" do Firebase
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setIsUserLoading(true);
       
       if (firebaseUser) {
-        // Usuário está logado. Vamos buscar os dados dele no nosso Firestore
         const userRef = doc(db, 'users', firebaseUser.uid);
         const userSnap = await getDoc(userRef);
 
+        const defaultEconomy: UserEconomy = { lives: 5, maxLives: 5, cache: 0, lastLogin: new Date().toISOString() };
+
         if (userSnap.exists()) {
           const data = userSnap.data();
-          setUser({
+          const currentUser: User = {
             uid: firebaseUser.uid,
             name: data.name || firebaseUser.displayName || 'Aluno',
             displayName: data.displayName || data.name || firebaseUser.displayName || 'Aluno',
@@ -79,10 +104,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
             hasCompletedOnboarding: data.hasCompletedOnboarding ?? false,
             onboardingData: data.onboardingData || { goal: '', level: '' },
             isAdmin: data.isAdmin ?? false,
-          });
+            isSpalla: data.isSpalla ?? false,
+            role: data.role || 'student',
+            economy: data.economy || defaultEconomy,
+            createdAt: data.createdAt
+          };
+
+          setUser(currentUser);
+          await checkDailyLogin(currentUser);
         } else {
-          // Se o usuário logou pela primeira vez (ex: Google) e não tem perfil no Firestore, criamos um!
-          const newUser = {
+          const newUser: Partial<User> = {
             name: firebaseUser.displayName || 'Aluno',
             email: firebaseUser.email || '',
             username: `user_${firebaseUser.uid.substring(0,5)}`,
@@ -91,19 +122,21 @@ export function UserProvider({ children }: { children: ReactNode }) {
             achievements: [],
             progress: {},
             hasCompletedOnboarding: false,
+            isSpalla: false,
+            role: 'student',
+            economy: defaultEconomy,
             createdAt: new Date().toISOString()
           };
           
           await setDoc(userRef, newUser);
           
           setUser({
+            ...(newUser as User),
             uid: firebaseUser.uid,
-            ...newUser,
             displayName: newUser.name,
           });
         }
       } else {
-        // Ninguém logado
         setUser(null);
       }
       setIsUserLoading(false);
@@ -120,7 +153,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const firebaseUser = userCredential.user;
     
-    // Logo após criar a conta no Auth, já criamos o perfil no Firestore
     const userRef = doc(db, 'users', firebaseUser.uid);
     await setDoc(userRef, {
       name,
@@ -131,6 +163,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
       achievements: [],
       progress: {},
       hasCompletedOnboarding: false,
+      isSpalla: false,
+      role: 'student',
+      economy: { lives: 5, maxLives: 5, cache: 0, lastLogin: new Date().toISOString() },
       createdAt: new Date().toISOString()
     });
   };
@@ -146,69 +181,115 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const addXP = async (amount: number) => {
     if (!user?.uid) return;
-
-    // Atualização otimista na tela (UI)
     setUser(prev => prev ? { ...prev, stats: { ...prev.stats, xp: prev.stats.xp + amount } } : null);
-
     try {
       const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
-        'stats.xp': increment(amount)
-      });
+      await updateDoc(userRef, { 'stats.xp': increment(amount) });
     } catch (error) {
-      console.error('Failed to add XP to Firestore:', error);
-      // Reverte caso dê erro no banco
       setUser(prev => prev ? { ...prev, stats: { ...prev.stats, xp: prev.stats.xp - amount } } : null);
     }
   };
 
   const updateProgress = async (completedLessons: string[], unlockedLessons: string[]) => {
     if (!user?.uid) return;
-
-    // Atualização otimista na tela (UI)
     setUser(prev => prev ? {
       ...prev,
-      progress: {
-        ...prev.progress,
-        completedLessons,
-        unlockedLessons
-      }
+      progress: { ...prev.progress, completedLessons, unlockedLessons }
     } : null);
-
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
         'progress.completedLessons': completedLessons,
         'progress.unlockedLessons': unlockedLessons
       });
-    } catch (error) {
-      console.error('Failed to update progress in Firestore:', error);
-      // Aqui idealmente reverteríamos, mas por simplicidade mantemos otimista
-    }
+    } catch (error) {}
   };
 
   const completeOnboarding = async (goal: string, level: string, focus?: string, instruments?: string[]) => {
     if (!user?.uid) return;
-
     setUser(prev => prev ? {
       ...prev,
       hasCompletedOnboarding: true,
       onboardingData: { goal, level, focus, instruments }
     } : null);
-
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
         hasCompletedOnboarding: true,
         onboardingData: { goal, level, focus, instruments }
       });
+    } catch (error) {}
+  };
+
+  // --- Economy Methods ---
+  
+  const useLife = async (): Promise<boolean> => {
+    if (!user?.uid) return false;
+    if (user.isSpalla) return true; // Spalla has infinite lives
+    
+    const currentLives = user.economy?.lives || 0;
+    if (currentLives <= 0) return false; // Can't play
+
+    setUser(prev => {
+      if (!prev || !prev.economy) return prev;
+      return { ...prev, economy: { ...prev.economy, lives: prev.economy.lives - 1 } };
+    });
+
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { 'economy.lives': increment(-1) });
+      return true;
     } catch (error) {
-      console.error('Failed to update onboarding status in Firestore:', error);
+      console.error(error);
+      return false;
     }
   };
 
+  const addCache = async (amount: number) => {
+    if (!user?.uid) return;
+    setUser(prev => {
+      if (!prev || !prev.economy) return prev;
+      return { ...prev, economy: { ...prev.economy, cache: prev.economy.cache + amount } };
+    });
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { 'economy.cache': increment(amount) });
+    } catch (error) {}
+  };
+
+  const spendCache = async (amount: number): Promise<boolean> => {
+    if (!user?.uid) return false;
+    const currentCache = user.economy?.cache || 0;
+    if (currentCache < amount) return false;
+
+    setUser(prev => {
+      if (!prev || !prev.economy) return prev;
+      return { ...prev, economy: { ...prev.economy, cache: prev.economy.cache - amount } };
+    });
+
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { 'economy.cache': increment(-amount) });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const upgradeToSpalla = async () => {
+    if (!user?.uid) return;
+    setUser(prev => prev ? { ...prev, isSpalla: true } : null);
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { isSpalla: true });
+    } catch (error) {}
+  };
+
   return (
-    <UserContext.Provider value={{ user, isUserLoading, login, signup, loginWithGoogle, logout, addXP, updateProgress, completeOnboarding }}>
+    <UserContext.Provider value={{ 
+      user, isUserLoading, login, signup, loginWithGoogle, logout, addXP, updateProgress, completeOnboarding,
+      useLife, addCache, spendCache, upgradeToSpalla
+    }}>
       {children}
     </UserContext.Provider>
   );
