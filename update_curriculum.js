@@ -23,20 +23,20 @@ export const DATABASE: Trail[] = [
       {
         id: 'esa',
         title: 'Sargento da ESA',
-        description: 'Foco na bibliografia da Escola de Sargentos das Armas (Maria Priolli).',
+        description: 'Foco na bibliografia da Escola de Sargentos das Armas.',
         icon: 'Crosshair',
         modules: [
           {
-            id: 'esa-priolli-1',
+            id: 'esa-teoria-1',
             title: 'Noções Básicas',
             description: 'Introdução à teoria musical focada no edital.',
-            author: 'Maria Priolli',
+            author: 'Teoria Musical',
             lessons: [
               {
                 id: 'esa-l1',
-                slug: 'introducao-priolli',
+                slug: 'introducao-teoria',
                 title: 'O Som e a Música',
-                description: 'Conceitos iniciais segundo Maria Priolli.',
+                description: 'Conceitos iniciais da teoria musical.',
                 status: 'available',
                 module: 1,
                 steps: []
@@ -48,27 +48,27 @@ export const DATABASE: Trail[] = [
       {
         id: 'fuzileiros',
         title: 'Fuzileiros Navais',
-        description: 'Preparação completa para o Corpo de Fuzileiros Navais da Marinha (Bohumil Med e Esther Scliar).',
+        description: 'Preparação completa para o Corpo de Fuzileiros Navais da Marinha.',
         icon: 'Anchor',
         modules: [
           {
-            id: 'fn-scliar-1',
+            id: 'fn-teoria-1',
             title: 'Fundamentos do Som',
             description: 'Matéria-prima e Propriedades do Som',
-            author: 'Esther Scliar',
+            author: 'Teoria Clássica',
             lessons: SCLIAR_LESSONS
           },
           {
-            id: 'fn-med-1',
+            id: 'fn-teoria-2',
             title: 'Notação Musical',
             description: 'Aprofundamento na escrita musical.',
-            author: 'Bohumil Med',
+            author: 'Teoria Contemporânea',
             lessons: [
               {
                 id: 'fn-l2',
-                slug: 'notacao-med',
+                slug: 'notacao-teoria',
                 title: 'O Pentagrama',
-                description: 'Escrita musical detalhada por Bohumil Med.',
+                description: 'Escrita musical detalhada.',
                 status: 'locked',
                 module: 1,
                 steps: []

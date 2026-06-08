@@ -83,7 +83,7 @@ export function StepBuilder({ step, index, onChange, onRemove }: Props) {
             <Input 
               value={step.source || ''} 
               onChange={(e) => updateBaseField('source', e.target.value)}
-              placeholder="Ex: Bohumil Med"
+              placeholder="Ex: Teoria Contemporânea"
               className="bg-card"
             />
           </div>

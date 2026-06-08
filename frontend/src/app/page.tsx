@@ -595,10 +595,10 @@ export default function LandingPage() {
                   <ShieldCheck className="w-4 h-4" /> Fundamentação Teórica
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tight font-headline text-white">
-                  O Método <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-200">Scliar</span> Digitalizado
+                  O Método <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-200">Clássico</span> Digitalizado
                 </h2>
                 <p className="text-gray-400 text-lg md:text-xl leading-relaxed">
-                  Não reinventamos a roda. Pegamos a metodologia sólida de <strong>Esther Scliar, Bohumil Med e Maria Luiza Priolli</strong> e transformamos em uma experiência moderna, onde o feedback é instantâneo e a teoria ganha vida.
+                  Não reinventamos a roda. Pegamos a metodologia sólida dos <strong>maiores teóricos musicais</strong> e transformamos em uma experiência moderna, onde o feedback é instantâneo e a teoria ganha vida.
                 </p>
                 <div className="pt-4">
                   <Button variant="link" className="text-primary hover:text-primary/80 p-0 text-lg group">

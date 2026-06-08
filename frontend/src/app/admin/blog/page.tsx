@@ -75,7 +75,7 @@ export default function BlogAdminPage() {
           <Input 
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ex: Como entender a Teoria de Scliar rapidamente"
+            placeholder="Ex: Como entender a Teoria Musical rapidamente"
             className="text-lg py-6"
           />
         </div>

@@ -27,13 +27,13 @@ const fontBody = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://notadentro.com'),
   title: 'Nota Dentro | Teoria Musical Gamificada',
-  description: 'Aprenda teoria musical do zero ao avançado. Plataforma interativa e gamificada focada em preparatório militar e THE de música. Metodologia baseada em Esther Scliar, Bohumil Med e Maria Luiza de Mattos Priolli.',
+  description: 'Aprenda teoria musical do zero ao avançado. Plataforma interativa e gamificada focada em preparatório militar e THE de música. Metodologia baseada nos principais teóricos da música.',
   alternates: {
     canonical: '/',
   },
   keywords: [
     'teoria musical', 'aprender música online', 'percepção musical', 
-    'Esther Scliar', 'Bohumil Med', 'Maria Luiza de Mattos Priolli',
+    'Teoria Musical', 'Fundamentos da Música', 'Percepção Musical',
     'preparatório militar música', 'preparatório THE música',
     'Teste de Habilidade Específica', 'exercícios de teoria musical', 
     'solfejo', 'harmonia', 'gamificação em música', 'ESA música', 'sgt músico', 

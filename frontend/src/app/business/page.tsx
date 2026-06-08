@@ -40,7 +40,7 @@ export default function BusinessPlanPage() {
 
             <h2>Visão Geral do Ecossistema</h2>
             <p>
-              O <strong>Nota Dentro</strong> atua na intersecção entre o rigor acadêmico exigido pelos principais editais (Forças Armadas, THE) e a retenção proporcionada pela gamificação moderna. Nosso diferencial competitivo repousa na curadoria do conteúdo ancorado em autores de peso: <em>Esther Scliar</em> (rigor rítmico/harmônico), <em>Bohumil Med</em> e <em>Maria Luiza de Mattos Priolli</em>.
+              O <strong>Nota Dentro</strong> atua na intersecção entre o rigor acadêmico exigido pelos principais editais (Forças Armadas, THE) e a retenção proporcionada pela gamificação moderna. Nosso diferencial competitivo repousa na curadoria do conteúdo ancorado nos principais teóricos da música.
             </p>
 
             <hr className="my-8" />
@@ -51,7 +51,7 @@ export default function BusinessPlanPage() {
             <h4>Estruturação e Plano de Ação:</h4>
             <ul>
               <li><strong>Passo 1:</strong> Implementar a SDK do Google AdMob / AdSense na plataforma.</li>
-              <li><strong>Passo 2:</strong> Mapear os "pontos de frustração e alívio" (ex: após passar de uma lição difícil de compassos compostos do Med, ou ao perder a última vida).</li>
+              <li><strong>Passo 2:</strong> Mapear os "pontos de frustração e alívio" (ex: após passar de uma lição difícil de compassos compostos, ou ao perder a última vida).</li>
               <li><strong>Passo 3:</strong> Inserir <em>Rewarded Video Ads</em> (Anúncios em vídeo com recompensa) para o usuário ganhar vidas extras gratuitamente assistindo a um vídeo de 30 segundos.</li>
               <li><strong>Passo 4:</strong> Inserir banners não-intrusivos no rodapé do dashboard principal.</li>
             </ul>
@@ -63,7 +63,7 @@ export default function BusinessPlanPage() {
             <ul>
               <li><strong>Passo 1:</strong> Criar os planos de assinatura (Mensal, Semestral e Anual) integrados a um gateway como Stripe ou Pagar.me.</li>
               <li><strong>Passo 2:</strong> Desenvolver o bloqueador de anúncios (flag <code>isProUser: true</code> na modelagem do usuário).</li>
-              <li><strong>Passo 3:</strong> Desenvolver a <strong>"Clínica de Erros"</strong>: uma aba exclusiva PRO que compila as questões onde o aluno mais errou (focando nos "pegas" teóricos clássicos da Scliar).</li>
+              <li><strong>Passo 3:</strong> Desenvolver a <strong>"Clínica de Erros"</strong>: uma aba exclusiva Spalla que compila as questões onde o aluno mais errou (focando nos "pegas" teóricos clássicos).</li>
               <li><strong>Passo 4:</strong> Adicionar Vidas Ilimitadas para assinantes PRO.</li>
             </ul>
 
@@ -73,14 +73,14 @@ export default function BusinessPlanPage() {
             <h4>Estruturação e Plano de Ação:</h4>
             <ul>
               <li><strong>Passo 1:</strong> Criar uma moeda virtual (ex: "Semínimas de Ouro").</li>
-              <li><strong>Passo 2:</strong> Vender pacotes dessas moedas via PIX/Cartão (ex: 100 moedas por R$4,90).</li>
+              <li><strong>Passo 2:</strong> Cadastrar produtos tangíveis: Apostilas diagramadas de Teoria Musical, Cadernos de Pautas estilizados e Flashcards de Acordes e Intervalos.</li>
               <li><strong>Passo 3:</strong> Permitir o uso das moedas para refilar a barra de vidas instantaneamente.</li>
-              <li><strong>Passo 4:</strong> Criar uma "Loja do App" onde a moeda pode comprar temas escuros (Dark Mode), avatares de grandes compositores (Mozart, Beethoven) e pacotes de sons de acerto (Piano de Cauda, Violino, etc).</li>
+              <li><strong>Passo 4:</strong> Criar uma "Loja do App" onde a moeda pode comprar temas escuros (Dark Mode), avatares e pacotes de sons de acerto (Piano de Cauda, Violino, etc).</li>
             </ul>
 
             {/* FRONT 4 */}
             <h3>4. YouTube e Produtos High-Ticket (Mentorias)</h3>
-            <p><strong>Aprofundamento:</strong> O app Nota Dentro é excelente para fixação rápida (microlearning). No entanto, temas como <em>Ditado Rítmico a 2 Vozes (Scliar)</em> ou <em>Harmonia Funcional Avançada</em> exigem aulas profundas. O YouTube atua como topo de funil (atrai alunos) e a plataforma direciona para serviços de alto valor agregado.</p>
+            <p><strong>Aprofundamento:</strong> O app Nota Dentro é excelente para fixação rápida (microlearning). No entanto, temas como <em>Ditado Rítmico a 2 Vozes</em> ou <em>Harmonia Funcional Avançada</em> exigem aulas profundas. O YouTube atua como topo de funil (atrai alunos) e a plataforma direciona para serviços de alto valor agregado.</p>
             <h4>Estruturação e Plano de Ação:</h4>
             <ul>
               <li><strong>Passo 1:</strong> Mapear as 20 dúvidas mais comuns nas provas da ESA/UFRJ.</li>
@@ -106,7 +106,7 @@ export default function BusinessPlanPage() {
             <h4>Estruturação e Plano de Ação:</h4>
             <ul>
               <li><strong>Passo 1:</strong> Mapear os editais mais procurados (ESA, EsPCEx, Fuzileiros Navais, THE-UFRJ, THE-UNIRIO).</li>
-              <li><strong>Passo 2:</strong> Criar bancos de questões (Simulados) que espelhem perfeitamente a divisão da prova (ex: X questões de Med, Y questões de Priolli).</li>
+              <li><strong>Passo 2:</strong> Criar bancos de questões (Simulados) que espelhem perfeitamente a divisão da prova (ex: X questões de teoria contemporânea, Y questões de teoria clássica).</li>
               <li><strong>Passo 3:</strong> Vender esses pacotes como um produto de pagamento único na loja do app (ex: Pack ESA 2026 - R$ 39,90).</li>
             </ul>
 
@@ -116,9 +116,9 @@ export default function BusinessPlanPage() {
             <h4>Estruturação e Plano de Ação:</h4>
             <ul>
               <li><strong>Passo 1:</strong> Inscrever-se no Programa de Associados da Amazon.</li>
-              <li><strong>Passo 2:</strong> Gerar links rastreáveis para: <em>Teoria da Música (Bohumil Med)</em>, <em>Princípios de Ritmo e Harmonia (Esther Scliar)</em> e <em>Princípios Básicos da Música (Priolli)</em>.</li>
+              <li><strong>Passo 2:</strong> Gerar links rastreáveis para: <em>Teoria da Música</em>, <em>Princípios de Ritmo e Harmonia</em> e <em>Princípios Básicos da Música</em>.</li>
               <li><strong>Passo 3:</strong> Criar uma seção "Biblioteca Recomendada" dentro do app.</li>
-              <li><strong>Passo 4:</strong> Nas explicações teóricas do app, adicionar rodapés: <em>"Para aprofundar este tema, consulte o Capítulo 4 do Med. (Compre o livro aqui)"</em>.</li>
+              <li><strong>Passo 4:</strong> Nas explicações teóricas do app, adicionar rodapés: <em>"Para aprofundar este tema, consulte os manuais recomendados. (Compre o livro aqui)"</em>.</li>
             </ul>
 
             <hr className="my-8" />

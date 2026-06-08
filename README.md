@@ -10,9 +10,9 @@ Abandonamos a leitura densa e massante dos livros teóricos tradicionais e trans
 
 Nossa base curricular não é genérica. O projeto mapeia e transforma em micro-aulas os **três autores mais cobrados** pelas maiores bancas militares e universitárias do Brasil:
 
-1. **Esther Scliar** - Rigor analítico e estrutural profundo (Elementos de Teoria Musical).
-2. **Bohumil Med** - A base contemporânea, ditados e exercícios (Teoria da Música).
-3. **Maria Luiza de Mattos Priolli** - Fundamentos clássicos e tradição de leitura (Princípios Básicos da Música para a Juventude).
+1. **Teoria Clássica** - Rigor analítico e estrutural profundo.
+2. **Teoria Contemporânea** - A base contemporânea, ditados e exercícios.
+3. **Fundamentos Musicais** - Fundamentos clássicos e tradição de leitura.
 
 Com essa base, abrangemos desde Acordes, Escalas e Intervalos até Ornamentos e Modulação, tudo mastigado através de quizzes dinâmicos.
 
