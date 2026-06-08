@@ -40,12 +40,12 @@ export function StepBuilder({ step, index, onChange, onRemove }: Props) {
 
   const renderForm = () => {
     switch (step.type) {
-      case 'theory': return <TheoryForm data={step.data} onChange={updateData} />;
-      case 'quiz': return <QuizForm data={step.data} onChange={updateData} />;
-      case 'true_false': return <TrueFalseForm data={step.data} onChange={updateData} />;
-      case 'match_columns': return <MatchColumnsForm data={step.data} onChange={updateData} />;
-      case 'memory_game': return <MemoryGameForm data={step.data} onChange={updateData} />;
-      case 'fill_blanks': return <FillBlanksForm data={step.data} onChange={updateData} />;
+      case 'theory': return <TheoryForm data={step.data as any} onChange={updateData} />;
+      case 'quiz': return <QuizForm data={step.data as any} onChange={updateData} />;
+      case 'true_false': return <TrueFalseForm data={step.data as any} onChange={updateData} />;
+      case 'match_columns': return <MatchColumnsForm data={step.data as any} onChange={updateData} />;
+      case 'memory_game': return <MemoryGameForm data={step.data as any} onChange={updateData} />;
+      case 'fill_blanks': return <FillBlanksForm data={step.data as any} onChange={updateData} />;
       default: return null;
     }
   };
