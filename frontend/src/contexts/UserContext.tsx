@@ -9,6 +9,11 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  sendSignInLinkToEmail,
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+  fetchSignInMethodsForEmail,
+  getAdditionalUserInfo,
   User as FirebaseUser
 } from 'firebase/auth';
 import { db, auth } from '@/lib/firebase';
@@ -39,6 +44,9 @@ interface UserContextType {
   isUserLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, username: string, email: string, password: string) => Promise<void>;
+  checkEmailExists: (email: string) => Promise<boolean>;
+  sendMagicLink: (email: string) => Promise<void>;
+  finishMagicLinkSignup: (email: string, windowUrl: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   addXP: (amount: number) => Promise<void>;
@@ -135,6 +143,57 @@ export function UserProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const checkEmailExists = async (email: string) => {
+    try {
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      return methods.length > 0;
+    } catch (error) {
+      console.error('Error checking email:', error);
+      return false;
+    }
+  };
+
+  const sendMagicLink = async (email: string) => {
+    const actionCodeSettings = {
+      // URL para onde o usuário será redirecionado após clicar no link
+      url: `${window.location.origin}/auth/finish-signup`,
+      handleCodeInApp: true,
+    };
+    await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    // Salva o email localmente para não precisar digitar de novo na outra aba
+    window.localStorage.setItem('emailForSignIn', email);
+  };
+
+  const finishMagicLinkSignup = async (email: string, windowUrl: string) => {
+    if (isSignInWithEmailLink(auth, windowUrl)) {
+      const result = await signInWithEmailLink(auth, email, windowUrl);
+      const firebaseUser = result.user;
+      
+      // Cria o documento do usuário se for novo (isNewUser)
+      const additionalInfo = getAdditionalUserInfo(result);
+      const isNewUser = additionalInfo?.isNewUser;
+      
+      if (isNewUser) {
+        const userRef = doc(db, 'users', firebaseUser.uid);
+        await setDoc(userRef, {
+          name: 'Aluno',
+          username: `user_${firebaseUser.uid.substring(0,5)}`,
+          email: firebaseUser.email,
+          photoURL: `https://picsum.photos/seed/${firebaseUser.uid}/200`,
+          stats: { xp: 0, level: 1, streak: 0 },
+          achievements: [],
+          progress: {},
+          hasCompletedOnboarding: false,
+          createdAt: new Date().toISOString()
+        });
+      }
+      
+      window.localStorage.removeItem('emailForSignIn');
+    } else {
+      throw new Error('Link inválido ou expirado.');
+    }
+  };
+
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
@@ -208,7 +267,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <UserContext.Provider value={{ user, isUserLoading, login, signup, loginWithGoogle, logout, addXP, updateProgress, completeOnboarding }}>
+    <UserContext.Provider value={{ user, isUserLoading, login, signup, checkEmailExists, sendMagicLink, finishMagicLinkSignup, loginWithGoogle, logout, addXP, updateProgress, completeOnboarding }}>
       {children}
     </UserContext.Provider>
   );
