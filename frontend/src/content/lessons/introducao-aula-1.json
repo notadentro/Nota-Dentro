@@ -1,0 +1,111 @@
+{
+  "id": "intro-aula-1",
+  "slug": "introducao-aula-1",
+  "title": "O Despertar: A Festa, o Som e o Silêncio",
+  "description": "Uma introdução à música unindo a pedagogia de Odette Ernest Dias e Esther Scliar.",
+  "status": "available",
+  "module": 1,
+  "steps": [
+    {
+      "id": "tb-1",
+      "type": "theory",
+      "title": "A Festa da Música",
+      "avatar": "annie",
+      "data": {
+        "content": "Bem-vindo(a) à música! Antes de falarmos de regras, lembre-se: a técnica não é uma ferramenta fria, ela é a própria arte. A técnica é inseparável da sua sensibilidade e emoção. Aprender os fundamentos é aprender a esculpir o som para encontrar a sua própria expressão. Tocar deve ser, sempre, uma festa!"
+      }
+    },
+    {
+      "id": "tb-2",
+      "type": "theory",
+      "title": "A Matéria-Prima",
+      "avatar": "scliar",
+      "data": {
+        "content": "Para dar forma a essa expressão, precisamos conhecer nossas ferramentas. Como eu sempre digo nas minhas aulas de estruturação musical: a MÚSICA é uma arte cuja matéria-prima fundamental é o SOM. Mas existe um ingrediente secreto que molda o discurso musical: o SILÊNCIO."
+      }
+    },
+    {
+      "id": "tb-3",
+      "type": "theory",
+      "title": "O Silêncio",
+      "avatar": "scliar",
+      "data": {
+        "content": "O silêncio é a matéria-prima secundária. Ele não é o vazio absoluto; ele depende do som para existir e possui apenas uma qualidade: a DURAÇÃO (o tempo que ele ocupa)."
+      }
+    },
+    {
+      "id": "tb-4",
+      "type": "theory",
+      "title": "As Propriedades do Som",
+      "avatar": "scliar",
+      "data": {
+        "content": "Todo som musical que você produzir terá simultaneamente 4 propriedades: ALTURA (se é grave ou agudo), INTENSIDADE (se é forte ou fraco), TIMBRE (a 'cor' do som, sua voz única) e DURAÇÃO (o tempo de extensão)."
+      }
+    },
+    {
+      "id": "ch-1",
+      "type": "quiz",
+      "title": "A Filosofia da Técnica",
+      "avatar": "annie",
+      "data": {
+        "question": "Segundo a pedagogia de Odette Ernest Dias, qual deve ser a sua atitude ao estudar os elementos técnicos da música (como as propriedades do som)?",
+        "options": [
+          "A técnica deve ser estudada de forma mecânica e fria, separada da emoção.",
+          "A técnica é inseparável da arte, da musicalidade e da emoção. É a busca da própria expressão.",
+          "A técnica serve apenas para decorar regras teóricas para a prova."
+        ],
+        "correctAnswer": "A técnica é inseparável da arte, da musicalidade e da emoção. É a busca da própria expressão.",
+        "explanation": "Perfeito! Como dizia Odette: 'a técnica não é uma ferramenta - ela é a própria arte, a mão inseparável do pensamento' e da emoção."
+      }
+    },
+    {
+      "id": "ch-2",
+      "type": "true_false",
+      "title": "O Silêncio Tem Altura?",
+      "avatar": "scliar",
+      "data": {
+        "statement": "Você está em silêncio antes de tocar a primeira nota. Na minha concepção teórica, esse silêncio NÃO possui Altura (grave/agudo), nem Intensidade, nem Timbre. Ele possui apenas Duração.",
+        "isTrue": true,
+        "explanation": "Exatamente! Essa é uma regra de ouro: o silêncio é a nossa matéria-prima secundária e possui APENAS a qualidade da Duração."
+      }
+    },
+    {
+      "id": "ch-3",
+      "type": "match_columns",
+      "title": "Expressando as Propriedades",
+      "avatar": "odette",
+      "data": {
+        "question": "Conecte as 4 propriedades do som à forma como você as usará para se expressar:",
+        "pairs": [
+          {
+            "left": "Altura",
+            "right": "Cantar uma nota mais aguda para gerar tensão."
+          },
+          {
+            "left": "Intensidade",
+            "right": "Tocar mais forte (volume) para demonstrar energia."
+          },
+          {
+            "left": "Timbre",
+            "right": "A cor única da voz ou instrumento."
+          },
+          {
+            "left": "Duração",
+            "right": "Sustentar um som longo para emocionar."
+          }
+        ],
+        "explanation": "Cada propriedade do som é uma tinta diferente para pintar a emoção musical!"
+      }
+    },
+    {
+      "id": "ch-4",
+      "type": "sandbox_audio",
+      "title": "A Invenção",
+      "avatar": "annie",
+      "data": {
+        "question": "A pedagogia de Scliar exige ESCUTA e INVENÇÃO. Use o laboratório abaixo para inventar o seu primeiro som, alterando os níveis de Altura e Intensidade.",
+        "successMessage": "Você acaba de manipular a matéria-prima da música! O som é seu."
+      }
+    }
+  ]
+}

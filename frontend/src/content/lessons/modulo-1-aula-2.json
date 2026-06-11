@@ -1,0 +1,75 @@
+{
+  "id": "modulo-1-aula-2",
+  "slug": "mapa-do-som-pauta",
+  "title": "O Mapa do Som: Pauta e Notação",
+  "description": "Descubra como os sons são mapeados no papel e conheça a Pauta Musical.",
+  "status": "available",
+  "module": 1,
+  "steps": [
+    {
+      "id": "tb-1",
+      "type": "theory",
+      "title": "O Mapa do Som",
+      "avatar": "annie",
+      "data": {
+        "content": "Na aula passada, descobrimos que a técnica é a nossa ferramenta de expressão e que a música é a arte de esculpir o som e o silêncio. Mas como registramos as nossas invenções para que outros músicos possam tocá-las? Precisamos de um mapa! A isso damos o nome de notação musical."
+      }
+    },
+    {
+      "id": "tb-2",
+      "type": "theory",
+      "title": "A Origem das Notas",
+      "avatar": "priolli",
+      "data": {
+        "content": "Historicamente, a notação evoluiu muito. Vocês sabiam que os nomes das notas que utilizamos (Dó, Ré, Mi, Fá, Sol, Lá, Si) derivam das sílabas iniciais do Hino a São João Batista (Ut queant laxis)? Foi o monge Guido D'Arezzo quem organizou isso e ajudou a consolidar o sistema de linhas para escrever a música!"
+      }
+    },
+    {
+      "id": "tb-3",
+      "type": "theory",
+      "title": "A Pauta (Pentagrama)",
+      "avatar": "scliar",
+      "data": {
+        "content": "Exato, professora Priolli. E o sistema de linhas que utilizamos hoje se chama Pauta ou Pentagrama. É um conjunto de 5 linhas horizontais paralelas que formam 4 espaços entre si. Mas preste muita atenção a esta regra estrutural: estas linhas e espaços são SEMPRE numerados e contados de baixo para cima."
+      }
+    },
+    {
+      "id": "ch-1",
+      "type": "quiz",
+      "title": "Origem das Notas",
+      "avatar": "priolli",
+      "data": {
+        "question": "A notação musical e o nome das notas têm uma origem histórica fascinante, muito cobrada em provas teóricas. De onde derivam os nomes das notas musicais que utilizamos hoje?",
+        "options": [
+          "De uma fórmula matemática grega criada por Pitágoras.",
+          "Das sílabas iniciais do Hino a São João Batista, organizado por Guido D'Arezzo.",
+          "De uma invenção aleatória de compositores do século XX."
+        ],
+        "correctAnswer": "Das sílabas iniciais do Hino a São João Batista, organizado por Guido D'Arezzo.",
+        "explanation": "Isso mesmo! Saber esse detalhe histórico te coloca à frente de muitos candidatos. Guido D'Arezzo usou este hino para batizar as notas e facilitar o ensino da entoação."
+      }
+    },
+    {
+      "id": "ch-2",
+      "type": "true_false",
+      "title": "A Base da Pauta",
+      "avatar": "scliar",
+      "data": {
+        "statement": "Se eu pedir para você escrever uma nota na 1ª linha da Pauta (Pentagrama), você deve escrevê-la na linha mais alta (a que fica no topo do desenho).",
+        "isTrue": false,
+        "explanation": "Nunca se esqueça da regra espacial: as 5 linhas e os 4 espaços do pentagrama são sempre contados de baixo para cima. A 1ª linha é a base de tudo."
+      }
+    },
+    {
+      "id": "ch-3",
+      "type": "drag_drop_pauta",
+      "title": "A Pauta na Prática",
+      "avatar": "odette",
+      "data": {
+        "question": "Vamos testar o seu olhar espacial na prática! Arraste a nota musical e posicione-a exatamente no 3º espaço da pauta.",
+        "expectedTarget": "space-3",
+        "successMessage": "Lindo! Você encontrou o 3º espaço. Aos poucos, você vai ler essas posições tão rápido quanto lê palavras de um livro!"
+      }
+    }
+  ]
+}
