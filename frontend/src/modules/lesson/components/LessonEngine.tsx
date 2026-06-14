@@ -15,6 +15,8 @@ import { FillBlanksView } from './FillBlanksView';
 import { SandboxAudioView } from './SandboxAudioView';
 import { TeacherBubble } from './TeacherBubble';
 import { StaffDragDropView } from './StaffDragDropView';
+import { RhythmicPizzaView } from './RhythmicPizzaView';
+import { GraphicShowcaseView } from './GraphicShowcaseView';
 
 interface LessonEngineProps {
   lesson: Lesson;
@@ -75,7 +77,7 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
   if (!currentStep && !showVictory) return null;
 
   // Check if current step can be bypassed
-  const isTheory = currentStep?.type === 'theory';
+  const isTheory = currentStep?.type === 'theory' || currentStep?.type === 'graphic_showcase';
   const isCompleted = isTheory || completedSteps[currentIndex] || !currentStep;
 
   if (showVictory) {
@@ -130,6 +132,8 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
         return <SandboxAudioView data={currentStep.data as SandboxAudioStep} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} />;
       case 'drag_drop_pauta':
         return <StaffDragDropView step={currentStep.data as DragDropPautaStep} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} />;
+      case 'graphic_showcase':
+        return <GraphicShowcaseView data={currentStep.data as any} avatar={currentStep.avatar} onComplete={markStepComplete} isCompleted={completedSteps[currentIndex]} />;
       default:
         return null;
     }
@@ -174,7 +178,7 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
             </h2>
             
             <div className="flex-1 flex flex-col justify-center">
-              {currentStep.avatar ? (
+              {currentStep.avatar && currentStep.type !== 'drag_drop_pizza' && currentStep.type !== 'graphic_showcase' ? (
                 <TeacherBubble avatar={currentStep.avatar}>
                   {renderStepContent()}
                 </TeacherBubble>
@@ -183,6 +187,14 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
                   {renderStepContent()}
                 </div>
               )}
+                {currentStep.type === 'drag_drop_pizza' && (
+                <RhythmicPizzaView 
+                    data={currentStep.data as any} 
+                    isCompleted={completedSteps[currentIndex]}
+                    onSuccess={markStepComplete}
+                    onFail={loseLife}
+                />
+                )}
             </div>
             
           </motion.div>
@@ -262,7 +274,7 @@ function QuizView({ data, isCompleted, onSuccess, onFail }: { data: QuizStep, is
             const isThisCorrect = isCompleted && opt === data.correctAnswer;
             const isLastOdd = data.options.length % 2 !== 0 && index === data.options.length - 1;
             
-            let btnClass = "border-2 border-brand-graphite/20 bg-background text-brand-black dark:text-brand-white hover:bg-brand-graphite/5 shadow-[0_2px_0_0_rgba(0,0,0,0.1)]";
+            let btnClass = "border-2 border-border bg-card text-card-foreground shadow-[0_2px_0_0_rgba(0,0,0,0.1)] hover:border-primary/70 hover:shadow-[0_0_15px_rgba(201,168,17,0.3)] hover:-translate-y-1 transition-all duration-300";
             
             if (isThisCorrect) {
               btnClass = "border-[#2D8A5C] bg-[#2D8A5C]/10 text-[#2D8A5C] shadow-[0_0_20px_#2D8A5C] animate-pulse border-4";
@@ -365,7 +377,7 @@ function TrueFalseView({ data, isCompleted, onSuccess, onFail }: { data: TrueFal
               "p-4 md:p-6 rounded-2xl text-lg md:text-xl font-bold text-center transition-all border-2 shadow-[0_4px_0_0_rgba(0,0,0,0.1)]",
               isCompleted && data.isTrue ? "border-[#2D8A5C] bg-[#2D8A5C] text-white shadow-[0_0_20px_#2D8A5C] animate-pulse border-4" 
               : selected === true && isWrong ? "border-red-500 bg-red-500 text-white shadow-none"
-              : "border-brand-graphite/20 bg-background hover:bg-brand-graphite/5 text-brand-black dark:text-brand-white"
+              : "border-border bg-card text-card-foreground hover:border-primary/70 hover:shadow-[0_0_15px_rgba(201,168,17,0.3)] hover:-translate-y-1"
             )}
           >
             Verdadeiro
@@ -379,7 +391,7 @@ function TrueFalseView({ data, isCompleted, onSuccess, onFail }: { data: TrueFal
               "p-4 md:p-6 rounded-2xl text-lg md:text-xl font-bold text-center transition-all border-2 shadow-[0_4px_0_0_rgba(0,0,0,0.1)]",
               isCompleted && !data.isTrue ? "border-[#2D8A5C] bg-[#2D8A5C] text-white shadow-[0_0_20px_#2D8A5C] animate-pulse border-4" 
               : selected === false && isWrong ? "border-red-500 bg-red-500 text-white shadow-none"
-              : "border-brand-graphite/20 bg-background hover:bg-brand-graphite/5 text-brand-black dark:text-brand-white"
+              : "border-border bg-card text-card-foreground hover:border-primary/70 hover:shadow-[0_0_15px_rgba(201,168,17,0.3)] hover:-translate-y-1"
             )}
           >
             Falso

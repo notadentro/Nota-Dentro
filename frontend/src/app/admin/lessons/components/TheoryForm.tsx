@@ -15,7 +15,7 @@ export function TheoryForm({ data, onChange }: Props) {
       <div>
         <label className="block text-sm font-bold text-muted-foreground mb-1">Conteúdo Teórico</label>
         <RichEditor 
-          content={data.content || ''} 
+          value={data.content || ''} 
           onChange={(content) => onChange({ ...data, content })}
         />
       </div>

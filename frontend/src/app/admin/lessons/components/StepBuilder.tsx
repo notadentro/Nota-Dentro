@@ -26,7 +26,11 @@ const typeLabels: Record<StepType, string> = {
   true_false: 'Verdadeiro ou Falso',
   match_columns: 'Ligar Colunas',
   memory_game: 'Jogo da Memória',
-  fill_blanks: 'Preencher Lacunas'
+  fill_blanks: 'Preencher Lacunas',
+  sandbox_audio: 'Laboratório de Áudio',
+  drag_drop_pauta: 'Arrastar na Pauta',
+  drag_drop_pizza: 'Pizza Rítmica',
+  graphic_showcase: 'Vitrine Gráfica'
 };
 
 export function StepBuilder({ step, index, onChange, onRemove }: Props) {

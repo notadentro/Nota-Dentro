@@ -183,17 +183,12 @@ export default function LandingPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      const isNewUser = await loginWithGoogle();
+      await loginWithGoogle();
       toast({
         title: 'Login realizado!',
         description: 'Entrando com a conta do Google...',
       });
-      // Se for usuário novo, encaminhamos pro profile setup
-      if (isNewUser) {
-        router.push('/onboarding/profile');
-      } else {
-        router.push('/dashboard');
-      }
+      router.push('/dashboard');
     } catch (error: any) {
       toast({
         variant: 'destructive',

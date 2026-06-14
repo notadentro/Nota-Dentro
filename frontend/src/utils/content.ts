@@ -50,7 +50,8 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
 }
 
 import { DATABASE } from '@/constants/curriculum';
-import { Trail, Lesson } from '@/types/lesson';
+import { Trail } from '@/types/curriculum';
+import { Lesson } from '@/types/lesson';
 
 export async function getDynamicCurriculum(): Promise<Trail[]> {
   const dynamicDb: Trail[] = JSON.parse(JSON.stringify(DATABASE));
@@ -81,7 +82,7 @@ export async function getDynamicCurriculum(): Promise<Trail[]> {
     for (const trail of dynamicDb) {
       for (const course of trail.courses) {
         for (const module of course.modules) {
-          const index = module.lessons.findIndex(l => l.id === dLesson.id || l.slug === dLesson.slug);
+          const index = module.lessons.findIndex((l: any) => l.id === dLesson.id || l.slug === dLesson.slug);
           if (index !== -1) {
             module.lessons[index] = {
               ...module.lessons[index],

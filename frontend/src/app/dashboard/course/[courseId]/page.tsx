@@ -12,7 +12,7 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
   let trailId = '';
 
   for (const trail of dynamicDb) {
-    const course = trail.courses.find(c => c.id === resolvedParams.courseId);
+    const course = trail.courses.find((c: any) => c.id === resolvedParams.courseId);
     if (course) {
       foundCourse = course;
       trailId = trail.id;

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="1058.000000pt"
+   height="911.000000pt"
+   viewBox="0 0 1058.000000 911.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg2"
+   sodipodi:docname="pausa-semifusa.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath27">
+      <path
+         id="path28"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:7.5"
+         d="m 0,9110 v -19.9951 h 33.544922 c 1.490791,7.1153 4.277236,13.8578 8.291016,19.9951 z" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview2"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="pt"
+     inkscape:zoom="0.63968167"
+     inkscape:cx="705.81982"
+     inkscape:cy="606.55169"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <metadata
+     id="metadata1">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,911.000000) scale(0.100000,-0.100000)"
+     fill="#000000"
+     stroke="none"
+     id="g2">
+    <path
+       d="M0 9100 c0 -7 1770 -10 5290 -10 3520 0 5290 3 5290 10 0 7 -1770 10 -5290 10 -3520 0 -5290 -3 -5290 -10z"
+       id="path1"
+       clip-path="url(#clipPath27)" />
+    <path
+       d="M7761 8918 c-163 -426 -218 -562 -243 -603 -109 -178 -257 -269 -428 -263 -60 2 -75 6 -73 18 1 8 10 53 19 99 15 72 16 95 6 165 -29 197 -181 371 -383 436 -85 28 -222 32 -309 11 -169 -42 -342 -191 -395 -341 -75 -213 -7 -441 174 -583 128 -101 243 -132 456 -123 307 12 541 71 705 177 33 21 63 39 65 39 14 0 -6 -48 -134 -324 -77 -166 -219 -474 -316 -686 -97 -211 -190 -411 -207 -444 -55 -108 -162 -189 -286 -215 -62 -13 -189 -15 -196 -3 -3 5 2 28 10 53 9 24 18 76 21 114 12 155 -42 290 -159 401 -124 117 -239 164 -403 164 -152 0 -274 -47 -385 -148 -75 -67 -114 -122 -145 -207 -50 -131 -43 -264 19 -390 65 -130 185 -236 326 -287 60 -21 80 -23 255 -22 206 1 315 14 470 59 89 26 240 93 303 135 21 15 32 18 32 9 0 -7 -151 -344 -336 -749 -369 -811 -367 -807 -483 -869 -67 -35 -169 -61 -246 -61 -76 0 -80 6 -61 82 31 125 16 265 -42 372 -43 80 -155 187 -242 230 -126 61 -252 79 -377 52 -182 -39 -362 -188 -418 -346 -84 -237 15 -486 246 -623 112 -66 182 -82 349 -81 310 2 551 58 745 175 37 23 69 39 71 36 5 -4 -25 -70 -281 -627 -62 -135 -174 -380 -250 -545 -76 -165 -150 -318 -166 -341 -81 -118 -215 -179 -379 -172 -60 2 -75 6 -73 18 1 8 9 51 19 95 35 164 -18 328 -146 455 -232 229 -586 227 -816 -4 -212 -213 -207 -517 12 -726 131 -124 231 -160 449 -160 306 0 558 58 747 171 45 27 83 47 85 45 2 -2 -62 -168 -142 -367 -81 -200 -230 -569 -330 -819 -101 -250 -245 -606 -320 -790 -75 -184 -137 -343 -138 -354 -2 -17 5 -18 88 -17 50 1 93 5 96 9 3 4 36 77 72 162 36 85 122 288 192 450 125 288 604 1404 1187 2760 160 371 344 801 411 955 66 154 135 314 152 355 18 41 164 381 325 755 161 374 318 741 350 815 32 74 225 524 430 1000 205 476 419 975 477 1110 58 135 114 262 124 282 11 21 19 40 19 43 0 3 -43 5 -95 5 -90 0 -96 -1 -104 -22z"
+       id="path2" />
+  </g>
+</svg>

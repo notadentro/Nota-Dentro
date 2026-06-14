@@ -71,7 +71,7 @@ export function MemoryGame({ data, onComplete }: MemoryGameProps) {
   return (
     <div className="flex flex-col gap-6 md:gap-8 w-full">
       <p className="text-xl md:text-2xl font-bold text-brand-black dark:text-brand-white leading-snug">
-        {data.question}
+        {data?.question}
       </p>
       
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">

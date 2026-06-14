@@ -5,6 +5,7 @@ import { MemoryGameStep } from '@/types/lesson';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Star, X } from 'lucide-react';
+import { MusicSymbol, MusicSymbolName } from '@/components/music-symbols';
 
 interface Props {
   data: MemoryGameStep;
@@ -19,7 +20,30 @@ interface Card {
   pairId: number;
 }
 
+function getSymbolName(text: string): MusicSymbolName | null {
+  const t = text.toLowerCase();
+  if (t.includes('pausa')) {
+    if (t.includes('semibreve')) return 'rest-semibreve';
+    if (t.includes('semínima') || t.includes('seminima')) return 'rest-seminima';
+    if (t.includes('mínima') || t.includes('minima')) return 'rest-minima';
+    if (t.includes('semicolcheia')) return 'rest-semicolcheia';
+    if (t.includes('colcheia')) return 'rest-colcheia';
+    if (t.includes('semifusa')) return 'rest-semifusa';
+    if (t.includes('fusa')) return 'rest-fusa';
+  } else {
+    if (t.includes('semibreve')) return 'note-semibreve';
+    if (t.includes('semínima') || t.includes('seminima')) return 'note-seminima';
+    if (t.includes('mínima') || t.includes('minima')) return 'note-minima';
+    if (t.includes('semicolcheia')) return 'note-semicolcheia';
+    if (t.includes('colcheia')) return 'note-colcheia';
+    if (t.includes('semifusa')) return 'note-semifusa';
+    if (t.includes('fusa')) return 'note-fusa';
+  }
+  return null;
+}
+
 export function MemoryGameView({ data, isCompleted, onSuccess, onFail }: Props) {
+  console.log("MEMORY GAME DATA:", data);
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedIndexes, setFlippedIndexes] = useState<number[]>([]);
   const [matchedPairIds, setMatchedPairIds] = useState<number[]>([]);
@@ -82,8 +106,8 @@ export function MemoryGameView({ data, isCompleted, onSuccess, onFail }: Props) 
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
-      <p className="text-xl md:text-2xl font-medium text-center mb-4 text-brand-black dark:text-brand-white">
-        {data.question}
+      <p className="text-xl md:text-2xl font-medium text-center mb-4">
+        {data?.question}
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 perspective-1000">
@@ -122,13 +146,18 @@ export function MemoryGameView({ data, isCompleted, onSuccess, onFail }: Props) 
                 {/* Frente da Carta */}
                 <div 
                   className={cn(
-                    "absolute w-full h-full backface-hidden rounded-2xl border-4 shadow-xl flex items-center justify-center p-4 text-center",
+                    "absolute w-full h-full backface-hidden rounded-2xl border-4 shadow-xl flex flex-col items-center justify-center p-2 md:p-4 text-center",
                     isMatched 
                       ? "bg-[#2D8A5C]/10 border-[#2D8A5C] text-[#2D8A5C]" 
                       : "bg-white border-brand-gold text-brand-black dark:bg-brand-black dark:text-brand-white"
                   )}
                   style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                 >
+                  {getSymbolName(card.text) && (
+                    <div className="w-12 h-12 md:w-16 md:h-16 mb-2">
+                      <MusicSymbol name={getSymbolName(card.text)!} />
+                    </div>
+                  )}
                   <span className="font-bold text-sm md:text-base lg:text-lg break-words leading-tight">
                     {card.text}
                   </span>
@@ -148,7 +177,7 @@ export function MemoryGameView({ data, isCompleted, onSuccess, onFail }: Props) 
           >
             <Star className="text-[#2D8A5C] fill-[#2D8A5C] w-12 h-12 mb-4" />
             <p className="text-xl text-[#2D8A5C] font-bold mb-2">Desafio Concluído!</p>
-            <p className="text-brand-black dark:text-white/90">{data.explanation}</p>
+            <p className="opacity-90 font-medium" style={{ color: '#1A1A1A' }}>{data.explanation}</p>
           </motion.div>
         )}
       </AnimatePresence>

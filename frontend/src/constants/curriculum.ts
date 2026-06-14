@@ -133,10 +133,10 @@ const SCLIAR_LESSONS: Lesson[] = [
   },
   {
     id: '3',
-    slug: 'duracao-e-intensidade',
-    title: 'Duração e Intensidade',
-    description: 'Descubra a diferença entre sons longos/curtos e fortes/fracos.',
-    status: 'locked',
+    slug: 'desenho-do-tempo',
+    title: 'O Desenho do Tempo: Figuras, Pausas e Proporção',
+    description: 'Descubra que na música o tempo não é medido em relógios, mas sim em proporções! A matemática por trás do ritmo.',
+    status: 'available',
     module: 1,
     steps: []
   },

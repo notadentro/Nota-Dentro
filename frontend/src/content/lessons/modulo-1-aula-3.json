@@ -1,0 +1,108 @@
+{
+  "id": "3",
+  "slug": "conhecendo-o-elenco",
+  "title": "Conhecendo o Elenco: As Figuras e Pausas",
+  "description": "Para que a nossa festa musical aconteça no ritmo certo, precisamos aprender a desenhar o tempo. Vamos conhecer os nossos atores principais!",
+  "status": "available",
+  "module": 1,
+  "steps": [
+    {
+      "id": "tb-1",
+      "type": "theory",
+      "title": "Desenhando o Tempo",
+      "avatar": "odette",
+      "data": {
+        "content": "Para que a nossa festa musical aconteça no ritmo certo, precisamos aprender a 'desenhar' o tempo. Na música, nós usamos símbolos muito simpáticos para dizer se um som ou um silêncio deve durar mais ou menos. Vamos conhecer os nossos atores principais?"
+      }
+    },
+    {
+      "id": "tb-2",
+      "type": "theory",
+      "title": "Anatomia da Figura",
+      "avatar": "priolli",
+      "data": {
+        "content": "As figuras de som, também chamadas de valores positivos, recebem formas diferentes. Elas podem ser formadas por até três partes: a **Cabeça** (que pode ser branca ou pintada), a **Haste** (um traço vertical) e o **Colchete** (ou bandeirola)."
+      }
+    },
+    {
+      "id": "tb-visual-1",
+      "type": "graphic_showcase",
+      "title": "A Anatomia das Figuras de Som",
+      "avatar": "mascarenhas",
+      "data": {
+        "content": "Olhem bem para os rostos delas na tabela acima! Da maior para a menor: Semibreve, Mínima, Semínima, Colcheia, Semicolcheia, Fusa e Semifusa. Memorizem, pois teoria e solfejo andam juntos, e logo vamos executá-las!",
+        "items": [
+          {"name": "Semibreve", "symbol": "note-semibreve", "description": "Apenas cabeça branca"},
+          {"name": "Mínima", "symbol": "note-minima", "description": "Cabeça branca + haste"},
+          {"name": "Semínima", "symbol": "note-seminima", "description": "Cabeça pintada + haste"},
+          {"name": "Colcheia", "symbol": "note-colcheia", "description": "Cabeça pintada + haste + 1 colchete"},
+          {"name": "Semicolcheia", "symbol": "note-semicolcheia", "description": "Cabeça pintada + haste + 2 colchetes"},
+          {"name": "Fusa", "symbol": "note-fusa", "description": "Cabeça pintada + haste + 3 colchetes"},
+          {"name": "Semifusa", "symbol": "note-semifusa", "description": "Cabeça pintada + haste + 4 colchetes"}
+        ]
+      }
+    },
+    {
+      "id": "tb-4",
+      "type": "theory",
+      "title": "O Lado do Silêncio",
+      "avatar": "scliar",
+      "data": {
+        "content": "Perfeito. E não se esqueçam da nossa regra inquebrável: o silêncio também tem duração. Para cada figura representativa do som, existe um desenho correspondente exato para representar o silêncio. Nós os chamamos de Pausas."
+      }
+    },
+    {
+      "id": "tb-visual-2",
+      "type": "graphic_showcase",
+      "title": "As Pausas (Sinais de Silêncio)",
+      "avatar": "scliar",
+      "data": {
+        "items": [
+          {"name": "Pausa de Semibreve", "symbol": "rest-semibreve", "description": "Retângulo pendurado na 4ª linha da pauta"},
+          {"name": "Pausa de Mínima", "symbol": "rest-minima", "description": "Retângulo apoiado sobre a 3ª linha da pauta"},
+          {"name": "Pausa de Semínima", "symbol": "rest-seminima", "description": "O clássico 'ziguezague' vertical"},
+          {"name": "Pausa de Colcheia", "symbol": "rest-colcheia", "description": "Haste inclinada com 1 colchete à esquerda"},
+          {"name": "Pausa de Semicolcheia", "symbol": "rest-semicolcheia", "description": "Haste inclinada com 2 colchetes à esquerda"},
+          {"name": "Pausa de Fusa", "symbol": "rest-fusa", "description": "Haste inclinada com 3 colchetes à esquerda"},
+          {"name": "Pausa de Semifusa", "symbol": "rest-semifusa", "description": "Haste inclinada com 4 colchetes à esquerda"}
+        ]
+      }
+    },
+    {
+      "id": "ch-1",
+      "type": "quiz",
+      "title": "Anatomia da Nota",
+      "avatar": "priolli",
+      "data": {
+        "question": "Analisando a anatomia gráfica que acabamos de ver, quais são as três partes que podem compor uma figura de som?",
+        "options": [
+          "Pauta, Clave e Linha Suplementar.",
+          "Cabeça, Haste e Colchete.",
+          "Tom, Semitom e Coma."
+        ],
+        "correctAnswer": "Cabeça, Haste e Colchete.",
+        "explanation": "Isso mesmo! A Semibreve só tem cabeça, a Mínima tem cabeça e haste, e a Colcheia tem as três partes!",
+        "wrongExplanations": {
+          "Pauta, Clave e Linha Suplementar.": "Isso compõe a pauta musical, não a figura de som.",
+          "Tom, Semitom e Coma.": "Estes são intervalos e alturas."
+        }
+      }
+    },
+    {
+      "id": "ch-2",
+      "type": "memory_game",
+      "title": "Memória Visual",
+      "avatar": "scliar",
+      "data": {
+        "question": "Agora que você já olhou a tabela, vamos testar sua memória visual! Combine a Figura de Som com o desenho da sua respectiva Pausa.",
+        "pairs": [
+          { "item1": "Semibreve (Som)", "item2": "Pausa de Semibreve" },
+          { "item1": "Mínima (Som)", "item2": "Pausa de Mínima" },
+          { "item1": "Semínima (Som)", "item2": "Pausa de Semínima" },
+          { "item1": "Colcheia (Som)", "item2": "Pausa de Colcheia" }
+        ],
+        "explanation": "Excelente memória visual! Você já conhece os rostos de quem faz o ritmo acontecer."
+      }
+    }
+  ]
+}
