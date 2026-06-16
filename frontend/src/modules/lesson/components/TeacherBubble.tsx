@@ -6,44 +6,46 @@ interface TeacherBubbleProps {
   children: React.ReactNode;
 }
 
+import { PROFESSORS } from '@/constants/professors';
+
 const avatarConfig = {
   odette: {
-    name: "Mestra Odette",
+    name: PROFESSORS.odette.displayName,
     color: "bg-purple-50 border-purple-200",
     textColor: "text-purple-900",
     nameColor: "text-purple-700",
     image: "/avatares/odette.png"
   },
   scliar: {
-    name: "Mestra Scliar",
+    name: PROFESSORS.scliar.displayName,
     color: "bg-blue-50 border-blue-200",
     textColor: "text-blue-900",
     nameColor: "text-blue-700",
     image: "/avatares/scliar.png"
   },
   priolli: {
-    name: "Profª Priolli",
+    name: PROFESSORS.priolli.displayName,
     color: "bg-amber-50 border-amber-200",
     textColor: "text-amber-900",
     nameColor: "text-amber-700",
     image: "/avatares/priolli.png"
   },
   med: {
-    name: "Mestre Med",
+    name: PROFESSORS.med.displayName,
     color: "bg-emerald-50 border-emerald-200",
     textColor: "text-emerald-900",
     nameColor: "text-emerald-700",
     image: "/avatares/med.png"
   },
   mascarenhas: {
-    name: "Mestre Mascarenhas",
+    name: PROFESSORS.mascarenhas.displayName,
     color: "bg-orange-50 border-orange-200",
     textColor: "text-orange-900",
     nameColor: "text-orange-700",
     image: "/avatares/mascarenhas.png"
   },
   annie: {
-    name: "Profª Annie",
+    name: PROFESSORS.annie.displayName,
     color: "bg-rose-50 border-rose-200",
     textColor: "text-rose-900",
     nameColor: "text-rose-700",
