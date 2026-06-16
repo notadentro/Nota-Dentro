@@ -1,7 +1,6 @@
 import { Trail } from '@/types/curriculum';
 import { Lesson } from '@/types/lesson';
-
-
+import { PROFESSORS } from './professors';
 
 export const DATABASE: Trail[] = [
   {
@@ -20,7 +19,7 @@ export const DATABASE: Trail[] = [
             id: 'esa-teoria-1',
             title: 'Noções Básicas',
             description: 'Introdução à teoria musical focada no edital.',
-            author: 'Teoria Musical',
+            author: PROFESSORS.scliar.displayName,
             lessons: []
           }
         ]
@@ -35,14 +34,14 @@ export const DATABASE: Trail[] = [
             id: 'fn-teoria-1',
             title: 'Fundamentos do Som',
             description: 'Matéria-prima e Propriedades do Som',
-            author: 'Teoria Clássica',
+            author: PROFESSORS.med.displayName,
             lessons: []
           },
           {
             id: 'fn-teoria-2',
             title: 'Notação Musical',
             description: 'Aprofundamento na escrita musical.',
-            author: 'Teoria Contemporânea',
+            author: PROFESSORS.med.displayName,
             lessons: []
           }
         ]
