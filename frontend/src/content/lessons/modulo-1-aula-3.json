@@ -19,7 +19,7 @@
       "id": "tb-2",
       "type": "theory",
       "title": "Anatomia da Figura",
-      "avatar": "priolli",
+      "avatar": "maria_luisa",
       "data": {
         "content": "As figuras de som, também chamadas de valores positivos, recebem formas diferentes. Elas podem ser formadas por até três partes: a **Cabeça** (que pode ser branca ou pintada), a **Haste** (um traço vertical) e o **Colchete** (ou bandeirola)."
       }
@@ -28,7 +28,7 @@
       "id": "tb-visual-1",
       "type": "graphic_showcase",
       "title": "A Anatomia das Figuras de Som",
-      "avatar": "mascarenhas",
+      "avatar": "marcio",
       "data": {
         "content": "Olhem bem para os rostos delas na tabela acima! Da maior para a menor: Semibreve, Mínima, Semínima, Colcheia, Semicolcheia, Fusa e Semifusa. Memorizem, pois teoria e solfejo andam juntos, e logo vamos executá-las!",
         "items": [
@@ -46,7 +46,7 @@
       "id": "tb-4",
       "type": "theory",
       "title": "O Lado do Silêncio",
-      "avatar": "scliar",
+      "avatar": "ester",
       "data": {
         "content": "Perfeito. E não se esqueçam da nossa regra inquebrável: o silêncio também tem duração. Para cada figura representativa do som, existe um desenho correspondente exato para representar o silêncio. Nós os chamamos de Pausas."
       }
@@ -55,7 +55,7 @@
       "id": "tb-visual-2",
       "type": "graphic_showcase",
       "title": "As Pausas (Sinais de Silêncio)",
-      "avatar": "scliar",
+      "avatar": "ester",
       "data": {
         "items": [
           {"name": "Pausa de Semibreve", "symbol": "rest-semibreve", "description": "Retângulo pendurado na 4ª linha da pauta"},
@@ -72,7 +72,7 @@
       "id": "ch-1",
       "type": "quiz",
       "title": "Anatomia da Nota",
-      "avatar": "priolli",
+      "avatar": "maria_luisa",
       "data": {
         "question": "Analisando a anatomia gráfica que acabamos de ver, quais são as três partes que podem compor uma figura de som?",
         "options": [
@@ -92,7 +92,7 @@
       "id": "ch-2",
       "type": "memory_game",
       "title": "Memória Visual",
-      "avatar": "scliar",
+      "avatar": "ester",
       "data": {
         "question": "Agora que você já olhou a tabela, vamos testar sua memória visual! Combine a Figura de Som com o desenho da sua respectiva Pausa.",
         "pairs": [

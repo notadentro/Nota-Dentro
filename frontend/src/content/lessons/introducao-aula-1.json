@@ -19,7 +19,7 @@
       "id": "tb-2",
       "type": "theory",
       "title": "A Matéria-Prima",
-      "avatar": "scliar",
+      "avatar": "ester",
       "data": {
         "content": "Para dar forma a essa expressão, precisamos conhecer nossas ferramentas. Como eu sempre digo nas minhas aulas de estruturação musical: a MÚSICA é uma arte cuja matéria-prima fundamental é o SOM. Mas existe um ingrediente secreto que molda o discurso musical: o SILÊNCIO."
       }
@@ -28,7 +28,7 @@
       "id": "tb-3",
       "type": "theory",
       "title": "O Silêncio",
-      "avatar": "scliar",
+      "avatar": "ester",
       "data": {
         "content": "O silêncio é a matéria-prima secundária. Ele não é o vazio absoluto; ele depende do som para existir e possui apenas uma qualidade: a DURAÇÃO (o tempo que ele ocupa)."
       }
@@ -37,7 +37,7 @@
       "id": "tb-4",
       "type": "theory",
       "title": "As Propriedades do Som",
-      "avatar": "scliar",
+      "avatar": "ester",
       "data": {
         "content": "Todo som musical que você produzir terá simultaneamente 4 propriedades: ALTURA (se é grave ou agudo), INTENSIDADE (se é forte ou fraco), TIMBRE (a 'cor' do som, sua voz única) e DURAÇÃO (o tempo de extensão)."
       }
@@ -62,7 +62,7 @@
       "id": "ch-2",
       "type": "true_false",
       "title": "O Silêncio Tem Altura?",
-      "avatar": "scliar",
+      "avatar": "ester",
       "data": {
         "statement": "Você está em silêncio antes de tocar a primeira nota. Na minha concepção teórica, esse silêncio NÃO possui Altura (grave/agudo), nem Intensidade, nem Timbre. Ele possui apenas Duração.",
         "isTrue": true,

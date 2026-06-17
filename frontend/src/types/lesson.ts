@@ -127,7 +127,7 @@ export interface LessonStep {
   type: StepType;
   title: string;
   source?: string; // Fonte bibliográfica. Ex: "Teoria Clássica", "Fundamentos Musicais"
-  avatar?: 'odette' | 'scliar' | 'priolli' | 'med' | 'mascarenhas' | 'annie'; // Professor avatar
+  avatar?: 'odette' | 'ester' | 'maria_luisa' | 'bohdan' | 'marcio' | 'annie'; // Professor avatar
   data: TheoryStep | QuizStep | TrueFalseStep | MatchColumnsStep | MemoryGameStep | FillBlanksStep | SandboxAudioStep | DragDropPautaStep | DragDropPizzaStep | GraphicShowcaseStep | DragDropPyramidStep | FullPyramidStep;
 }
 

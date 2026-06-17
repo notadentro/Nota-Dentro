@@ -1,26 +1,26 @@
 export const PROFESSORS = {
-  med: {
-    id: 'med',
+  bohdan: {
+    id: 'bohdan',
     displayName: 'Prof. Bohdan',
-    avatar: '/avatares/med.png',
+    avatar: '/avatares/bohdan.png',
     instrument: 'Teoria Musical',
   },
-  scliar: {
-    id: 'scliar',
+  ester: {
+    id: 'ester',
     displayName: 'Profa. Ester',
-    avatar: '/avatares/scliar.png',
+    avatar: '/avatares/ester.png',
     instrument: 'Musicologia',
   },
-  priolli: {
-    id: 'priolli',
+  maria_luisa: {
+    id: 'maria_luisa',
     displayName: 'Profa. Maria Luísa',
-    avatar: '/avatares/priolli.png',
+    avatar: '/avatares/maria_luisa.png',
     instrument: 'Piano',
   },
-  mascarenhas: {
-    id: 'mascarenhas',
+  marcio: {
+    id: 'marcio',
     displayName: 'Prof. Márcio',
-    avatar: '/avatares/mascarenhas.png',
+    avatar: '/avatares/marcio.png',
     instrument: 'Acordeão',
   },
   odette: {
