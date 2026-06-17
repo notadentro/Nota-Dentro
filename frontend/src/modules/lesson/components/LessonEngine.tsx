@@ -17,6 +17,9 @@ import { TeacherBubble } from './TeacherBubble';
 import { StaffDragDropView } from './StaffDragDropView';
 import { RhythmicPizzaView } from './RhythmicPizzaView';
 import { GraphicShowcaseView } from './GraphicShowcaseView';
+import { PyramidDragDropView } from './PyramidDragDropView';
+import { FullPyramidView } from './FullPyramidView';
+import { MusicSymbol, MusicSymbolName } from '@/components/music-symbols';
 
 interface LessonEngineProps {
   lesson: Lesson;
@@ -144,6 +147,10 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
         return <StaffDragDropView step={currentStep.data as DragDropPautaStep} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} />;
       case 'graphic_showcase':
         return <GraphicShowcaseView data={currentStep.data as any} avatar={currentStep.avatar} onComplete={markStepComplete} isCompleted={completedSteps[currentIndex]} />;
+      case 'drag_drop_pyramid':
+        return <PyramidDragDropView data={currentStep.data as any} avatar={currentStep.avatar} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} onFail={loseLife} />;
+      case 'full_pyramid':
+        return <FullPyramidView data={currentStep.data as any} avatar={currentStep.avatar} isCompleted={completedSteps[currentIndex]} onComplete={markStepComplete} />;
       default:
         return null;
     }
@@ -184,14 +191,14 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -20, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-2xl flex flex-col flex-1"
+            className={cn("w-full flex flex-col flex-1", currentStep.type === 'full_pyramid' ? "max-w-full md:max-w-5xl" : "max-w-2xl")}
           >
             <h2 className="text-2xl md:text-3xl font-bold font-headline mb-4 md:mb-8 text-center text-brand-black dark:text-brand-white">
                 {currentStep.title}
             </h2>
             
             <div className="flex-1 flex flex-col justify-center">
-              {currentStep.avatar && currentStep.type !== 'drag_drop_pizza' && currentStep.type !== 'graphic_showcase' ? (
+              {currentStep.avatar && currentStep.type !== 'drag_drop_pizza' && currentStep.type !== 'graphic_showcase' && currentStep.type !== 'drag_drop_pyramid' && currentStep.type !== 'full_pyramid' ? (
                 <TeacherBubble avatar={currentStep.avatar}>
                   {renderStepContent()}
                 </TeacherBubble>
@@ -245,16 +252,25 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
 
 function TheoryView({ data }: { data: TheoryStep }) {
   return (
-    <div className="prose prose-base md:prose-lg max-w-none text-center mx-auto text-inherit">
-      <p className="text-lg md:text-xl leading-relaxed text-inherit font-body">
-        {/* Usando Regex para transformar **texto** em bold simples caso venha do JSON */}
-        {data.content.split(/(\*\*.*?\*\*)/).map((part, i) => {
-            if (part.startsWith('**') && part.endsWith('**')) {
-                return <strong key={i} className="text-brand-gold">{part.slice(2, -2)}</strong>;
-            }
-            return part;
-        })}
-      </p>
+    <div className="flex flex-col items-center gap-6">
+      <div className="prose prose-base md:prose-lg max-w-none text-center mx-auto text-inherit w-full">
+        <p className="text-lg md:text-xl leading-relaxed text-inherit font-body">
+          {/* Usando Regex para transformar **texto** em bold simples caso venha do JSON */}
+          {data.content.split(/(\*\*.*?\*\*)/).map((part, i) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                  return <strong key={i} className="text-brand-gold">{part.slice(2, -2)}</strong>;
+              }
+              return part;
+          })}
+        </p>
+      </div>
+      {data.imageUrl && (
+        <img 
+          src={data.imageUrl} 
+          alt="Recurso Visual" 
+          className="max-w-full rounded-2xl shadow-xl mt-4 max-h-[400px] object-contain border-2 border-brand-graphite/20" 
+        />
+      )}
     </div>
   );
 }
@@ -262,6 +278,20 @@ function TheoryView({ data }: { data: TheoryStep }) {
 function QuizView({ data, isCompleted, onSuccess, onFail }: { data: QuizStep, isCompleted: boolean, onSuccess: () => void, onFail: () => void }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [isWrong, setIsWrong] = useState(false);
+
+  const getSymbolForOption = (opt: string): MusicSymbolName | null => {
+    const lower = opt.toLowerCase();
+    if (lower.includes('semibreve')) return 'note-semibreve';
+    if (lower.includes('mínima') || lower.includes('minima')) {
+      if (lower.includes('semínima') || lower.includes('seminima')) return 'note-seminima';
+      return 'note-minima';
+    }
+    if (lower.includes('semicolcheia')) return 'note-semicolcheia';
+    if (lower.includes('colcheia')) return 'note-colcheia';
+    if (lower.includes('semifusa')) return 'note-semifusa';
+    if (lower.includes('fusa')) return 'note-fusa';
+    return null;
+  };
 
   const handleSelect = (option: string) => {
     if (isCompleted) return;
@@ -303,9 +333,14 @@ function QuizView({ data, isCompleted, onSuccess, onFail }: { data: QuizStep, is
                 transition={{ duration: 0.4 }}
                 onClick={() => handleSelect(opt)}
                 disabled={isCompleted}
-                className={cn("p-3 md:p-6 rounded-2xl text-base md:text-lg font-semibold text-center transition-all", btnClass, isLastOdd && "md:col-span-2")}
+                className={cn("p-3 md:p-6 rounded-2xl text-base md:text-lg font-semibold text-center transition-all flex items-center justify-center gap-3", btnClass, isLastOdd && "md:col-span-2")}
               >
-                {opt}
+                {getSymbolForOption(opt) && (
+                   <div className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 flex items-center justify-center text-inherit pointer-events-none">
+                     <MusicSymbol name={getSymbolForOption(opt)!} />
+                   </div>
+                )}
+                <span>{opt}</span>
               </motion.button>
             );
           })}

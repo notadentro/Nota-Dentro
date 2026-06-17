@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 
 interface TeacherBubbleProps {
-  avatar: 'odette' | 'scliar' | 'priolli' | 'med' | 'mascarenhas' | 'annie';
+  avatar: 'odette' | 'ester' | 'maria_luisa' | 'bohdan' | 'marcio' | 'annie';
   children: React.ReactNode;
 }
 
@@ -16,33 +16,33 @@ const avatarConfig = {
     nameColor: "text-purple-700",
     image: "/avatares/odette.png"
   },
-  scliar: {
-    name: PROFESSORS.scliar.displayName,
+  ester: {
+    name: PROFESSORS.ester.displayName,
     color: "bg-blue-50 border-blue-200",
     textColor: "text-blue-900",
     nameColor: "text-blue-700",
-    image: "/avatares/scliar.png"
+    image: "/avatares/ester.png"
   },
-  priolli: {
-    name: PROFESSORS.priolli.displayName,
+  maria_luisa: {
+    name: PROFESSORS.maria_luisa.displayName,
     color: "bg-amber-50 border-amber-200",
     textColor: "text-amber-900",
     nameColor: "text-amber-700",
-    image: "/avatares/priolli.png"
+    image: "/avatares/maria_luisa.png"
   },
-  med: {
-    name: PROFESSORS.med.displayName,
+  bohdan: {
+    name: PROFESSORS.bohdan.displayName,
     color: "bg-emerald-50 border-emerald-200",
     textColor: "text-emerald-900",
     nameColor: "text-emerald-700",
-    image: "/avatares/med.png"
+    image: "/avatares/bohdan.png"
   },
-  mascarenhas: {
-    name: PROFESSORS.mascarenhas.displayName,
+  marcio: {
+    name: PROFESSORS.marcio.displayName,
     color: "bg-orange-50 border-orange-200",
     textColor: "text-orange-900",
     nameColor: "text-orange-700",
-    image: "/avatares/mascarenhas.png"
+    image: "/avatares/marcio.png"
   },
   annie: {
     name: PROFESSORS.annie.displayName,

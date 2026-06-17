@@ -1,0 +1,150 @@
+{
+  "id": "modulo-1-aula-4",
+  "slug": "matematica-do-tempo-divisao-proporcional",
+  "title": "A Matemática do Tempo: Divisão Proporcional",
+  "description": "Descubra como a matemática e a música se encontram na divisão das figuras musicais.",
+  "status": "available",
+  "module": 1,
+  "steps": [
+    {
+      "id": "tb-1",
+      "type": "theory",
+      "title": "O Bolo do Tempo",
+      "avatar": "odette",
+      "data": {
+        "content": "Agora que conhecemos os nossos atores, como eles dividem o tempo no palco? Na nossa festa musical, o tempo é como um bolo que compartilhamos. Não importa o tamanho do bolo, o que importa é que a divisão das fatias seja justa e exata para cada figura!"
+      }
+    },
+    {
+      "id": "tb-2",
+      "type": "theory",
+      "title": "Duração Absoluta x Relativa",
+      "avatar": "ester",
+      "data": {
+        "content": "Para desenhar esse tempo com exatidão, gravem esta regra de ouro: a duração das figuras NÃO é absoluta (medida em segundos fixos). O que é absoluto é a proporção entre as mesmas."
+      }
+    },
+    {
+      "id": "tb-3",
+      "type": "theory",
+      "title": "A Unidade",
+      "avatar": "maria_luisa",
+      "data": {
+        "content": "Isso mesmo, Profa. Ester. Na chamada Divisão Proporcional dos Valores, a Semibreve é a figura de maior duração e é tomada como a nossa unidade (o número 1). Assim sendo, ela é a única figura que compreende todas as demais."
+      }
+    },
+    {
+      "id": "tb-4",
+      "type": "theory",
+      "title": "Dobros e Metades",
+      "avatar": "marcio",
+      "data": {
+        "content": "Para facilitar o solfejo, a regra é simples: as outras figuras são frações da Semibreve. Segundo a ordem dos seus valores, cada figura vale sempre o DOBRO da figura seguinte (a menor) e a METADE da anterior (a maior)."
+      }
+    },
+    {
+      "id": "tb-visual-1",
+      "type": "graphic_showcase",
+      "title": "A Árvore Gráfica",
+      "avatar": "odette",
+      "data": {
+        "content": "Para visualizar melhor as divisões e frações: veja quantas figuras são necessárias para preencher o valor da nossa Semibreve (O Todo).",
+        "items": [
+          {"name": "1 Semibreve", "symbol": "note-semibreve", "description": "A figura inteira. Representa o valor 1."},
+          {"name": "2 Mínimas", "symbol": "note-minima", "description": "Valem metade (1/2). Precisamos de duas para igualar 1 Semibreve."},
+          {"name": "4 Semínimas", "symbol": "note-seminima", "description": "Valem um quarto (1/4). Precisamos de quatro para igualar 1 Semibreve."},
+          {"name": "8 Colcheias", "symbol": "note-colcheia", "description": "Valem um oitavo (1/8). Precisamos de oito para igualar 1 Semibreve."}
+        ]
+      }
+    },
+    {
+      "id": "ch-1",
+      "type": "true_false",
+      "title": "Tempo Absoluto?",
+      "avatar": "ester",
+      "data": {
+        "statement": "Se você for tocar uma música de forma muito lenta, a Semínima passará a ter uma duração absoluta maior que a da Mínima.",
+        "isTrue": false,
+        "explanation": "Falso! Lembre-se: a duração das figuras não é absoluta, é estritamente proporcional. Mesmo tocando lento, a Semínima SEMPRE valerá a metade da Mínima."
+      }
+    },
+    {
+      "id": "ch-2",
+      "type": "quiz",
+      "title": "Fração da Semibreve",
+      "avatar": "maria_luisa",
+      "data": {
+        "question": "Sabendo que a Semibreve é a nossa Unidade (1), qual é a figura que representa a sua 4ª parte (ou seja, precisamos de 4 delas para formar 1 Semibreve)?",
+        "options": [
+          "Mínima",
+          "Semínima",
+          "Colcheia"
+        ],
+        "correctAnswer": "Semínima",
+        "explanation": "Exato! A Mínima é a 2ª parte (metade), e a Semínima é a 4ª parte. É por isso que o número de referência da Semínima nas fórmulas de compasso será o 4!"
+      }
+    },
+    {
+      "id": "ch-3",
+      "type": "drag_drop_pizza",
+      "title": "Fatiando o Tempo",
+      "avatar": "bohdan",
+      "data": {
+        "question": "Chegou a hora de fatiar o tempo! Sabendo que este círculo inteiro representa 1 Semibreve, arraste para dentro dele o número exato de Semínimas necessárias para preenchê-lo 100%.",
+        "expectedTarget": ["seminima", "seminima", "seminima", "seminima"],
+        "successMessage": "Matou a charada! A Semínima é a 4ª parte da Semibreve. Quatro fatias fecham o círculo."
+      }
+    },
+    {
+      "id": "ch-4",
+      "type": "quiz",
+      "title": "Matemática Reversa",
+      "avatar": "marcio",
+      "data": {
+        "question": "Vamos testar o raciocínio reverso da matemática rítmica: Se você tem 1 Mínima, quantas Semicolcheias você precisa para ter o mesmo valor?",
+        "options": ["2", "4", "8", "16"],
+        "correctAnswer": "8",
+        "explanation": "Perfeito! A Mínima é metade da Semibreve. Se a Semibreve é formada por 16 Semicolcheias, a Mínima será formada por 8!"
+      }
+    },
+    {
+      "id": "ch-pyramid",
+      "type": "drag_drop_pyramid",
+      "title": "Construindo a Pirâmide",
+      "avatar": "bohdan",
+      "data": {
+        "question": "A regra da divisão binária é perfeita e simétrica. O topo da pirâmide já tem o nosso tronco: a Semibreve (1). Arraste as figuras corretas para completar a 2ª camada (metades) e a 3ª camada (quartos).",
+        "baseNode": "semibreve",
+        "expectedTarget": {
+          "level_2": ["minima", "minima"],
+          "level_3": ["seminima", "seminima", "seminima", "seminima"]
+        },
+        "successMessage": "Brilhante! Você construiu a fundação da matemática musical com as próprias mãos. Uma Semibreve se divide em 2 Mínimas, que formam 4 Semínimas!"
+      }
+    },
+    {
+      "id": "ch-pyramid-2",
+      "type": "drag_drop_pyramid",
+      "title": "A Fração da Fração",
+      "avatar": "maria_luisa",
+      "data": {
+        "question": "Lembra que a regra é fractal? Agora o nosso tronco da pirâmide é a Semínima! Divida-a em suas metades e quartos usando as figuras corretas.",
+        "baseNode": "seminima",
+        "expectedTarget": {
+          "level_2": ["colcheia", "colcheia"],
+          "level_3": ["semicolcheia", "semicolcheia", "semicolcheia", "semicolcheia"]
+        },
+        "successMessage": "Incrível! A mesma proporção se aplica em qualquer andar. A Semínima se divide em 2 Colcheias, que formam 4 Semicolcheias. A matemática musical é bela!"
+      }
+    },
+    {
+      "id": "full-pyramid-showcase",
+      "type": "full_pyramid",
+      "title": "A Árvore Genealógica do Tempo",
+      "avatar": "ester",
+      "data": {
+        "content": "Eis aqui a majestosa Pirâmide Rítmica! Nela, vemos todas as 64 Semifusas necessárias para igualar o valor da grande Semibreve. Observe a perfeição da matemática musical se multiplicando."
+      }
+    }
+  ]
+}

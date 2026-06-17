@@ -17,7 +17,7 @@ export function CourseMapWrapper({ course }: { course: Course }) {
           let status: 'completed' | 'available' | 'locked' = 'locked';
           if (completedLessons.includes(lesson.id)) {
             status = 'completed';
-          } else if (unlockedLessons.includes(lesson.id) || (mIndex === 0 && lIndex === 0)) {
+          } else if (unlockedLessons.includes(lesson.id) || (mIndex === 0 && lIndex === 0) || process.env.NODE_ENV === 'development') {
             status = 'available';
           }
           return { ...lesson, status };
