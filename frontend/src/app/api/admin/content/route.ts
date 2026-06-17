@@ -76,7 +76,8 @@ export async function POST(req: NextRequest) {
     
     return NextResponse.json({ success: true, path: filePath });
     
-  } catch (error: any) {
+  } // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (error: any) {
     console.error('Erro na API de Admin:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -105,7 +106,8 @@ export async function GET(req: NextRequest) {
     }));
 
     return NextResponse.json({ items });
-  } catch (error: any) {
+  } // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

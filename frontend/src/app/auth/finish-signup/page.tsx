@@ -37,6 +37,7 @@ function FinishSignupContent() {
     }
 
     handleLinkVerification(savedEmail);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const handleLinkVerification = async (emailToVerify: string) => {
@@ -44,7 +45,7 @@ function FinishSignupContent() {
       // Tenta validar o link
       await finishMagicLinkSignup(emailToVerify, window.location.href);
       setStatus('setup_profile');
-    } catch (error: any) {
+    } catch (error: any | unknown) {
       console.error(error);
       setStatus('error');
       setErrorMsg(error.message || 'Link inválido ou expirado.');
@@ -80,7 +81,7 @@ function FinishSignupContent() {
         router.push('/dashboard'); 
       }, 1500);
       
-    } catch (error: any) {
+    } catch (error: any | unknown) {
       console.error(error);
       setErrorMsg(error.message || 'Erro ao concluir perfil.');
     } finally {

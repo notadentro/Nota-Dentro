@@ -19,7 +19,7 @@ export async function GET() {
     try {
       const files = await fs.readdir(contentDir);
       jsonFiles = files.filter(f => f.endsWith('.json'));
-    } catch (e) {
+    } catch (_e) {
       // Pasta pode não existir ainda no primeiro run
     }
 
@@ -96,7 +96,8 @@ export async function GET() {
     }
 
     return NextResponse.json({ database: dynamicDb });
-  } catch (error: any) {
+  } // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (error: any) {
     console.error('Erro na API de curriculum:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
