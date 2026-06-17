@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { DragDropPizzaStep } from '@/types/lesson';
 import { cn } from '@/lib/utils';
 import { CheckCircle2 } from 'lucide-react';
+import { MusicSymbol } from '@/components/music-symbols';
 
 export function RhythmicPizzaView({ 
   data, 
@@ -36,6 +37,9 @@ export function RhythmicPizzaView({
     if (!targetRef.current) return;
     const targetRect = targetRef.current.getBoundingClientRect();
     
+    const targetX = targetRect.left + window.scrollX;
+    const targetY = targetRect.top + window.scrollY;
+    
     // Check intersection
     const dropX = info.point.x;
     const dropY = info.point.y;
@@ -43,10 +47,10 @@ export function RhythmicPizzaView({
     // A lenient bounding box check
     const padding = 20;
     if (
-      dropX >= targetRect.left - padding &&
-      dropX <= targetRect.right + padding &&
-      dropY >= targetRect.top - padding &&
-      dropY <= targetRect.bottom + padding
+      dropX >= targetX - padding &&
+      dropX <= targetX + targetRect.width + padding &&
+      dropY >= targetY - padding &&
+      dropY <= targetY + targetRect.height + padding
     ) {
       const newFilled = filledSlices + 1;
       setFilledSlices(newFilled);
@@ -119,8 +123,9 @@ export function RhythmicPizzaView({
                   className="w-16 h-24 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing"
                 >
                   {/* Visual da Semínima */}
-                  <div className="w-1 h-16 bg-brand-black dark:bg-brand-white ml-5 rounded-t-sm" />
-                  <div className="w-7 h-5 bg-brand-black dark:bg-brand-white rounded-full -rotate-[20deg] -mt-1 shadow-md" />
+                  <div className="w-16 h-16 flex items-center justify-center text-brand-black dark:text-brand-white drop-shadow-sm pointer-events-none">
+                    <MusicSymbol name="note-seminima" />
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
