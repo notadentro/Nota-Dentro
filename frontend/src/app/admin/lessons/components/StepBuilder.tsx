@@ -34,7 +34,8 @@ const typeLabels: Record<StepType, string> = {
   graphic_showcase: 'Vitrine Gráfica',
   drag_drop_pyramid: 'Pirâmide Interativa',
   full_pyramid: 'Pirâmide Completa',
-  pulsation: 'Jogo de Pulsação'
+  pulsation: 'Jogo de Pulsação',
+  rhythmic_reading: 'Leitura Rítmica'
 };
 
 export function StepBuilder({ step, index, onChange, onRemove }: Props) {
