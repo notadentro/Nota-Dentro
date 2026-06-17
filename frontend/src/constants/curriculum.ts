@@ -19,7 +19,7 @@ export const DATABASE: Trail[] = [
             id: 'esa-teoria-1',
             title: 'Noções Básicas',
             description: 'Introdução à teoria musical focada no edital.',
-            author: PROFESSORS.scliar.displayName,
+            author: PROFESSORS.ester.displayName,
             lessons: []
           }
         ]
@@ -34,14 +34,14 @@ export const DATABASE: Trail[] = [
             id: 'fn-teoria-1',
             title: 'Fundamentos do Som',
             description: 'Matéria-prima e Propriedades do Som',
-            author: PROFESSORS.med.displayName,
+            author: PROFESSORS.bohdan.displayName,
             lessons: []
           },
           {
             id: 'fn-teoria-2',
             title: 'Notação Musical',
             description: 'Aprofundamento na escrita musical.',
-            author: PROFESSORS.med.displayName,
+            author: PROFESSORS.bohdan.displayName,
             lessons: []
           }
         ]

@@ -31,7 +31,9 @@ const typeLabels: Record<StepType, string> = {
   sandbox_audio: 'Laboratório de Áudio',
   drag_drop_pauta: 'Arrastar na Pauta',
   drag_drop_pizza: 'Pizza Rítmica',
-  graphic_showcase: 'Vitrine Gráfica'
+  graphic_showcase: 'Vitrine Gráfica',
+  drag_drop_pyramid: 'Pirâmide Interativa',
+  full_pyramid: 'Pirâmide Completa'
 };
 
 export function StepBuilder({ step, index, onChange, onRemove }: Props) {
