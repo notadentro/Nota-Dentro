@@ -1,0 +1,114 @@
+{
+  "id": "modulo-1-aula-5",
+  "slug": "a-seminima-partes-e-pausas",
+  "title": "A Semínima: Partes e Pausas",
+  "description": "Conheça o coração do ritmo musical, as partes estruturais de uma nota e a importância do silêncio.",
+  "status": "available",
+  "module": 1,
+  "steps": [
+    {
+      "id": "tb-1",
+      "type": "theory",
+      "title": "O Coração da Música",
+      "avatar": "odette",
+      "data": {
+        "content": "Nós já aprendemos a fatiar o tempo, mas quem dita o andamento da nossa festa? Geralmente, a figura escolhida para representar a batida do nosso coração, o passo da nossa marcha, é a Semínima!"
+      }
+    },
+    {
+      "id": "tb-2",
+      "type": "theory",
+      "title": "A Anatomia da Semínima",
+      "avatar": "ester",
+      "data": {
+        "content": "Ao analisarmos a anatomia de uma Semínima, notamos que o seu valor positivo (o som) é composto visualmente por duas partes essenciais: a CABEÇA (a parte oval e preenchida) e a HASTE (o traço vertical)."
+      }
+    },
+    {
+      "id": "tb-3",
+      "type": "theory",
+      "title": "A Pulsação",
+      "avatar": "ester",
+      "data": {
+        "content": "A sucessão de várias Semínimas cria o que chamamos de PULSAÇÃO, que é uma sequência de durações iguais, ordenadora das diversas durações. Essa pulsação é também designada por TEMPO."
+      }
+    },
+    {
+      "id": "tb-4",
+      "type": "theory",
+      "title": "O Silêncio Tem Valor",
+      "avatar": "maria_luisa",
+      "data": {
+        "content": "Mas a música não é feita só de som! Cada figura tem sua respectiva pausa (silêncio). Alguns livros chamam as pausas de 'valores negativos'. Eu discordo! A pausa da Semínima tem função rítmica e estética profundas. Ela é tão importante quanto o som."
+      }
+    },
+    {
+      "id": "tb-visual-1",
+      "type": "graphic_showcase",
+      "title": "Anatomia e Pausa",
+      "avatar": "odette",
+      "data": {
+        "content": "Vamos visualizar a anatomia do som e do silêncio que equivalem a 1 Tempo (na nossa pulsação básica):",
+        "items": [
+          {"name": "Cabeça", "symbol": "note-head-filled", "description": "A parte oval, sempre preenchida (pintada) na Semínima."},
+          {"name": "Haste", "symbol": "note-stem", "description": "O traço vertical que se liga à cabeça da nota."},
+          {"name": "Pausa de Semínima", "symbol": "rest-quarter", "description": "O símbolo que indica exatamente o mesmo tempo de duração, mas em silêncio."}
+        ]
+      }
+    },
+    {
+      "id": "ch-1",
+      "type": "quiz",
+      "title": "Partes da Nota",
+      "avatar": "bohdan",
+      "data": {
+        "question": "Diferente da Colcheia (que possui colchete), a figura da Semínima é desenhada utilizando apenas quais partes anatômicas?",
+        "options": [
+          "Cabeça vazia e haste.",
+          "Cabeça preenchida e haste.",
+          "Apenas cabeça preenchida, sem haste."
+        ],
+        "correctAnswer": "Cabeça preenchida e haste.",
+        "explanation": "Exato! A Semibreve tem cabeça vazia e sem haste. A Mínima tem cabeça vazia com haste. Já a nossa Semínima tem cabeça preenchida e haste!"
+      }
+    },
+    {
+      "id": "ch-2",
+      "type": "true_false",
+      "title": "A Polêmica da Pausa",
+      "avatar": "maria_luisa",
+      "data": {
+        "statement": "Segundo a teoria musical mais aprofundada, a pausa da Semínima significa a 'ausência de ritmo' e uma falha na música, por isso é chamada de valor negativo.",
+        "isTrue": false,
+        "explanation": "Falso! Cuidado com as bancas de concurso! Como defende Maria Luísa Priolli, as pausas têm função rítmica e estética inquestionáveis. Elas não indicam 'ausência de ritmo', mas sim a duração exata do silêncio estrutural."
+      }
+    },
+    {
+      "id": "ch-3",
+      "type": "quiz",
+      "title": "O Conceito de Pulsação",
+      "avatar": "ester",
+      "data": {
+        "question": "De acordo com a nossa Mestra Arquiteta, como podemos definir o conceito de 'Pulsação' em uma música?",
+        "options": [
+          "A variação constante de andamento do rápido para o lento.",
+          "O prolongamento de um som fraco para um tempo forte.",
+          "Uma sequência de durações iguais que atua como ordenadora do ritmo."
+        ],
+        "correctAnswer": "Uma sequência de durações iguais que atua como ordenadora do ritmo.",
+        "explanation": "Perfeito! A pulsação (frequentemente chamada de tempo) é essa 'batida do coração' regular e igual que ordena toda a música."
+      }
+    },
+    {
+      "id": "pulse-1",
+      "type": "pulsation",
+      "title": "Mantenha a Pulsação",
+      "avatar": "ester",
+      "data": {
+        "bpm": 65,
+        "beatsToComplete": 8,
+        "toleranceMs": 200
+      }
+    }
+  ]
+}

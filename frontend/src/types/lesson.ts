@@ -8,7 +8,7 @@ export type LessonStatus = 'locked' | 'available' | 'completed';
 /**
  * Diferenciação entre conteúdo teórico e desafios práticos.
  */
-export type StepType = 'theory' | 'quiz' | 'true_false' | 'match_columns' | 'memory_game' | 'fill_blanks' | 'sandbox_audio' | 'drag_drop_pauta' | 'drag_drop_pizza' | 'graphic_showcase' | 'drag_drop_pyramid' | 'full_pyramid';
+export type StepType = 'theory' | 'quiz' | 'true_false' | 'match_columns' | 'memory_game' | 'fill_blanks' | 'sandbox_audio' | 'drag_drop_pauta' | 'drag_drop_pizza' | 'graphic_showcase' | 'drag_drop_pyramid' | 'full_pyramid' | 'pulsation';
 
 export interface DragDropPyramidStep {
   question: string;
@@ -118,6 +118,12 @@ export interface GraphicShowcaseStep {
   content?: string;
 }
 
+export interface PulsationStep {
+  bpm: number;
+  beatsToComplete: number;
+  toleranceMs: number;
+}
+
 /**
  * Um passo (Step) individual dentro de uma lição.
  * O campo 'type' serve como discriminador para o TypeScript saber se é teoria ou quiz.
@@ -128,7 +134,7 @@ export interface LessonStep {
   title: string;
   source?: string; // Fonte bibliográfica. Ex: "Teoria Clássica", "Fundamentos Musicais"
   avatar?: 'odette' | 'ester' | 'maria_luisa' | 'bohdan' | 'marcio' | 'annie'; // Professor avatar
-  data: TheoryStep | QuizStep | TrueFalseStep | MatchColumnsStep | MemoryGameStep | FillBlanksStep | SandboxAudioStep | DragDropPautaStep | DragDropPizzaStep | GraphicShowcaseStep | DragDropPyramidStep | FullPyramidStep;
+  data: TheoryStep | QuizStep | TrueFalseStep | MatchColumnsStep | MemoryGameStep | FillBlanksStep | SandboxAudioStep | DragDropPautaStep | DragDropPizzaStep | GraphicShowcaseStep | DragDropPyramidStep | FullPyramidStep | PulsationStep;
 }
 
 /**
