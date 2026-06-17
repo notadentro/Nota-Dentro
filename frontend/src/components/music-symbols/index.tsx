@@ -274,9 +274,25 @@ m169 432 c76 -56 179 -170 206 -228 15 -32 25 -71 25 -98 -1 -45 -1 -45 -66
 
 export function NoteSeminima({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor" className={cn("w-full h-full", className)}>
+    <svg viewBox="15 15 55 195" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor" className={cn("w-full h-full", className)}>
   <g transform="rotate(-20 40 180)"><ellipse cx="40" cy="180" rx="22" ry="15" fill="currentColor" stroke="none"/></g><rect x="56" y="20" width="8" height="160" fill="currentColor" stroke="none" />
 </svg>
+  );
+}
+
+export function NoteHeadFilled({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" className={cn("w-full h-full", className)}>
+      <g transform="rotate(-20 60 60)"><ellipse cx="60" cy="60" rx="40" ry="26" fill="currentColor" stroke="none"/></g>
+    </svg>
+  );
+}
+
+export function NoteStem({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 40 160" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" className={cn("w-full h-full", className)}>
+      <rect x="16" y="10" width="8" height="140" fill="currentColor" rx="4" />
+    </svg>
   );
 }
 
@@ -292,10 +308,13 @@ export type MusicSymbolName =
   | 'rest-semicolcheia'
   | 'rest-semifusa'
   | 'rest-seminima'
+  | 'rest-quarter'
   | 'note-semibreve'
   | 'note-semicolcheia'
   | 'note-semifusa'
-  | 'note-seminima';
+  | 'note-seminima'
+  | 'note-head-filled'
+  | 'note-stem';
 
 export function MusicSymbol({ name, className }: { name: MusicSymbolName, className?: string }) {
   switch (name) {
@@ -308,11 +327,14 @@ export function MusicSymbol({ name, className }: { name: MusicSymbolName, classN
     case 'rest-semibreve': return <RestSemibreve className={className} />;
     case 'rest-semicolcheia': return <RestSemicolcheia className={className} />;
     case 'rest-semifusa': return <RestSemifusa className={className} />;
-    case 'rest-seminima': return <RestSeminima className={className} />;
+    case 'rest-seminima': 
+    case 'rest-quarter': return <RestSeminima className={className} />;
     case 'note-semibreve': return <NoteSemibreve className={className} />;
     case 'note-semicolcheia': return <NoteSemicolcheia className={className} />;
     case 'note-semifusa': return <NoteSemifusa className={className} />;
     case 'note-seminima': return <NoteSeminima className={className} />;
+    case 'note-head-filled': return <NoteHeadFilled className={className} />;
+    case 'note-stem': return <NoteStem className={className} />;
     default: return null;
   }
 }
