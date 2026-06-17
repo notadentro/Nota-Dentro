@@ -20,6 +20,7 @@ import { GraphicShowcaseView } from './GraphicShowcaseView';
 import { PyramidDragDropView } from './PyramidDragDropView';
 import { FullPyramidView } from './FullPyramidView';
 import { PulsationView } from './PulsationView';
+import { RhythmicReadingView } from './RhythmicReadingView';
 import { MusicSymbol, MusicSymbolName } from '@/components/music-symbols';
 
 interface LessonEngineProps {
@@ -154,6 +155,8 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
         return <FullPyramidView data={currentStep.data as any} avatar={currentStep.avatar} isCompleted={completedSteps[currentIndex]} onComplete={markStepComplete} />;
       case 'pulsation':
         return <PulsationView data={currentStep.data as any} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} onFail={loseLife} />;
+      case 'rhythmic_reading':
+        return <RhythmicReadingView data={currentStep.data as any} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} onFail={loseLife} />;
       default:
         return null;
     }

@@ -45,7 +45,7 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
   const [score, setScore] = useState<number | null>(null);
   const [ghostMsg, setGhostMsg] = useState<{ text: string, id: number, type: BeatResult } | null>(null);
   const [heartScale, setHeartScale] = useState(1);
-  const LATENCY_OFFSET_MS = 0.3; // Latência zerada, pois o laptop não tem atraso (sem fone bluetooth)
+  const LATENCY_OFFSET_MS = 0.3; // Latência quase zerada, pois o laptop quase não tem atraso (sem fone bluetooth)
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const startTimeRef = useRef<number>(0);

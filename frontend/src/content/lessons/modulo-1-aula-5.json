@@ -109,6 +109,17 @@
         "beatsToComplete": 8,
         "toleranceMs": 200
       }
+    },
+    {
+      "id": "reading-1",
+      "type": "rhythmic_reading",
+      "title": "Atenção ao Silêncio!",
+      "avatar": "ester",
+      "data": {
+        "bpm": 60,
+        "sequence": ["note", "note", "rest", "note", "note", "rest", "note", "rest"],
+        "toleranceMs": 200
+      }
     }
   ]
 }
