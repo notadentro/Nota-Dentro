@@ -316,6 +316,12 @@ function QuizView({ data, isCompleted, onSuccess, onFail }: { data: QuizStep, is
     <div className="flex flex-col gap-4 md:gap-8 w-full max-w-4xl mx-auto">
       <p className="text-lg md:text-2xl font-medium text-center mb-4 md:mb-8 text-inherit">{data.question}</p>
       
+      {data.imageUrl && (
+        <div className="flex justify-center mb-4">
+          <img src={data.imageUrl} alt="Visualização da Questão" className="max-h-32 object-contain" />
+        </div>
+      )}
+      
       <div className="relative">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {data.options.map((opt, index) => {

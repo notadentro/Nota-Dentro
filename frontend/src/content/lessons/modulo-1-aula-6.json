@@ -1,0 +1,130 @@
+{
+  "id": "modulo-1-aula-6",
+  "slug": "pulsacao-e-unidade",
+  "title": "O Batimento da Música: Pulsação e Unidade",
+  "description": "Descubra como a música organiza a constância do seu ritmo através da Pulsação e conheça as Unidades de Tempo e Compasso.",
+  "status": "available",
+  "module": 1,
+  "steps": [
+    {
+      "id": "tb-1",
+      "type": "theory",
+      "title": "O Batimento Musical",
+      "avatar": "odette",
+      "data": {
+        "content": "Todo coração saudável tem um batimento regular, e na música não é diferente! O que dá vida, movimento e coerência a uma canção é a constância desse batimento invisível que guia todos os músicos juntos."
+      }
+    },
+    {
+      "id": "tb-2",
+      "type": "theory",
+      "title": "A Pulsação",
+      "avatar": "ester",
+      "data": {
+        "content": "Para sermos arquitetonicamente exatos, chamamos isso de PULSAÇÃO. É uma sequência de durações iguais, que atua como ordenadora das diversas durações da música. Essa pulsação contínua e regular é também designada por TEMPO."
+      }
+    },
+    {
+      "id": "tb-compasso",
+      "type": "theory",
+      "title": "O Compasso",
+      "avatar": "odette",
+      "data": {
+        "content": "Mas a pulsação não fica solta ao infinito! Nós agrupamos a pulsação em 'caixinhas' que chamamos de COMPASSOS. Como se a música fosse um poema, os compassos são as estrofes. O mais comum é agrupar a música de 2 em 2 tempos (binário), 3 em 3 (ternário) ou 4 em 4 (quaternário)."
+      }
+    },
+    {
+      "id": "tb-formula",
+      "type": "theory",
+      "title": "Fórmula de Compasso",
+      "avatar": "maria_luisa",
+      "data": {
+        "content": "Na partitura, usamos uma fração (como 2/4 ou 2/2) para indicar essa organização. O número de CIMA diz QUANTOS tempos cabem no compasso. O número de BAIXO diz QUAL figura vale 1 tempo. O 4 representa a Semínima e o 2 representa a Mínima! Então 2/4 significa 2 Semínimas por compasso. E 2/2 significa 2 Mínimas!"
+      }
+    },
+    {
+      "id": "tb-3",
+      "type": "graphic_showcase",
+      "title": "Unidade de Tempo (UT)",
+      "avatar": "maria_luisa",
+      "data": {
+        "content": "A UNIDADE DE TEMPO (UT) é justamente a figura escolhida para preencher EXATAMENTE um tempo. Num compasso 2/4, 3/4 ou 4/4, o número de baixo é o 4, portanto a nossa UT é a Semínima.",
+        "items": [
+          {"name": "1 Tempo = UT", "symbol": "note-seminima", "description": "Se a Semínima for a nossa UT, ela valerá 1 tempo cravado do nosso relógio interno."}
+        ]
+      }
+    },
+    {
+      "id": "tb-4",
+      "type": "graphic_showcase",
+      "title": "Unidade de Compasso (UC)",
+      "avatar": "marcio",
+      "data": {
+        "content": "Já a UNIDADE DE COMPASSO (UC) é a figura maior, capaz de preencher sozinha todos os tempos de um compasso inteiro! Num compasso 2/4, a figura que vale 2 tempos é a Mínima. Num 4/4, a figura que vale 4 tempos é a Semibreve.",
+        "items": [
+          {"name": "Compasso 2/4", "symbol": "note-minima", "description": "A UC no 2/4 é a Mínima (vale 2 semínimas)."},
+          {"name": "Compasso 4/4", "symbol": "note-semibreve", "description": "A UC no 4/4 é a Semibreve (vale 4 semínimas)."}
+        ]
+      }
+    },
+    {
+      "id": "ex-match",
+      "type": "match_columns",
+      "title": "Conectando as Fórmulas",
+      "avatar": "ester",
+      "data": {
+        "question": "Ligue cada fórmula de compasso à sua respectiva Unidade de Compasso (UC). Lembre-se de verificar o número de cima (quantidade) e o de baixo (figura)!",
+        "pairs": [
+          { "left": "Fórmula 2/4", "right": "UC: Mínima (2 Semínimas)" },
+          { "left": "Fórmula 4/4", "right": "UC: Semibreve (4 Semínimas)" },
+          { "left": "Fórmula 2/2", "right": "UC: Semibreve (2 Mínimas)" }
+        ],
+        "explanation": "Brilhante! No 2/4 precisamos de 2 Semínimas para fechar o compasso (Mínima). No 4/4, precisamos de 4 Semínimas (Semibreve). E no genial 2/2, precisamos de 2 Mínimas para fechar o compasso, o que também resulta em uma Semibreve!"
+      }
+    },
+    {
+      "id": "ch-1",
+      "type": "quiz",
+      "title": "O Conceito de Pulsação",
+      "avatar": "ester",
+      "data": {
+        "question": "De acordo com a teoria estrutural, como podemos definir rigorosamente o conceito de 'Pulsação' (ou Tempo)?",
+        "options": [
+          "A variação constante da velocidade da música, do lento para o rápido.",
+          "Uma sequência de durações iguais, ordenadora das diversas durações.",
+          "A figura de maior valor absoluto na partitura."
+        ],
+        "correctAnswer": "Uma sequência de durações iguais, ordenadora das diversas durações.",
+        "explanation": "Perfeito! A pulsação é a fundação contínua de durações idênticas que mantém a coerência e a regularidade do ritmo."
+      }
+    },
+    {
+      "id": "ch-2",
+      "type": "true_false",
+      "title": "UT vs UC",
+      "avatar": "maria_luisa",
+      "data": {
+        "statement": "A Unidade de Tempo (UT) é a figura musical que preenche todos os tempos de um compasso inteiro sozinha.",
+        "isTrue": false,
+        "explanation": "Falso! A figura que preenche o compasso inteiro sozinha é a Unidade de Compasso (UC). A Unidade de Tempo (UT) preenche apenas UM tempo."
+      }
+    },
+    {
+      "id": "ch-3",
+      "type": "quiz",
+      "title": "Matemática das Unidades",
+      "avatar": "bohdan",
+      "data": {
+        "question": "Vamos ao cálculo prático: Se em uma determinada marcha a Unidade de Tempo (UT) é a Semínima, e os compassos agrupam a música de 2 em 2 tempos, qual figura será a nossa Unidade de Compasso (UC)?",
+        "imageUrl": "/assets/svg/uc-math.svg",
+        "options": [
+          "A Semibreve",
+          "A Mínima",
+          "A Colcheia"
+        ],
+        "correctAnswer": "A Mínima",
+        "explanation": "Exato! Se precisamos de 2 tempos (2 Semínimas) para fechar o compasso, a figura que sozinha equivale a 2 Semínimas é a Mínima. Logo, ela é a nossa UC!"
+      }
+    }
+  ]
+}

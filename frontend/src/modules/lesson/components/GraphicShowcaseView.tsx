@@ -17,6 +17,19 @@ export function GraphicShowcaseView({ data, avatar, isCompleted, onComplete }: P
   return (
     <div className="flex flex-col h-full max-w-4xl mx-auto p-4 md:p-8">
       <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 pb-20 mt-4 md:mt-8">
+        {avatar && data.content && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 max-w-2xl mx-auto"
+          >
+            <TeacherBubble avatar={avatar}>
+              <p className="text-lg leading-relaxed text-inherit font-body">{data.content}</p>
+            </TeacherBubble>
+          </motion.div>
+        )}
+
         <motion.div 
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           initial={{ opacity: 0, y: 20 }}
@@ -56,19 +69,6 @@ export function GraphicShowcaseView({ data, avatar, isCompleted, onComplete }: P
             </motion.div>
           ))}
         </motion.div>
-        
-        {avatar && data.content && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-8 mb-4 max-w-2xl mx-auto"
-          >
-            <TeacherBubble avatar={avatar}>
-              <p className="text-lg leading-relaxed text-inherit font-body">{data.content}</p>
-            </TeacherBubble>
-          </motion.div>
-        )}
       </div>
     </div>
   );

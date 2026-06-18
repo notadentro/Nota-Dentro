@@ -30,6 +30,7 @@ export interface FullPyramidStep {
  */
 export interface QuizStep {
   question: string;
+  imageUrl?: string;
   options: string[];
   correctAnswer: string;
   explanation: string;
