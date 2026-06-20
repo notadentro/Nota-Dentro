@@ -30,11 +30,11 @@ const TreeNode = ({ levelIndex }: { levelIndex: number }) => {
         transition={{ delay: levelIndex * 1.5, duration: 0.6, type: "spring", stiffness: 200 }}
         style={{ zIndex: 10 - levelIndex }}
       >
-        <div className="w-10 h-16 flex items-center justify-center text-brand-black dark:text-brand-white transition-transform group-hover:scale-150 group-active:scale-150 hover:text-[#2D8A5C]">
+        <div className="w-10 h-16 flex items-center justify-center text-brand-black dark:text-brand-white transition-transform group-hover:scale-150 group-active:scale-150 hover:text-system-success">
           <MusicSymbol name={levelData.icon as MusicSymbolName} />
         </div>
         {/* Tooltip Hover */}
-        <div className="absolute bottom-full mb-1 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity bg-[#2D8A5C] text-white text-[16px] font-bold px-3 py-1 rounded whitespace-nowrap pointer-events-none shadow-lg">
+        <div className="absolute bottom-full mb-1 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity bg-system-success text-white text-[16px] font-bold px-3 py-1 rounded whitespace-nowrap pointer-events-none shadow-lg">
           {levelData.name}
         </div>
       </motion.div>
@@ -44,7 +44,7 @@ const TreeNode = ({ levelIndex }: { levelIndex: number }) => {
         <div className="flex flex-col items-center w-full">
            {/* Central Stem dropping from parent */}
            <motion.div
-             className="w-0.5 bg-[#F2B705] drop-shadow-[0_0_5px_rgba(242,183,5,0.8)]"
+             className="w-0.5 bg-brand-gold-light drop-shadow-[0_0_5px_rgba(242,183,5,0.8)]"
              style={{ height: '16px' }} // Adjusted height to connect smoothly
              initial={{ opacity: 0, scaleY: 0, originY: 0 }}
              animate={{ opacity: 1, scaleY: 1 }}
@@ -52,7 +52,7 @@ const TreeNode = ({ levelIndex }: { levelIndex: number }) => {
            />
            {/* Horizontal Bracket that spans 50% of the container */}
            <motion.div 
-             className="w-1/2 border-t-2 border-l-2 border-r-2 border-[#F2B705] rounded-t-sm drop-shadow-[0_0_5px_rgba(242,183,5,0.8)]"
+             className="w-1/2 border-t-2 border-l-2 border-r-2 border-brand-gold-light rounded-t-sm drop-shadow-[0_0_5px_rgba(242,183,5,0.8)]"
              style={{ height: '16px' }} // Height of the vertical drops
              initial={{ opacity: 0, scaleX: 0 }}
              animate={{ opacity: 1, scaleX: 1 }}
@@ -126,7 +126,7 @@ export function FullPyramidView({
       </p>
 
       {/* Rotate Screen Banner */}
-      <div className="flex md:hidden items-center justify-center gap-2 bg-[#2D8A5C]/10 text-[#2D8A5C] px-4 py-2 rounded-full mb-2 border border-[#2D8A5C]/20 animate-pulse z-10">
+      <div className="flex md:hidden items-center justify-center gap-2 bg-system-success/10 text-system-success px-4 py-2 rounded-full mb-2 border border-system-success/20 animate-pulse z-10">
          <Smartphone className="w-4 h-4 rotate-90" />
          <span className="text-xs font-bold uppercase tracking-wider">Gire a tela para ver maior</span>
       </div>

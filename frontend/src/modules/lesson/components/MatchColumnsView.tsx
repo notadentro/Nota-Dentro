@@ -114,7 +114,7 @@ export function MatchColumnsView({ data, isCompleted, onSuccess, onFail }: Props
                 onClick={() => handleSelect('left', item.pairId)}
                 className={cn(
                   "p-4 md:p-6 rounded-2xl text-base md:text-lg font-bold transition-all border-2 text-left shadow-sm",
-                  isMatched ? "border-[#2D8A5C] bg-[#2D8A5C]/10 text-[#2D8A5C] opacity-60" 
+                  isMatched ? "border-system-success bg-system-success/10 text-system-success opacity-60" 
                   : isError ? "border-red-500 bg-red-500/10 text-red-500"
                   : isSelected ? "border-brand-gold bg-brand-gold/10 text-brand-gold shadow-[0_0_15px_rgba(242,211,73,0.3)]"
                   : "border-border bg-card text-foreground hover:bg-muted/50 hover:border-brand-gray/50"
@@ -144,7 +144,7 @@ export function MatchColumnsView({ data, isCompleted, onSuccess, onFail }: Props
                 onClick={() => handleSelect('right', item.pairId)}
                 className={cn(
                   "p-4 md:p-6 rounded-2xl text-base md:text-lg font-bold transition-all border-2 text-right shadow-sm",
-                  isMatched ? "border-[#2D8A5C] bg-[#2D8A5C]/10 text-[#2D8A5C] opacity-60" 
+                  isMatched ? "border-system-success bg-system-success/10 text-system-success opacity-60" 
                   : isError ? "border-red-500 bg-red-500/10 text-red-500"
                   : isSelected ? "border-brand-gold bg-brand-gold/10 text-brand-gold shadow-[0_0_15px_rgba(242,211,73,0.3)]"
                   : "border-border bg-card text-foreground hover:bg-muted/50 hover:border-brand-gray/50"
@@ -174,10 +174,10 @@ export function MatchColumnsView({ data, isCompleted, onSuccess, onFail }: Props
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
-            className="mt-4 p-6 bg-[#2D8A5C]/10 border border-[#2D8A5C] rounded-3xl flex flex-col items-center text-center"
+            className="mt-4 p-6 bg-system-success/10 border border-system-success rounded-3xl flex flex-col items-center text-center"
           >
-            <Star className="text-[#2D8A5C] fill-[#2D8A5C] w-12 h-12 mb-4" />
-            <p className="text-xl text-[#2D8A5C] font-bold mb-2">Conexões Perfeitas!</p>
+            <Star className="text-system-success fill-system-success w-12 h-12 mb-4" />
+            <p className="text-xl text-system-success font-bold mb-2">Conexões Perfeitas!</p>
             <p className="text-inherit">{data.explanation}</p>
           </motion.div>
         )}

@@ -160,7 +160,7 @@ export function PyramidDragDropView({
             <span className="text-sm font-bold text-brand-black dark:text-brand-white uppercase tracking-wider">{levels.level1.name}</span>
             <span className="text-xs text-brand-gray font-medium">A figura base (1)</span>
           </div>
-          <div className="w-20 h-20 bg-brand-graphite/10 dark:bg-brand-graphite/30 rounded-xl flex items-center justify-center border-2 border-[#2D8A5C] shadow-[0_0_15px_rgba(45,138,92,0.3)]">
+          <div className="w-20 h-20 bg-brand-graphite/10 dark:bg-brand-graphite/30 rounded-xl flex items-center justify-center border-2 border-system-success shadow-[0_0_15px_rgba(45,138,92,0.3)]">
             {renderNoteVisual(levels.level1.id)}
           </div>
           <div className="md:hidden mt-2 flex flex-col items-center">
@@ -182,7 +182,7 @@ export function PyramidDragDropView({
               <div key={`l2-${i}`} className="flex flex-col items-center">
                 <div 
                   ref={el => { if (el) level2Refs.current[i] = el; }}
-                  className={`w-16 h-20 md:w-20 md:h-24 rounded-xl flex items-center justify-center border-2 transition-all duration-300 ${i < level2Filled ? 'bg-[#2D8A5C]/20 border-[#2D8A5C]' : 'bg-brand-graphite/5 border-brand-graphite/30 border-dashed'}`}
+                  className={`w-16 h-20 md:w-20 md:h-24 rounded-xl flex items-center justify-center border-2 transition-all duration-300 ${i < level2Filled ? 'bg-system-success/20 border-system-success' : 'bg-brand-graphite/5 border-brand-graphite/30 border-dashed'}`}
                 >
                   {i < level2Filled && renderNoteVisual(levels.level2.id)}
                 </div>
@@ -211,7 +211,7 @@ export function PyramidDragDropView({
               <div key={`l3-${i}`} className="flex flex-col items-center">
                 <div 
                   ref={el => { if (el) level3Refs.current[i] = el; }}
-                  className={`w-14 h-20 md:w-16 md:h-24 rounded-xl flex items-center justify-center border-2 transition-all duration-300 ${i < level3Filled ? 'bg-[#2D8A5C]/20 border-[#2D8A5C]' : 'bg-brand-graphite/5 border-brand-graphite/30 border-dashed'}`}
+                  className={`w-14 h-20 md:w-16 md:h-24 rounded-xl flex items-center justify-center border-2 transition-all duration-300 ${i < level3Filled ? 'bg-system-success/20 border-system-success' : 'bg-brand-graphite/5 border-brand-graphite/30 border-dashed'}`}
                 >
                   {i < level3Filled && renderNoteVisual(levels.level3.id)}
                 </div>
@@ -258,10 +258,10 @@ export function PyramidDragDropView({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-8 p-6 bg-[#2D8A5C]/10 border-2 border-[#2D8A5C] rounded-2xl flex flex-col items-center text-center gap-3 w-full max-w-lg"
+            className="mt-8 p-6 bg-system-success/10 border-2 border-system-success rounded-2xl flex flex-col items-center text-center gap-3 w-full max-w-lg"
           >
-            <CheckCircle2 className="text-[#2D8A5C]" size={40} />
-            <p className="font-bold text-lg text-[#2D8A5C]">
+            <CheckCircle2 className="text-system-success" size={40} />
+            <p className="font-bold text-lg text-system-success">
               {data.successMessage}
             </p>
           </motion.div>
