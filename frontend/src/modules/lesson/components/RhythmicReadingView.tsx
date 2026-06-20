@@ -314,7 +314,7 @@ export function RhythmicReadingView({ data, isCompleted, onSuccess, onFail }: Pr
               onClick={startPrep}
               className={cn(
                 "px-8 py-6 rounded-full text-brand-black text-xl font-bold shadow-lg mt-4",
-                score >= 70 ? "bg-[#2D8A5C] hover:bg-green-600 text-white" : "bg-red-500 hover:bg-red-600 text-white"
+                score >= 70 ? "bg-system-success hover:bg-green-600 text-white" : "bg-red-500 hover:bg-red-600 text-white"
               )}
             >
               <RefreshCw className="mr-2" /> {score >= 70 ? "Jogar Novamente" : "Tentar Novamente"}

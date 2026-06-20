@@ -1,0 +1,48 @@
+'use server';
+
+import { adminDb } from '@/lib/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
+
+export async function addXPServer(userId: string, amount: number) {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
+  if (typeof amount !== 'number' || amount <= 0 || amount > 100) {
+    throw new Error('Invalid XP amount');
+  }
+
+  try {
+    const userRef = adminDb.collection('users').doc(userId);
+    
+    // Using FieldValue.increment from the admin SDK to securely add XP
+    await userRef.update({
+      'stats.xp': FieldValue.increment(amount)
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error adding XP on server:', error);
+    throw new Error('Failed to add XP');
+  }
+}
+
+export async function updateProgressServer(userId: string, completedLessons: string[], unlockedLessons: string[]) {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
+  try {
+    const userRef = adminDb.collection('users').doc(userId);
+    
+    await userRef.update({
+      'progress.completedLessons': completedLessons,
+      'progress.unlockedLessons': unlockedLessons
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating progress on server:', error);
+    throw new Error('Failed to update progress');
+  }
+}
