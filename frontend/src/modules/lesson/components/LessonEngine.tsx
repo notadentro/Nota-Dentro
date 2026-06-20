@@ -172,7 +172,7 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
         
         <div className="flex-1 h-4 bg-brand-graphite/10 dark:bg-brand-graphite/30 rounded-full relative">
           <motion.div 
-            className="absolute left-0 top-0 h-full bg-[#2D8A5C] rounded-full shadow-[0_0_15px_#2D8A5C]"
+            className="absolute left-0 top-0 h-full bg-system-success rounded-full shadow-[0_0_15px_#2D8A5C]"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -243,7 +243,7 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
           className={cn(
             "rounded-2xl font-bold py-4 px-6 md:py-6 md:px-8 text-base md:text-lg min-w-[120px] md:min-w-[150px] transition-all",
             isCompleted 
-              ? "bg-[#2D8A5C] hover:bg-green-600 text-white shadow-[0_4px_0_0_#1e5f3f] hover:-translate-y-1 hover:shadow-[0_6px_0_0_#1e5f3f] active:translate-y-1 active:shadow-[0_0px_0_0_#1e5f3f]" 
+              ? "bg-system-success hover:bg-green-600 text-white shadow-[0_4px_0_0_#1e5f3f] hover:-translate-y-1 hover:shadow-[0_6px_0_0_#1e5f3f] active:translate-y-1 active:shadow-[0_0px_0_0_#1e5f3f]" 
               : "bg-brand-graphite/20 text-brand-gray cursor-not-allowed border-none shadow-none"
           )}
         >
@@ -326,7 +326,7 @@ function QuizView({ data, isCompleted, onSuccess, onFail }: { data: QuizStep, is
             let btnClass = "border-2 border-border bg-card text-card-foreground shadow-[0_2px_0_0_rgba(0,0,0,0.1)] hover:border-primary/70 hover:shadow-[0_0_15px_rgba(201,168,17,0.3)] hover:-translate-y-1 transition-all duration-300";
             
             if (isThisCorrect) {
-              btnClass = "border-[#2D8A5C] bg-[#2D8A5C]/10 text-[#2D8A5C] shadow-[0_0_20px_#2D8A5C] animate-pulse border-4";
+              btnClass = "border-system-success bg-system-success/10 text-system-success shadow-[0_0_20px_#2D8A5C] animate-pulse border-4";
             } else if (isThisSelected && isWrong) {
               btnClass = "border-red-500 bg-red-500/10 text-red-500 shadow-none";
             }
@@ -364,12 +364,12 @@ function QuizView({ data, isCompleted, onSuccess, onFail }: { data: QuizStep, is
                 initial={{ scale: 0.8, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.8, y: 20 }}
-                className={cn("w-[90%] md:w-full max-w-3xl p-6 md:p-10 rounded-3xl shadow-2xl text-center flex flex-col items-center border", isWrong ? "bg-red-50 dark:bg-red-950/90 border-red-200 dark:border-red-900" : "bg-white/90 dark:bg-[#2D8A5C]/40 border-white/50 dark:border-white/20")}
+                className={cn("w-[90%] md:w-full max-w-3xl p-6 md:p-10 rounded-3xl shadow-2xl text-center flex flex-col items-center border", isWrong ? "bg-red-50 dark:bg-red-950/90 border-red-200 dark:border-red-900" : "bg-white/90 dark:bg-system-success/40 border-white/50 dark:border-white/20")}
               >
                 {isCompleted ? (
                   <>
                     <p className="font-bold text-2xl mb-3 flex items-center justify-center gap-2 text-brand-black dark:text-white">
-                      <Star className="fill-[#2D8A5C] text-[#2D8A5C] dark:fill-brand-gold dark:text-brand-gold" size={32} /> 
+                      <Star className="fill-system-success text-system-success dark:fill-brand-gold dark:text-brand-gold" size={32} /> 
                       Correto!
                     </p>
                     <p className="text-base md:text-lg text-brand-black dark:text-white/90 font-medium">{data.explanation}</p>
@@ -429,7 +429,7 @@ function TrueFalseView({ data, isCompleted, onSuccess, onFail }: { data: TrueFal
             disabled={isCompleted}
             className={cn(
               "p-4 md:p-6 rounded-2xl text-lg md:text-xl font-bold text-center transition-all border-2 shadow-[0_4px_0_0_rgba(0,0,0,0.1)]",
-              isCompleted && data.isTrue ? "border-[#2D8A5C] bg-[#2D8A5C] text-white shadow-[0_0_20px_#2D8A5C] animate-pulse border-4" 
+              isCompleted && data.isTrue ? "border-system-success bg-system-success text-white shadow-[0_0_20px_#2D8A5C] animate-pulse border-4" 
               : selected === true && isWrong ? "border-red-500 bg-red-500 text-white shadow-none"
               : "border-border bg-card text-card-foreground hover:border-primary/70 hover:shadow-[0_0_15px_rgba(201,168,17,0.3)] hover:-translate-y-1"
             )}
@@ -443,7 +443,7 @@ function TrueFalseView({ data, isCompleted, onSuccess, onFail }: { data: TrueFal
             disabled={isCompleted}
             className={cn(
               "p-4 md:p-6 rounded-2xl text-lg md:text-xl font-bold text-center transition-all border-2 shadow-[0_4px_0_0_rgba(0,0,0,0.1)]",
-              isCompleted && !data.isTrue ? "border-[#2D8A5C] bg-[#2D8A5C] text-white shadow-[0_0_20px_#2D8A5C] animate-pulse border-4" 
+              isCompleted && !data.isTrue ? "border-system-success bg-system-success text-white shadow-[0_0_20px_#2D8A5C] animate-pulse border-4" 
               : selected === false && isWrong ? "border-red-500 bg-red-500 text-white shadow-none"
               : "border-border bg-card text-card-foreground hover:border-primary/70 hover:shadow-[0_0_15px_rgba(201,168,17,0.3)] hover:-translate-y-1"
             )}
@@ -464,12 +464,12 @@ function TrueFalseView({ data, isCompleted, onSuccess, onFail }: { data: TrueFal
                 initial={{ scale: 0.8, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.8, y: 20 }}
-                className={cn("w-[90%] md:w-full max-w-3xl p-6 md:p-10 rounded-3xl shadow-2xl text-center flex flex-col items-center border", isWrong ? "bg-red-50 dark:bg-red-950/90 border-red-200 dark:border-red-900" : "bg-white/90 dark:bg-[#2D8A5C]/40 border-white/50 dark:border-white/20")}
+                className={cn("w-[90%] md:w-full max-w-3xl p-6 md:p-10 rounded-3xl shadow-2xl text-center flex flex-col items-center border", isWrong ? "bg-red-50 dark:bg-red-950/90 border-red-200 dark:border-red-900" : "bg-white/90 dark:bg-system-success/40 border-white/50 dark:border-white/20")}
               >
                 {isCompleted ? (
                   <>
                     <p className="font-bold text-2xl mb-3 flex items-center justify-center gap-2 text-brand-black dark:text-white">
-                      <Star className="fill-[#2D8A5C] text-[#2D8A5C] dark:fill-brand-gold dark:text-brand-gold" size={32} /> 
+                      <Star className="fill-system-success text-system-success dark:fill-brand-gold dark:text-brand-gold" size={32} /> 
                       Correto!
                     </p>
                     <p className="text-base md:text-lg text-brand-black dark:text-white/90 font-medium">{data.explanation}</p>

@@ -291,7 +291,7 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
 
       <div className="relative w-full h-48 bg-brand-graphite/5 rounded-3xl flex items-center justify-center overflow-hidden mb-12 border border-brand-graphite/10">
         <div className="absolute inset-0 w-full h-full opacity-30">
-          <svg preserveAspectRatio="none" viewBox="0 0 100 100" className="w-full h-full text-[#2D8A5C]">
+          <svg preserveAspectRatio="none" viewBox="0 0 100 100" className="w-full h-full text-system-success">
             <path d={generateEKGPath()} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
@@ -306,7 +306,7 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
             className={cn(
               "transition-colors duration-300",
               isHeartDead ? "fill-brand-gray text-brand-gray" : "fill-red-500 text-red-500",
-              status === 'finished' && score !== null && score >= 70 && "fill-[#2D8A5C] text-[#2D8A5C]"
+              status === 'finished' && score !== null && score >= 70 && "fill-system-success text-system-success"
             )}
           />
           {status === 'prep' && visualBeat < 0 && (
@@ -332,7 +332,7 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
               className={cn(
                 "absolute top-1/2 left-1/2 -translate-x-1/2 font-bold drop-shadow-md z-30 whitespace-nowrap",
                 ghostMsg.text === 'Desafio Concluído!' ? "text-brand-gold text-2xl" :
-                ghostMsg.type === 'perfect' ? "text-[#2D8A5C] text-xl" :
+                ghostMsg.type === 'perfect' ? "text-system-success text-xl" :
                   ghostMsg.type === 'early' ? "text-yellow-500 text-xl" :
                     ghostMsg.type === 'late' ? "text-orange-500 text-xl" :
                       "text-red-500 text-xl"
@@ -352,7 +352,7 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
             className={cn(
               "h-2 w-8 rounded-full transition-all duration-300",
               visualBeat === i ? "scale-y-150 ring-2 ring-brand-gold ring-offset-1" : "",
-              res === 'perfect' ? "bg-[#2D8A5C]" :
+              res === 'perfect' ? "bg-system-success" :
               res === 'early' ? "bg-yellow-500" :
               res === 'late' ? "bg-orange-500" :
               res === 'missed' ? "bg-red-500" :
@@ -369,7 +369,7 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
             className={cn(
               "w-full rounded-2xl py-6 text-xl font-bold shadow-lg", 
               status === 'idle' || (score !== null && score >= 70) 
-                ? "bg-[#2D8A5C] hover:bg-green-600 text-white" 
+                ? "bg-system-success hover:bg-green-600 text-white" 
                 : "bg-red-500 hover:bg-red-600 text-white"
             )}
           >

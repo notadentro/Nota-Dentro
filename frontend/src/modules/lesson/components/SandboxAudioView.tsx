@@ -165,7 +165,7 @@ export function SandboxAudioView({ data, isCompleted, onSuccess }: SandboxAudioV
           <div className="space-y-4">
             <div className="flex justify-between items-center text-inherit">
               <div className="flex items-center gap-2 font-bold text-lg">
-                <Volume2 className="text-[#2D8A5C]" />
+                <Volume2 className="text-system-success" />
                 <span>Intensidade (Volume)</span>
               </div>
               <span className="font-mono bg-brand-black dark:bg-brand-white text-brand-white dark:text-brand-black px-3 py-1 rounded-lg text-sm">{Math.round(gain * 100)}%</span>
@@ -177,7 +177,7 @@ export function SandboxAudioView({ data, isCompleted, onSuccess }: SandboxAudioV
               step="0.01"
               value={gain}
               onChange={(e) => setGain(Number(e.target.value))}
-              className="w-full h-3 bg-brand-graphite/20 rounded-lg appearance-none cursor-pointer accent-[#2D8A5C]"
+              className="w-full h-3 bg-brand-graphite/20 rounded-lg appearance-none cursor-pointer accent-system-success"
             />
             <div className="flex justify-between text-sm text-brand-gray font-medium">
               <span>Piano (Fraco)</span>
@@ -193,9 +193,9 @@ export function SandboxAudioView({ data, isCompleted, onSuccess }: SandboxAudioV
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-[#2D8A5C]/10 border border-[#2D8A5C] rounded-2xl w-full text-center"
+            className="p-6 bg-system-success/10 border border-system-success rounded-2xl w-full text-center"
           >
-            <p className="font-bold text-[#2D8A5C] text-xl mb-2 flex items-center justify-center gap-2">
+            <p className="font-bold text-system-success text-xl mb-2 flex items-center justify-center gap-2">
               <Check size={24} strokeWidth={3} /> Invenção Concluída!
             </p>
             <p className="text-inherit text-lg">{data.successMessage}</p>
@@ -209,7 +209,7 @@ export function SandboxAudioView({ data, isCompleted, onSuccess }: SandboxAudioV
             <Button 
               onClick={handleComplete} 
               disabled={!hasInteracted}
-              className="w-full py-6 rounded-2xl font-bold text-lg bg-[#2D8A5C] hover:bg-green-600 text-white shadow-[0_4px_0_0_#1e5f3f] active:translate-y-1 active:shadow-none transition-all"
+              className="w-full py-6 rounded-2xl font-bold text-lg bg-system-success hover:bg-green-600 text-white shadow-[0_4px_0_0_#1e5f3f] active:translate-y-1 active:shadow-none transition-all"
             >
               Concluir Invenção
             </Button>

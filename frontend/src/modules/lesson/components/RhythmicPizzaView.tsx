@@ -65,7 +65,7 @@ export function RhythmicPizzaView({
   const getSliceStyles = (index: number) => {
     const isFilled = index < filledSlices;
     const base = "absolute w-1/2 h-1/2 border border-brand-graphite/20 transition-colors duration-500";
-    const bg = isFilled ? "bg-[#2D8A5C]" : "bg-transparent";
+    const bg = isFilled ? "bg-system-success" : "bg-transparent";
     
     switch (index) {
       case 0: return cn(base, bg, "top-0 right-0 rounded-tr-full");
@@ -139,10 +139,10 @@ export function RhythmicPizzaView({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 p-6 bg-[#2D8A5C]/10 border-2 border-[#2D8A5C] rounded-2xl flex flex-col items-center text-center gap-3 w-full max-w-lg"
+            className="mt-4 p-6 bg-system-success/10 border-2 border-system-success rounded-2xl flex flex-col items-center text-center gap-3 w-full max-w-lg"
           >
-            <CheckCircle2 className="text-[#2D8A5C]" size={40} />
-            <p className="font-bold text-lg text-[#2D8A5C]">
+            <CheckCircle2 className="text-system-success" size={40} />
+            <p className="font-bold text-lg text-system-success">
               {data.successMessage}
             </p>
           </motion.div>

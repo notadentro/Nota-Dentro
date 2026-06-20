@@ -157,7 +157,7 @@ export function FillBlanksView({ data, isCompleted, onSuccess, onFail }: Props) 
                 "h-10 min-w-[100px] px-4 rounded-xl border-b-4 border-2 font-bold transition-all text-sm md:text-base inline-flex items-center justify-center",
                 wordObj 
                   ? isCompleted 
-                    ? "bg-[#2D8A5C] border-[#2D8A5C] text-white" 
+                    ? "bg-system-success border-system-success text-white" 
                     : isError 
                       ? "bg-red-100 border-red-500 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                       : "bg-brand-gold/20 border-brand-gold text-brand-black dark:text-brand-gold dark:bg-brand-gold/10"
@@ -222,7 +222,7 @@ export function FillBlanksView({ data, isCompleted, onSuccess, onFail }: Props) 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-center">
           <Button 
             onClick={verifyAnswers}
-            className="bg-[#2D8A5C] hover:bg-green-600 text-white rounded-2xl py-6 px-12 font-bold text-lg shadow-[0_4px_0_0_#1e5f3f] active:shadow-none active:translate-y-1 transition-all"
+            className="bg-system-success hover:bg-green-600 text-white rounded-2xl py-6 px-12 font-bold text-lg shadow-[0_4px_0_0_#1e5f3f] active:shadow-none active:translate-y-1 transition-all"
           >
             Verificar Respostas
           </Button>
@@ -234,10 +234,10 @@ export function FillBlanksView({ data, isCompleted, onSuccess, onFail }: Props) 
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
-            className="mt-2 p-6 bg-[#2D8A5C]/10 border border-[#2D8A5C] rounded-3xl flex flex-col items-center text-center"
+            className="mt-2 p-6 bg-system-success/10 border border-system-success rounded-3xl flex flex-col items-center text-center"
           >
-            <CheckCircle2 className="text-[#2D8A5C] w-12 h-12 mb-4" />
-            <p className="text-xl text-[#2D8A5C] font-bold mb-2">Frase Completa!</p>
+            <CheckCircle2 className="text-system-success w-12 h-12 mb-4" />
+            <p className="text-xl text-system-success font-bold mb-2">Frase Completa!</p>
             <p className="text-brand-black dark:text-white/90">{data.explanation}</p>
           </motion.div>
         )}
