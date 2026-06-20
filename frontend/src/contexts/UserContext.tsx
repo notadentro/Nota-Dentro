@@ -17,6 +17,7 @@ import {
   User as FirebaseUser
 } from 'firebase/auth';
 import { db, auth } from '@/lib/firebase';
+import { addXPServer, updateProgressServer } from '@/app/actions/gamification';
 
 interface User {
   uid: string;
@@ -212,12 +213,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUser(prev => prev ? { ...prev, stats: { ...prev.stats, xp: prev.stats.xp + amount } } : null);
 
     try {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
-        'stats.xp': increment(amount)
-      });
+      await addXPServer(user.uid, amount);
     } catch (error) {
-      console.error('Failed to add XP to Firestore:', error);
+      console.error('Failed to add XP to server:', error);
       // Reverte caso dê erro no banco
       setUser(prev => prev ? { ...prev, stats: { ...prev.stats, xp: prev.stats.xp - amount } } : null);
     }
@@ -237,13 +235,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } : null);
 
     try {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
-        'progress.completedLessons': completedLessons,
-        'progress.unlockedLessons': unlockedLessons
-      });
+      await updateProgressServer(user.uid, completedLessons, unlockedLessons);
     } catch (error) {
-      console.error('Failed to update progress in Firestore:', error);
+      console.error('Failed to update progress on server:', error);
       // Aqui idealmente reverteríamos, mas por simplicidade mantemos otimista
     }
   };

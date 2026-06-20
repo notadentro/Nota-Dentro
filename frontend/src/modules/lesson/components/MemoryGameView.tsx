@@ -148,7 +148,7 @@ export function MemoryGameView({ data, isCompleted, onSuccess, onFail }: Props) 
                   className={cn(
                     "absolute w-full h-full backface-hidden rounded-2xl border-4 shadow-xl flex flex-col items-center justify-center p-2 md:p-4 text-center",
                     isMatched 
-                      ? "bg-[#2D8A5C]/10 border-[#2D8A5C] text-[#2D8A5C]" 
+                      ? "bg-system-success/10 border-system-success text-system-success" 
                       : "bg-white border-brand-gold text-brand-black dark:bg-brand-black dark:text-brand-white"
                   )}
                   style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
@@ -173,10 +173,10 @@ export function MemoryGameView({ data, isCompleted, onSuccess, onFail }: Props) 
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
-            className="mt-8 p-6 bg-[#2D8A5C]/10 border border-[#2D8A5C] rounded-3xl flex flex-col items-center text-center"
+            className="mt-8 p-6 bg-system-success/10 border border-system-success rounded-3xl flex flex-col items-center text-center"
           >
-            <Star className="text-[#2D8A5C] fill-[#2D8A5C] w-12 h-12 mb-4" />
-            <p className="text-xl text-[#2D8A5C] font-bold mb-2">Desafio Concluído!</p>
+            <Star className="text-system-success fill-system-success w-12 h-12 mb-4" />
+            <p className="text-xl text-system-success font-bold mb-2">Desafio Concluído!</p>
             <p className="opacity-90 font-medium" style={{ color: '#1A1A1A' }}>{data.explanation}</p>
           </motion.div>
         )}
