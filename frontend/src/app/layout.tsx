@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 
 export const viewport: Viewport = {
+  themeColor: '#1A1A1A',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -45,6 +46,14 @@ export const metadata: Metadata = {
     'música', 'harmonia', 'história da música',
   ].join(', '),
   authors: [{ name: 'Nota Dentro' }],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Nota Dentro',
+  },
+  formatDetection: {
+    telephone: false,
+  },
   openGraph: {
     title: 'Nota Dentro | Teoria Musical Gamificada',
     description: 'Transforme o estudo maçante da teoria musical em um jogo viciante. Focado em preparatório militar e THE.',
