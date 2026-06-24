@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Play, RefreshCw, Heart, Zap, Info, ShieldAlert } from 'lucide-react';
+import { Play, RefreshCw, Heart, Zap, Info, ShieldAlert, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TimeSignature, RhythmCell, RhythmCellBase, GAME_LEVELS, LevelDefinition } from '../constants/levels';
+import { useUser } from '@/contexts/UserContext';
+import { useRouter } from 'next/navigation';
 
 type GameState = 'idle' | 'instruction' | 'prep' | 'playing' | 'level_complete' | 'level_failed' | 'game_over';
 type BeatResult = 'perfect' | 'early' | 'late' | 'missed' | 'penalty' | 'tied' | null;
@@ -144,7 +146,10 @@ const scheduleClick = (ctx: AudioContext, freq: number, time: number) => {
   return osc;
 };
 
-export function PerformanceSimulator() {
+export function PerformanceSimulator({ initialLevel, initialDifficulty }: { initialLevel?: number, initialDifficulty?: number }) {
+  const { user, addXP, updateProgress, deductLife, buyLives, addCache } = useUser();
+  const router = useRouter();
+  const [showStore, setShowStore] = useState(false);
   const INITIAL_LIVES = 5;
   const INITIAL_RETRIES = 5;
   const INITIAL_BPM = 60;
@@ -162,8 +167,46 @@ export function PerformanceSimulator() {
   const [levelTotalBeats, setLevelTotalBeats] = useState<number>(100);
   
   const [status, setStatus] = useState<GameState>('idle');
-  const [elapsedTime, setElapsedTime] = useState(-4 * (60 / INITIAL_BPM * 1000));
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [ghostMsg, setGhostMsg] = useState<{ text: string, id: number, type: BeatResult } | null>(null);
+
+  const accuracy = (() => {
+    const notes = events.filter(e => e.type === 'note' && e.result !== 'tied');
+    if (notes.length === 0) return 0;
+    const hits = notes.filter(e => e.result === 'perfect' || e.result === 'early' || e.result === 'late');
+    return Math.round((hits.length / notes.length) * 100);
+  })();
+
+  // Salvar progresso no Firebase quando a fase for concluída
+  useEffect(() => {
+    if (status === 'level_complete' && user) {
+      const completed = [...(user.progress?.completedLessons || [])];
+      const unlocked = [...(user.progress?.unlockedLessons || ['1'])];
+      const currentLvlStr = level.toString();
+      const nextLvlStr = (level + 1).toString();
+
+      let changed = false;
+      if (!completed.includes(currentLvlStr)) {
+        completed.push(currentLvlStr);
+        changed = true;
+      }
+      if (!unlocked.includes(nextLvlStr)) {
+        unlocked.push(nextLvlStr);
+        changed = true;
+      }
+
+      if (changed) {
+        updateProgress(completed, unlocked);
+      }
+
+      if (accuracy >= 80) {
+        addXP(Math.round(accuracy * 10));
+      }
+      if (accuracy >= 98) {
+        addCache(1);
+      }
+    }
+  }, [status]);
   
   const LATENCY_OFFSET_MS = 0.3; 
 
@@ -171,7 +214,7 @@ export function PerformanceSimulator() {
   const startTimeRef = useRef<number>(0);
   const animationRef = useRef<number>(0);
   const eventsRef = useRef<TapEvent[]>([]);
-  const livesRef = useRef<number>(INITIAL_LIVES);
+  const livesRef = useRef<number>(user ? user.stats.lives : INITIAL_LIVES);
   const scheduledOscillatorsRef = useRef<OscillatorNode[]>([]);
 
   const getCurrentTimeMs = () => {
@@ -186,14 +229,29 @@ export function PerformanceSimulator() {
   }, [events]);
 
   useEffect(() => {
+    if (user?.stats?.lives !== undefined) {
+      setLives(user.stats.lives);
+    }
+  }, [user?.stats?.lives]);
+
+  useEffect(() => {
     livesRef.current = lives;
   }, [lives]);
 
   useEffect(() => {
+    tickRef.current = tick;
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (initialLevel && initialDifficulty && status === 'idle') {
+      setLevel(initialLevel);
+      setBpm(initialDifficulty);
+      startGame(initialLevel, initialDifficulty);
+    }
+  }, [initialLevel, initialDifficulty]);
 
   useEffect(() => {
     if (status === 'level_failed' || status === 'game_over') {
@@ -296,13 +354,22 @@ export function PerformanceSimulator() {
       if (penalizedBeatsRef.current.has(beatKey)) return;
       penalizedBeatsRef.current.add(beatKey);
     }
-    setLives(prev => {
-      const next = prev - 1;
-      if (next <= 0) {
+
+    if (user) {
+      deductLife();
+      livesRef.current -= 1;
+      if (livesRef.current <= 0) {
         setStatus('level_failed');
       }
-      return next;
-    });
+    } else {
+      setLives(prev => {
+        const next = prev - 1;
+        if (next <= 0) {
+          setStatus('level_failed');
+        }
+        return next;
+      });
+    }
   };
 
   const tickRef = useRef<() => void>(() => {});
@@ -477,13 +544,21 @@ export function PerformanceSimulator() {
     }
   };
 
-  const startGame = (overrideLevel?: number | any) => {
-    const targetLevel = typeof overrideLevel === 'number' ? overrideLevel : level;
-    if (targetLevel !== level) setLevel(targetLevel);
-    setLives(INITIAL_LIVES);
+  const startGame = (overrideLevel?: number, overrideBpm?: number) => {
+    const l = overrideLevel ?? level;
+    const b = overrideBpm ?? selectedDifficulty;
+
+    const currentLives = user ? user.stats.lives : lives;
+    if (currentLives <= 0) {
+      setShowStore(true);
+      return;
+    }
+
+    setLevel(l);
+    setLives(currentLives);
     setRetries(INITIAL_RETRIES);
-    setBpm(selectedDifficulty);
-    startLevel(targetLevel, selectedDifficulty);
+    setBpm(b);
+    startLevel(l, b);
   };
 
   const nextLevel = () => {
@@ -646,8 +721,6 @@ export function PerformanceSimulator() {
   const prepBeats = levelDef.timeSignature[0];
 
   const validEvents = events.filter(e => e.result !== 'tied' && e.type === 'note');
-  const perfects = validEvents.filter(e => e.result === 'perfect').length;
-  const accuracy = validEvents.length > 0 ? Math.round((perfects / validEvents.length) * 100) : 0;
   
   const buildVisualCells = (sequence: RhythmCell[]) => {
     const visuals: { cellRaw: RhythmCell, absoluteBeat: number }[] = [];
@@ -867,23 +940,58 @@ export function PerformanceSimulator() {
                   </div>
                 );
               })()}
-              {baseName === 'quatro_semicolcheias' && (
-                <div className="flex flex-row w-full justify-between px-1 relative">
-                  {[0, 1, 2, 3].map((subIndex) => {
-                    const ev = cellEvents[subIndex];
-                    const active = isNoteActive(ev);
-                    return (
-                      <div key={subIndex} className="flex flex-col items-center">
-                        <div className={cn("w-4 h-8 transition-all flex items-center justify-center", active ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
-                          <div className={cn("w-full h-full transition-colors", getBgClass(ev, active))} style={{ WebkitMaskImage: 'url(/assets/svg/semicolcheia.svg)', maskImage: 'url(/assets/svg/semicolcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
-                        </div>
-                        {renderProgressBar("w-2", ev)}
-                      </div>
-                    );
-                  })}
-                  {isLigada && renderLigaduraDynamic()}
-                </div>
-              )}
+              {baseName === 'quatro_semicolcheias' && (() => {
+                const ev0 = cellEvents[0];
+                const ev1 = cellEvents[1];
+                const ev2 = cellEvents[2];
+                const ev3 = cellEvents[3];
+                const active0 = isNoteActive(ev0);
+                const active1 = isNoteActive(ev1);
+                const active2 = isNoteActive(ev2);
+                const active3 = isNoteActive(ev3);
+                const anyActive = active0 || active1 || active2 || active3;
+
+                const c0 = getColorCode(ev0, active0);
+                const c1 = getColorCode(ev1, active1);
+                const c2 = getColorCode(ev2, active2);
+                const c3 = getColorCode(ev3, active3);
+
+                let bgClass = "bg-black";
+                let style: React.CSSProperties = {};
+
+                if (c0 === c1 && c1 === c2 && c2 === c3) {
+                  if (c0 === "#F2D349") bgClass = "bg-brand-gold";
+                  else if (c0 === "#ef4444") bgClass = "bg-red-500";
+                  else bgClass = "bg-black";
+                } else {
+                  style = { background: `linear-gradient(to right, ${c0} 25%, ${c1} 25% 50%, ${c2} 50% 75%, ${c3} 75%)` };
+                }
+
+                return (
+                  <div className="flex flex-col items-center relative w-full">
+                    <div className={cn("w-20 h-12 transition-all flex items-center justify-center", anyActive ? "-translate-y-1 scale-110 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
+                      <div 
+                        className={cn("w-full h-full transition-colors", bgClass)} 
+                        style={{ 
+                          ...style,
+                          WebkitMaskImage: 'url(/assets/svg/quatro_semicolcheias.svg)', 
+                          maskImage: 'url(/assets/svg/quatro_semicolcheias.svg)', 
+                          WebkitMaskSize: 'contain', 
+                          WebkitMaskRepeat: 'no-repeat', 
+                          WebkitMaskPosition: 'center' 
+                        }} 
+                      />
+                    </div>
+                    <div className="flex flex-row w-full justify-evenly mt-1 px-1">
+                      {renderProgressBar("w-3", ev0)}
+                      {renderProgressBar("w-3", ev1)}
+                      {renderProgressBar("w-3", ev2)}
+                      {renderProgressBar("w-3", ev3)}
+                    </div>
+                    {isLigada && renderLigaduraDynamic()}
+                  </div>
+                );
+              })()}
               {baseName === 'colcheia_seminima_colcheia' && (() => {
                 const ev0 = cellEvents[0];
                 const ev1 = cellEvents[1];
@@ -932,13 +1040,19 @@ export function PerformanceSimulator() {
       {/* HEADER */}
       <div className="absolute top-8 left-0 right-0 flex justify-between items-center px-10 z-50">
          <div className="flex gap-2">
-            {[...Array(INITIAL_LIVES)].map((_, i) => (
-               <Heart 
-                 key={i} 
-                 className={cn("w-8 h-8 transition-all duration-300", i < lives ? "text-red-500 fill-red-500" : "text-brand-graphite fill-brand-graphite")}
-               />
+            {Array.from({ length: INITIAL_LIVES }).map((_, i) => (
+              <Heart key={i} className={cn("w-5 h-5 transition-all duration-300", i < lives ? "text-brand-gold fill-brand-gold scale-100" : "text-brand-gray/50 scale-75 opacity-50")} />
             ))}
          </div>
+
+         {/* Cachê UI */}
+         {user && (
+           <div className="flex items-center gap-1 bg-brand-gold/20 px-3 py-1 rounded-full text-brand-gold font-bold ml-4 border border-brand-gold/30 cursor-pointer hover:bg-brand-gold/30 transition-colors" onClick={() => setShowStore(true)}>
+             <Zap className="w-4 h-4 fill-brand-gold" />
+             <span>{user.stats.cache}</span>
+           </div>
+         )}
+
          <div className="flex items-center gap-6">
             <div className="flex flex-col items-end">
                <span className="text-brand-gray text-sm uppercase font-bold tracking-widest">Nível {level} - {levelDef.name}</span>
@@ -1014,31 +1128,76 @@ export function PerformanceSimulator() {
           <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md">
             <h2 className="text-5xl font-headline font-black text-red-500 mb-2 uppercase tracking-tight">Game Over Total</h2>
             <p className="text-brand-gray text-xl mb-8">Você esgotou todas as tentativas para esta fase.</p>
-            <Button onClick={() => setStatus('idle')} className="px-10 py-8 rounded-full bg-red-600 hover:bg-red-500 text-white text-2xl font-bold shadow-lg shadow-red-500/20">
+            <Button onClick={() => router.push('/ritmo-insano')} className="px-10 py-8 rounded-full bg-red-600 hover:bg-red-500 text-white text-2xl font-bold shadow-lg shadow-red-500/20">
               Voltar para o Menu
             </Button>
           </div>
         )}
 
         {status === 'level_complete' && (
-          <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md">
-            <h2 className="text-5xl font-headline font-black text-brand-gold mb-2 uppercase tracking-tight">Fase Concluída!</h2>
-            <div className="flex gap-8 mb-8 mt-4">
-              <div className="flex flex-col items-center">
-                <span className="text-brand-gray text-sm uppercase tracking-widest">Precisão</span>
-                <span className={cn("text-5xl font-bold font-headline", accuracy >= 80 ? "text-green-400" : "text-yellow-400")}>{accuracy}%</span>
-              </div>
+          <div className="absolute inset-0 bg-brand-black/90 z-20 flex flex-col items-center justify-center p-6 text-center backdrop-blur-sm animate-in fade-in duration-500">
+            <h2 className="text-4xl font-black text-brand-gold mb-2 uppercase tracking-widest drop-shadow-lg">Concluído!</h2>
+            <div className="text-white text-xl mb-4 font-bold flex items-center justify-center gap-2">
+              Precisão: <span className={accuracy >= 80 ? 'text-green-400 text-2xl' : accuracy >= 50 ? 'text-yellow-400 text-2xl' : 'text-red-400 text-2xl'}>{accuracy}%</span>
             </div>
-            <div className="flex gap-6 mt-4">
-              <Button onClick={() => { setRetries(r => r > 0 ? r - 1 : 0); startLevel(level, bpm, true); }} className="flex flex-col items-center justify-center w-40 h-32 rounded-3xl bg-brand-graphite hover:bg-brand-gray/20 text-brand-gray border-2 border-brand-gray/30 transition-all group">
-                <span className="text-2xl font-bold mb-2 group-hover:scale-105 transition-transform">Repetir</span>
-                <span className="text-brand-gray/50 font-bold bg-brand-black px-4 py-2 rounded-lg text-lg">F</span>
-              </Button>
+            {accuracy >= 98 && (
+              <div className="mb-6 bg-brand-gold/20 text-brand-gold px-4 py-2 rounded-full font-bold flex items-center gap-2 animate-bounce">
+                <Zap className="w-5 h-5 fill-brand-gold" />
+                +1 Cachê Bônus! (&ge; 98%)
+              </div>
+            )}
+            <div className="flex flex-col sm:flex-row gap-4 mt-6">
+              <Button onClick={() => { setRetries(r => r > 0 ? r - 1 : 0); startLevel(level, bpm, true); }} className="px-8 py-4 bg-brand-graphite text-white font-bold rounded-xl">Repetir</Button>
+              <Button onClick={nextLevel} className="px-8 py-4 bg-brand-gold text-brand-black font-bold rounded-xl">Avançar</Button>
+            </div>
+          </div>
+        )}
+        
+        {/* MODAL DA LOJA */}
+        {showStore && (
+          <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl p-6 max-w-md w-full text-center shadow-2xl relative">
+              <button onClick={() => setShowStore(false)} className="absolute top-4 right-4 text-brand-gray hover:text-brand-black">✕</button>
+              <div className="w-16 h-16 bg-brand-gold/20 text-brand-gold rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="w-8 h-8 fill-brand-gold" />
+              </div>
+              <h3 className="text-2xl font-black mb-2 text-brand-black">Suas vidas acabaram!</h3>
+              <p className="text-brand-gray mb-6">Você precisa de mais Vidas para continuar treinando o ritmo. Use seu Cachê ou adquira mais!</p>
               
-              <Button onClick={nextLevel} className="flex flex-col items-center justify-center w-40 h-32 rounded-3xl bg-brand-gold hover:bg-yellow-400 text-brand-black border-2 border-yellow-300 shadow-[0_0_30px_rgba(242,211,73,0.3)] transition-all group">
-                <span className="text-2xl font-bold mb-2 group-hover:scale-105 transition-transform">Avançar</span>
-                <span className="text-brand-gold font-bold bg-brand-black px-4 py-2 rounded-lg text-lg">J</span>
-              </Button>
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6 flex justify-between items-center">
+                <span className="font-bold text-slate-600">Seu Saldo:</span>
+                <span className="font-black text-brand-gold text-xl flex items-center gap-1">
+                  <Zap className="w-5 h-5 fill-brand-gold" />
+                  {user?.stats?.cache ?? 0}
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                <Button 
+                  onClick={async () => {
+                    if (!user) return;
+                    const success = await buyLives(50, 5);
+                    if (success) {
+                      setShowStore(false);
+                    } else {
+                      alert('Cachê insuficiente!');
+                    }
+                  }}
+                  className="w-full bg-brand-black hover:bg-brand-gray text-white font-bold py-6 text-lg rounded-xl flex justify-between items-center px-6"
+                >
+                  <span>Recuperar 5 Vidas</span>
+                  <span className="flex items-center text-brand-gold gap-1 bg-white/20 px-3 py-1 rounded-full text-sm">
+                    50 <Zap className="w-4 h-4 fill-brand-gold" />
+                  </span>
+                </Button>
+                
+                <Button 
+                  onClick={() => alert('Integração com Stripe em breve!')}
+                  className="w-full border-brand-gold/30 border-2 text-brand-gold font-bold py-6 text-lg rounded-xl hover:bg-brand-gold hover:text-white transition-colors"
+                >
+                  Comprar 100 Cachês por R$ 4,90
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -1116,56 +1275,8 @@ export function PerformanceSimulator() {
         {/* Controles e Botões PAD */}
         <div className="flex flex-col items-center gap-6 w-full max-w-lg relative">
           {status === 'idle' ? (
-            <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/90 backdrop-blur-md px-4">
-              <div className="bg-brand-graphite p-8 rounded-3xl w-full max-w-3xl flex flex-col gap-6 shadow-2xl border border-brand-gray/20">
-                <div className="flex justify-between items-center border-b border-brand-gray/20 pb-4">
-                  <h2 className="text-3xl font-headline font-black text-white uppercase tracking-widest">Selecionar Fase</h2>
-                  <div className="text-brand-gold font-bold text-xl">Fase {level} selecionada</div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-                  {[1, 2, 3, 4, 5].map(mundoNum => {
-                    const mundoLevels = GAME_LEVELS.slice((mundoNum - 1) * 10, mundoNum * 10);
-                    if (mundoLevels.length === 0) return null;
-                    return (
-                      <div key={mundoNum} className="flex flex-col gap-2">
-                        <div className="text-brand-gray text-xs font-bold uppercase tracking-widest mb-1 text-center">Mundo {mundoNum}</div>
-                        <div className="grid grid-cols-2 gap-2">
-                          {mundoLevels.map(lvl => (
-                            <button
-                              key={lvl.id}
-                              onClick={() => setLevel(lvl.id)}
-                              title={lvl.name}
-                              className={cn(
-                                "h-12 rounded-xl font-bold flex items-center justify-center transition-all",
-                                level === lvl.id 
-                                  ? "bg-brand-gold text-brand-black scale-110 shadow-lg shadow-brand-gold/40 z-10" 
-                                  : "bg-brand-black text-brand-gray hover:bg-brand-gray/20 hover:text-white border border-brand-gray/30"
-                              )}
-                            >
-                              {lvl.id}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-4 mt-2">
-                  <div className="flex gap-2 flex-1">
-                    <Button onClick={() => setSelectedDifficulty(60)} className={cn("flex-1 font-bold h-16", selectedDifficulty === 60 ? "bg-brand-gold text-brand-black" : "bg-brand-black text-brand-gray border border-brand-gray/30")}>Fácil (60)</Button>
-                    <Button onClick={() => setSelectedDifficulty(70)} className={cn("flex-1 font-bold h-16", selectedDifficulty === 70 ? "bg-brand-gold text-brand-black" : "bg-brand-black text-brand-gray border border-brand-gray/30")}>Médio (70)</Button>
-                    <Button onClick={() => setSelectedDifficulty(90)} className={cn("flex-1 font-bold h-16", selectedDifficulty === 90 ? "bg-brand-gold text-brand-black" : "bg-brand-black text-brand-gray border border-brand-gray/30")}>Difícil (90)</Button>
-                  </div>
-                  <Button 
-                    onClick={startGame}
-                    className="flex-1 h-16 rounded-2xl bg-green-500 hover:bg-green-400 text-white text-2xl font-black shadow-lg shadow-green-500/30 uppercase tracking-widest"
-                  >
-                    Iniciar Fase {level}
-                  </Button>
-                </div>
-              </div>
+            <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md px-4">
+               <div className="w-16 h-16 border-4 border-brand-gold border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : (
             <div className="h-[136px] w-full" />

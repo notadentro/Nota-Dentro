@@ -17,7 +17,7 @@ import {
   User as FirebaseUser
 } from 'firebase/auth';
 import { db, auth } from '@/lib/firebase';
-import { addXPServer, updateProgressServer } from '@/app/actions/gamification';
+import { addXPServer, updateProgressServer, updateLivesServer, updateCacheServer } from '@/app/actions/gamification';
 
 interface User {
   uid: string;
@@ -30,6 +30,8 @@ interface User {
     xp: number;
     level: number;
     streak: number;
+    lives: number;
+    cache: number;
   };
   achievements: string[];
   progress?: Record<string, any>;
@@ -52,6 +54,9 @@ interface UserContextType {
   logout: () => Promise<void>;
   addXP: (amount: number) => Promise<void>;
   updateProgress: (completedLessons: string[], unlockedLessons: string[]) => Promise<void>;
+  deductLife: () => Promise<void>;
+  buyLives: (cost: number, amount: number) => Promise<boolean>;
+  addCache: (amount: number) => Promise<void>;
   completeOnboarding: (goal: string, level: string, focus?: string, instruments?: string[]) => Promise<void>;
 }
 
@@ -80,7 +85,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
             username: data.username || `user_${firebaseUser.uid.substring(0,5)}`,
             email: firebaseUser.email || data.email || '',
             photoURL: data.photoURL || firebaseUser.photoURL || `https://picsum.photos/seed/${firebaseUser.uid}/200`,
-            stats: data.stats || { xp: 0, level: 1, streak: 0 },
+            stats: { 
+              xp: data.stats?.xp || 0, 
+              level: data.stats?.level || 1, 
+              streak: data.stats?.streak || 0,
+              lives: data.stats?.lives ?? 5,
+              cache: data.stats?.cache ?? 100
+            },
             achievements: data.achievements || [],
             progress: data.progress || {},
             instagramProfile: data.instagramProfile || '',
@@ -96,7 +107,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             email: firebaseUser.email || '',
             username: `user_${firebaseUser.uid.substring(0,5)}`,
             photoURL: firebaseUser.photoURL || `https://picsum.photos/seed/${firebaseUser.uid}/200`,
-            stats: { xp: 0, level: 1, streak: 0 },
+            stats: { xp: 0, level: 1, streak: 0, lives: 5, cache: 100 },
             achievements: [],
             progress: {},
             hasCompletedOnboarding: false,
@@ -136,7 +147,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       username,
       email,
       photoURL: `https://picsum.photos/seed/${username}/200`,
-      stats: { xp: 0, level: 1, streak: 0 },
+      stats: { xp: 0, level: 1, streak: 0, lives: 5, cache: 100 },
       achievements: [],
       progress: {},
       hasCompletedOnboarding: false,
@@ -181,7 +192,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           username: `user_${firebaseUser.uid.substring(0,5)}`,
           email: firebaseUser.email,
           photoURL: `https://picsum.photos/seed/${firebaseUser.uid}/200`,
-          stats: { xp: 0, level: 1, streak: 0 },
+          stats: { xp: 0, level: 1, streak: 0, lives: 5, cache: 100 },
           achievements: [],
           progress: {},
           hasCompletedOnboarding: false,
@@ -242,6 +253,57 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const deductLife = async () => {
+    if (!user?.uid) return;
+    if (user.stats.lives <= 0) return;
+
+    setUser(prev => prev ? { ...prev, stats: { ...prev.stats, lives: prev.stats.lives - 1 } } : null);
+
+    try {
+      await updateLivesServer(user.uid, -1);
+    } catch (error) {
+      console.error('Failed to deduct life:', error);
+      setUser(prev => prev ? { ...prev, stats: { ...prev.stats, lives: prev.stats.lives + 1 } } : null);
+    }
+  };
+
+  const buyLives = async (cost: number, amount: number): Promise<boolean> => {
+    if (!user?.uid) return false;
+    if (user.stats.cache < cost) return false;
+
+    setUser(prev => prev ? { 
+      ...prev, 
+      stats: { ...prev.stats, lives: prev.stats.lives + amount, cache: prev.stats.cache - cost } 
+    } : null);
+
+    try {
+      await updateCacheServer(user.uid, -cost);
+      await updateLivesServer(user.uid, amount);
+      return true;
+    } catch (error) {
+      console.error('Failed to buy lives:', error);
+      // rollback
+      setUser(prev => prev ? { 
+        ...prev, 
+        stats: { ...prev.stats, lives: prev.stats.lives - amount, cache: prev.stats.cache + cost } 
+      } : null);
+      return false;
+    }
+  };
+
+  const addCache = async (amount: number) => {
+    if (!user?.uid) return;
+
+    setUser(prev => prev ? { ...prev, stats: { ...prev.stats, cache: prev.stats.cache + amount } } : null);
+
+    try {
+      await updateCacheServer(user.uid, amount);
+    } catch (error) {
+      console.error('Failed to add cache:', error);
+      setUser(prev => prev ? { ...prev, stats: { ...prev.stats, cache: prev.stats.cache - amount } } : null);
+    }
+  };
+
   const completeOnboarding = async (goal: string, level: string, focus?: string, instruments?: string[]) => {
     if (!user?.uid) return;
 
@@ -263,7 +325,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <UserContext.Provider value={{ user, isUserLoading, login, signup, checkEmailExists, sendMagicLink, finishMagicLinkSignup, loginWithGoogle, logout, addXP, updateProgress, completeOnboarding }}>
+    <UserContext.Provider value={{ user, isUserLoading, login, signup, checkEmailExists, sendMagicLink, finishMagicLinkSignup, loginWithGoogle, logout, addXP, updateProgress, deductLife, buyLives, addCache, completeOnboarding }}>
       {children}
     </UserContext.Provider>
   );

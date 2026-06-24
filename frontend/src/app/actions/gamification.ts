@@ -46,3 +46,37 @@ export async function updateProgressServer(userId: string, completedLessons: str
     throw new Error('Failed to update progress');
   }
 }
+
+export async function updateLivesServer(userId: string, amount: number) {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
+  try {
+    const userRef = adminDb.collection('users').doc(userId);
+    await userRef.update({
+      'stats.lives': FieldValue.increment(amount)
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating lives on server:', error);
+    throw new Error('Failed to update lives');
+  }
+}
+
+export async function updateCacheServer(userId: string, amount: number) {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
+  try {
+    const userRef = adminDb.collection('users').doc(userId);
+    await userRef.update({
+      'stats.cache': FieldValue.increment(amount)
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating cache on server:', error);
+    throw new Error('Failed to update cache');
+  }
+}
