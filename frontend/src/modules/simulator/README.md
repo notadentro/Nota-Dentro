@@ -33,6 +33,10 @@ O motor adapta a gameplay com base nos dados.
 - Se a lição informar `lowerVoice: []` (vazio), a pauta é centralizada e o jogador pode usar tanto `F` quanto `J` para as notas.
 - Se houver `lowerVoice`, a tela se divide: `F` controla a pauta de cima, `J` controla a pauta de baixo.
 
+### Regras de Ouro para a Escrita de Fases (Level Design)
+- **Proibido "Vazar" o Compasso:** Figuras musicais não podem ultrapassar a duração física de sua fórmula de compasso (ex: uma `semibreve` de 4 tempos quebra o layout de um compasso `2/4`).
+- **Usando Ligaduras (`_ligada`) para Ultrapassar a Barra:** Se for necessário que o jogador segure uma nota por 4 tempos em um compasso `2/4`, deve-se escrever `minima_ligada` seguida de `minima`. O motor somará isso silenciosamente, gerando um único arco de duração (Hold) de 4 tempos, mantendo a notação ortodoxa.
+
 ---
 
 ## 3. Mecânica Físico-Quântica do Jogo
@@ -49,7 +53,7 @@ Para que o jogo julgue o clique do jogador, existem lógicas estritas em `handle
 Quando `ev.duration > 1.0` (ex: Mínimas, Semibreves), o usuário precisa manter o botão pressionado (Hold).
 - `handleRelease` calcula se a pessoa segurou até o fim.
 - **Mecânica Humanizada:** O motor aplica uma "gordurinha" (early tolerance). Um usuário é autorizado a soltar a nota adiantado em `10%` do seu tempo real. Ou seja, em uma semibreve, ele pode soltar um milissegundo antes para respirar e se preparar para a próxima figura sem receber penalidade.
-- A fórmula é: `earlyTolerance = TOLERANCE_MS + (ev.duration * beatMs * 0.10)`
+- A fórmula é: `earlyTolerance = TOLERANCE_MS + (ev.duration * beatMs * 0.15)` (tolerância expandida para 15% por conveniência de gameplay).
 
 ---
 
@@ -71,6 +75,13 @@ A ligadura funde a duração matemática de duas notas.
 ### Pontos de Aumento (`_pontuada`)
 Qualquer figura terminada em `_pontuada` tem sua duração multiplicada +50%.
 Ex: `seminima` = 1.0; `seminima_pontuada` = 1.5.
+
+### Alinhamento Visual por Unidade de Tempo (Ponto de Ataque)
+Em notação musical a duas vozes, as notas alinham-se horizontalmente pelo seu instante de ataque e não pelo centro de sua largura. Para replicar isso, os wrappers das notas são alinhados à esquerda (`justify-start`), de modo que as "cabeças" caiam verticalmente sobre o mesmo eixo de pixels exatos da pulsação, independentemente se uma mão tem uma figura larga (`minima`) e a outra uma estreita (`colcheia`).
+
+### Hit-Detection com CSS Linear Gradient (Grupos Unificados)
+Figuras que compartilham um traste unificado via um único SVG (como `duas_colcheias`) são processadas em bloco.
+Para iluminar as cabeças independentemente (ex: usuário acertou apenas o "Impulso", mas não o "Apoio"), o motor sobrepõe uma máscara dinâmica via **CSS Linear Gradients** (`linear-gradient(to right, black 50%, gold 50%)`), permitindo hit-detection visual microscópico em apenas "metade" do elemento DOM.
 
 ---
 

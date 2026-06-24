@@ -271,6 +271,8 @@ export function PerformanceSimulator() {
     }
   }, [status]);
 
+  const penalizedBeatsRef = useRef<Set<number>>(new Set());
+
   const showGhostMsg = (type: BeatResult, deltaMs?: number) => {
     if (type === 'tied') return;
     
@@ -288,7 +290,12 @@ export function PerformanceSimulator() {
     setGhostMsg({ text: msg, id: Date.now(), type });
   };
 
-  const loseLife = () => {
+  const loseLife = (beatAbsolute?: number) => {
+    if (beatAbsolute !== undefined) {
+      const beatKey = Math.floor(beatAbsolute);
+      if (penalizedBeatsRef.current.has(beatKey)) return;
+      penalizedBeatsRef.current.add(beatKey);
+    }
     setLives(prev => {
       const next = prev - 1;
       if (next <= 0) {
@@ -336,7 +343,7 @@ export function PerformanceSimulator() {
               updatedEvents[i] = { ...ev, result: 'missed' };
               changed = true;
               showGhostMsg('missed');
-              loseLife();
+              loseLife(ev.beatAbsolute);
            } else if (ev.type === 'rest') {
               updatedEvents[i] = { ...ev, result: 'perfect' };
               changed = true;
@@ -347,6 +354,7 @@ export function PerformanceSimulator() {
          if (timeSinceExpectedEnd > TOLERANCE_MS) {
              updatedEvents[i] = { ...ev, isHeld: false, releaseResult: 'late' };
              changed = true;
+             loseLife(ev.beatAbsolute);
          }
        }
     });
@@ -428,6 +436,8 @@ export function PerformanceSimulator() {
     } else {
        beginPrep(currentBpm, totalBeats, ctx, prepBts);
     }
+    
+    penalizedBeatsRef.current.clear();
   };
 
   const beginPrep = (currentBpm: number, totalBeats: number, ctx: AudioContext | null, prepBts: number) => {
@@ -467,12 +477,13 @@ export function PerformanceSimulator() {
     }
   };
 
-  const startGame = () => {
-    setLevel(1);
+  const startGame = (overrideLevel?: number | any) => {
+    const targetLevel = typeof overrideLevel === 'number' ? overrideLevel : level;
+    if (targetLevel !== level) setLevel(targetLevel);
     setLives(INITIAL_LIVES);
     setRetries(INITIAL_RETRIES);
     setBpm(selectedDifficulty);
-    startLevel(1, selectedDifficulty);
+    startLevel(targetLevel, selectedDifficulty);
   };
 
   const nextLevel = () => {
@@ -522,7 +533,7 @@ export function PerformanceSimulator() {
           if (ev.type === 'rest') {
              next[closestEventIndex] = { ...ev, result: 'penalty' };
              showGhostMsg('penalty');
-             loseLife();
+             loseLife(ev.beatAbsolute);
           } else {
              let type: BeatResult = 'perfect';
              if (delta < -TOLERANCE_MS / 3) type = 'early';
@@ -558,7 +569,7 @@ export function PerformanceSimulator() {
           if (delta < -earlyTolerance) {
              next[heldEventIndex] = { ...ev, isHeld: false, releaseResult: 'early' };
              showGhostMsg('early');
-             loseLife();
+             loseLife(ev.beatAbsolute);
           } else {
              next[heldEventIndex] = { ...ev, isHeld: false, releaseResult: 'perfect' };
              showGhostMsg('perfect');
@@ -683,7 +694,9 @@ export function PerformanceSimulator() {
           <span className="leading-none">{levelDef.timeSignature[1]}</span>
         </div>
 
-        {visualCells.map((vis, cellIndex) => {
+        {(() => {
+          const isTrackHolding = events.some(e => e.track === trackId && e.isHeld);
+          return visualCells.map((vis, cellIndex) => {
           const cellRaw = vis.cellRaw;
           const isLigada = cellRaw.endsWith('_ligada');
           const cellStr = cellRaw.replace('_ligada', '') as RhythmCellBase;
@@ -692,99 +705,168 @@ export function PerformanceSimulator() {
 
           const beatIndex = vis.absoluteBeat;
           const cellEvents = events.filter(e => e.track === trackId && e.cellIndex === cellIndex);
-          
+          const cellDuration = getCellDuration(cellRaw);
+          const isCellPlaying = visualBeatFloat >= beatIndex && visualBeatFloat < beatIndex + cellDuration;
+          const shouldWiggle = isTrackHolding && isCellPlaying && (cellEvents[0]?.isHeld || cellEvents[0]?.result === 'tied');
+
+          // Logic to center whole-measure notes if they don't need to align with subdivisions
+          const isFullMeasure = cellDuration === levelDef.timeSignature[0];
+          const otherEventsInMeasure = events.filter(e => e.track !== trackId && e.beatAbsolute >= beatIndex && e.beatAbsolute < beatIndex + cellDuration);
+          const isOtherTrackSimple = otherEventsInMeasure.length <= 1;
+          const shouldCenter = isFullMeasure && isOtherTrackSimple;
+
           const isNoteActive = (ev: TapEvent | undefined) => {
             if (!ev) return false;
-            if (ev.result === 'tied') return true; 
             return visualBeatFloat >= ev.beatAbsolute && visualBeatFloat < ev.beatAbsolute + 0.2;
+          };
+
+          const getColorCode = (ev: TapEvent | undefined, isActive: boolean) => {
+            if (!ev) return isActive ? "#F2D349" : "black";
+            if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "#ef4444";
+            if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "#F2D349";
+            return "black";
+          };
+
+          const getBgClass = (ev: TapEvent | undefined, isActive: boolean) => {
+            if (!ev) return isActive ? "bg-brand-gold" : "bg-black";
+            if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "bg-red-500";
+            if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "bg-brand-gold";
+            return "bg-black";
+          };
+
+          const renderLigaduraDynamic = () => {
+            const tieWidth = Math.max(10, getCellDuration(cellRaw) * 80 - 30);
+            return (
+              <svg 
+                className="absolute top-[60%] z-10 pointer-events-none overflow-visible" 
+                style={{ left: '50%', transform: 'translateX(15px)', width: `${tieWidth}px`, height: '24px' }}
+                viewBox={`0 0 ${tieWidth} 24`}
+              >
+                <path 
+                  d={`M 0 0 Q ${tieWidth / 2} 24 ${tieWidth} 0`} 
+                  fill="transparent" 
+                  stroke="#F2D349" 
+                  strokeWidth="3" 
+                  strokeLinecap="round" 
+                  opacity="0.6" 
+                />
+              </svg>
+            );
           };
 
           return (
             <div 
               key={`${trackId}-${cellIndex}`} 
-              className="absolute flex flex-row items-center justify-center h-full gap-1"
+              className={cn("absolute flex flex-row items-center h-full gap-1", shouldCenter ? "justify-center" : "justify-start pl-6")}
               style={{ left: `${(beatIndex + prepBeats) * 80}px`, width: `${getCellDuration(cellRaw) * 80}px` }}
             >
               {baseName === 'semibreve' && (
-                <div className="flex flex-col items-center w-full relative">
+                <div className="flex flex-col items-center relative">
                   <div 
                     className={cn("w-20 h-14 transition-all flex items-center justify-center relative", isNoteActive(cellEvents[0]) && !cellEvents[0]?.isHeld ? "-translate-y-2 scale-110 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}
-                    style={cellEvents[0]?.isHeld ? { animation: 'wiggle 0.2s ease-in-out infinite', filter: 'drop-shadow(0 0 15px rgba(242,211,73,0.8))' } : {}}
+                    style={shouldWiggle ? { animation: 'wiggle 0.2s ease-in-out infinite', filter: 'drop-shadow(0 0 15px rgba(242,211,73,0.8))' } : {}}
                   >
-                    <div className={cn("absolute inset-0 transition-colors", cellEvents[0]?.isHeld || cellEvents[0]?.result === 'perfect' || cellEvents[0]?.result === 'tied' || isNoteActive(cellEvents[0]) ? "bg-brand-gold" : "bg-black")} style={{ WebkitMaskImage: 'url(/assets/svg/semibreve.svg)', maskImage: 'url(/assets/svg/semibreve.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                    <div className={cn("absolute inset-0 transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/semibreve.svg)', maskImage: 'url(/assets/svg/semibreve.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
                   {isPontuada && <div className="absolute -right-3 top-6 w-2 h-2 rounded-full bg-brand-gold" />}
-                  {isLigada && <svg className="absolute -right-4 top-1/2 w-10 h-6 overflow-visible z-10"><path d="M 0 0 Q 20 15 40 0" fill="transparent" stroke="#F2D349" strokeWidth="4" strokeLinecap="round" opacity="0.6" /></svg>}
+                  {isLigada && renderLigaduraDynamic()}
                   {renderProgressBar("w-16", cellEvents[0])}
                 </div>
               )}
               {baseName === 'minima' && (
-                <div className="flex flex-col items-center w-full relative">
+                <div className="flex flex-col items-center relative">
                   <div 
                     className={cn("w-14 h-14 transition-all flex items-center justify-center relative", isNoteActive(cellEvents[0]) && !cellEvents[0]?.isHeld ? "-translate-y-2 scale-110 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}
-                    style={cellEvents[0]?.isHeld ? { animation: 'wiggle 0.2s ease-in-out infinite', filter: 'drop-shadow(0 0 15px rgba(242,211,73,0.8))' } : {}}
+                    style={shouldWiggle ? { animation: 'wiggle 0.2s ease-in-out infinite', filter: 'drop-shadow(0 0 15px rgba(242,211,73,0.8))' } : {}}
                   >
-                    <div className={cn("absolute inset-0 transition-colors", cellEvents[0]?.isHeld || cellEvents[0]?.result === 'perfect' || cellEvents[0]?.result === 'tied' || isNoteActive(cellEvents[0]) ? "bg-brand-gold" : "bg-black")} style={{ WebkitMaskImage: 'url(/assets/svg/minima.svg)', maskImage: 'url(/assets/svg/minima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                    <div className={cn("absolute inset-0 transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/minima.svg)', maskImage: 'url(/assets/svg/minima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
                   {isPontuada && <div className="absolute -right-3 top-6 w-2 h-2 rounded-full bg-brand-gold" />}
-                  {isLigada && <svg className="absolute -right-4 top-1/2 w-10 h-6 overflow-visible z-10"><path d="M 0 0 Q 20 15 40 0" fill="transparent" stroke="#F2D349" strokeWidth="4" strokeLinecap="round" opacity="0.6" /></svg>}
+                  {isLigada && renderLigaduraDynamic()}
                   {renderProgressBar("w-12", cellEvents[0])}
                 </div>
               )}
               {baseName === 'seminima' && (
-                <div className="flex flex-col items-center w-full relative">
+                <div className="flex flex-col items-center relative">
                   <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
-                    <div className={cn("w-full h-full transition-colors", isNoteActive(cellEvents[0]) || cellEvents[0]?.result === 'perfect' || cellEvents[0]?.result === 'tied' ? "bg-brand-gold" : "bg-black")} style={{ WebkitMaskImage: 'url(/assets/svg/seminima.svg)', maskImage: 'url(/assets/svg/seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                    <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/seminima.svg)', maskImage: 'url(/assets/svg/seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
                   {isPontuada && <div className="absolute -right-3 top-6 w-2 h-2 rounded-full bg-brand-gold" />}
-                  {isLigada && <svg className="absolute -right-4 top-1/2 w-10 h-6 overflow-visible z-10"><path d="M 0 0 Q 20 15 40 0" fill="transparent" stroke="#F2D349" strokeWidth="4" strokeLinecap="round" opacity="0.6" /></svg>}
+                  {isLigada && renderLigaduraDynamic()}
                   {renderProgressBar("w-8", cellEvents[0])}
                 </div>
               )}
               {baseName === 'pausa' && (
-                <div className="flex flex-col items-center w-full">
+                <div className="flex flex-col items-center">
                   <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
-                    <div className={cn("w-full h-full transition-colors", isNoteActive(cellEvents[0]) || cellEvents[0]?.result === 'perfect' ? "bg-brand-gold" : "bg-black")} style={{ WebkitMaskImage: 'url(/assets/svg/pausa-seminima.svg)', maskImage: 'url(/assets/svg/pausa-seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                    <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/pausa-seminima.svg)', maskImage: 'url(/assets/svg/pausa-seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
                   {renderProgressBar("w-8", cellEvents[0])}
                 </div>
               )}
               {baseName === 'pausa_minima' && (
-                <div className="flex flex-col items-center w-full">
+                <div className="flex flex-col items-center">
                   <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
-                    <div className={cn("w-full h-full transition-colors", isNoteActive(cellEvents[0]) || cellEvents[0]?.result === 'perfect' ? "bg-brand-gold" : "bg-black")} style={{ WebkitMaskImage: 'url(/assets/svg/pausa-minima.svg)', maskImage: 'url(/assets/svg/pausa-minima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                    <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/pausa-minima.svg)', maskImage: 'url(/assets/svg/pausa-minima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
                   {renderProgressBar("w-12", cellEvents[0])}
                 </div>
               )}
               {baseName === 'colcheia' && (
-                <div className="flex flex-col items-center w-full relative">
+                <div className="flex flex-col items-center relative">
                   <div className={cn("w-6 h-10 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
-                    <div className={cn("w-full h-full transition-colors", isNoteActive(cellEvents[0]) || cellEvents[0]?.result === 'perfect' || cellEvents[0]?.result === 'tied' ? "bg-brand-gold" : "bg-black")} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                    <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
                   {isPontuada && <div className="absolute -right-3 top-6 w-2 h-2 rounded-full bg-brand-gold" />}
-                  {isLigada && <svg className="absolute -right-4 top-1/2 w-10 h-6 overflow-visible z-10"><path d="M 0 0 Q 20 15 40 0" fill="transparent" stroke="#F2D349" strokeWidth="4" strokeLinecap="round" opacity="0.6" /></svg>}
+                  {isLigada && renderLigaduraDynamic()}
                   {renderProgressBar("w-4", cellEvents[0])}
                 </div>
               )}
-              {baseName === 'duas_colcheias' && (
-                <div className="flex flex-row w-full justify-evenly relative">
-                  <div className="absolute top-1/4 bottom-1/4 left-1/2 w-[1px] border-l-2 border-dashed border-brand-gray/30 -translate-x-1/2 z-0" />
-                  {[0, 1].map((subIndex) => {
-                    const ev = cellEvents[subIndex];
-                    const active = isNoteActive(ev);
-                    return (
-                      <div key={subIndex} className="flex flex-col items-center">
-                        <div className={cn("w-6 h-10 transition-all flex items-center justify-center", active ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
-                          <div className={cn("w-full h-full transition-colors", active || ev?.result === 'perfect' || ev?.result === 'tied' ? "bg-brand-gold" : "bg-black")} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
-                        </div>
-                        {renderProgressBar("w-4", ev)}
-                      </div>
-                    );
-                  })}
-                  {isLigada && <svg className="absolute -right-4 top-1/2 w-10 h-6 overflow-visible z-10"><path d="M 0 0 Q 20 15 40 0" fill="transparent" stroke="#F2D349" strokeWidth="4" strokeLinecap="round" opacity="0.6" /></svg>}
-                </div>
-              )}
+              {baseName === 'duas_colcheias' && (() => {
+                const ev0 = cellEvents[0];
+                const ev1 = cellEvents[1];
+                const active0 = isNoteActive(ev0);
+                const active1 = isNoteActive(ev1);
+                
+                const color0 = getColorCode(ev0, active0);
+                const color1 = getColorCode(ev1, active1);
+                
+                let bgClass = "bg-black";
+                let style: React.CSSProperties = {};
+                
+                if (color0 === color1) {
+                  if (color0 === "#F2D349") bgClass = "bg-brand-gold";
+                  else if (color0 === "#ef4444") bgClass = "bg-red-500";
+                  else bgClass = "bg-black";
+                } else {
+                  style = { background: `linear-gradient(to right, ${color0} 50%, ${color1} 50%)` };
+                }
+                
+                const anyActive = active0 || active1;
+                
+                return (
+                  <div className="flex flex-col items-center relative">
+                    <div className={cn("w-14 h-12 transition-all flex items-center justify-center", anyActive ? "-translate-y-1 scale-110 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
+                      <div 
+                        className={cn("w-full h-full transition-colors", bgClass)} 
+                        style={{ 
+                          ...style,
+                          WebkitMaskImage: 'url(/assets/svg/duas_colcheias.svg)', 
+                          maskImage: 'url(/assets/svg/duas_colcheias.svg)', 
+                          WebkitMaskSize: 'contain', 
+                          WebkitMaskRepeat: 'no-repeat', 
+                          WebkitMaskPosition: 'center' 
+                        }} 
+                      />
+                    </div>
+                    <div className="flex flex-row w-full justify-evenly mt-1">
+                      {renderProgressBar("w-4", ev0)}
+                      {renderProgressBar("w-4", ev1)}
+                    </div>
+                    {isLigada && renderLigaduraDynamic()}
+                  </div>
+                );
+              })()}
               {baseName === 'quatro_semicolcheias' && (
                 <div className="flex flex-row w-full justify-between px-1 relative">
                   {[0, 1, 2, 3].map((subIndex) => {
@@ -793,18 +875,47 @@ export function PerformanceSimulator() {
                     return (
                       <div key={subIndex} className="flex flex-col items-center">
                         <div className={cn("w-4 h-8 transition-all flex items-center justify-center", active ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
-                          <div className={cn("w-full h-full transition-colors", active || ev?.result === 'perfect' || ev?.result === 'tied' ? "bg-brand-gold" : "bg-black")} style={{ WebkitMaskImage: 'url(/assets/svg/semicolcheia.svg)', maskImage: 'url(/assets/svg/semicolcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                          <div className={cn("w-full h-full transition-colors", getBgClass(ev, active))} style={{ WebkitMaskImage: 'url(/assets/svg/semicolcheia.svg)', maskImage: 'url(/assets/svg/semicolcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                         </div>
                         {renderProgressBar("w-2", ev)}
                       </div>
                     );
                   })}
-                  {isLigada && <svg className="absolute -right-4 top-1/2 w-10 h-6 overflow-visible z-10"><path d="M 0 0 Q 20 15 40 0" fill="transparent" stroke="#F2D349" strokeWidth="4" strokeLinecap="round" opacity="0.6" /></svg>}
+                  {isLigada && renderLigaduraDynamic()}
                 </div>
               )}
+              {baseName === 'colcheia_seminima_colcheia' && (() => {
+                const ev0 = cellEvents[0];
+                const ev1 = cellEvents[1];
+                const ev2 = cellEvents[2];
+                return (
+                  <div className="flex flex-row items-end gap-2 relative">
+                    <div className="flex flex-col items-center">
+                      <div className={cn("w-6 h-10 transition-all flex items-center justify-center", isNoteActive(ev0) ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
+                        <div className={cn("w-full h-full transition-colors", getBgClass(ev0, isNoteActive(ev0)))} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                      </div>
+                      {renderProgressBar("w-4", ev0)}
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(ev1) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
+                        <div className={cn("w-full h-full transition-colors", getBgClass(ev1, isNoteActive(ev1)))} style={{ WebkitMaskImage: 'url(/assets/svg/seminima.svg)', maskImage: 'url(/assets/svg/seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                      </div>
+                      {renderProgressBar("w-8", ev1)}
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <div className={cn("w-6 h-10 transition-all flex items-center justify-center", isNoteActive(ev2) ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
+                        <div className={cn("w-full h-full transition-colors", getBgClass(ev2, isNoteActive(ev2)))} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                      </div>
+                      {renderProgressBar("w-4", ev2)}
+                    </div>
+                    {isLigada && renderLigaduraDynamic()}
+                  </div>
+                );
+              })()}
             </div>
           );
-        })}
+        });
+        })()}
       </div>
     );
   };
@@ -903,8 +1014,8 @@ export function PerformanceSimulator() {
           <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md">
             <h2 className="text-5xl font-headline font-black text-red-500 mb-2 uppercase tracking-tight">Game Over Total</h2>
             <p className="text-brand-gray text-xl mb-8">Você esgotou todas as tentativas para esta fase.</p>
-            <Button onClick={startGame} className="px-10 py-8 rounded-full bg-red-600 hover:bg-red-500 text-white text-2xl font-bold shadow-lg shadow-red-500/20">
-              Voltar para o Nível 1
+            <Button onClick={() => setStatus('idle')} className="px-10 py-8 rounded-full bg-red-600 hover:bg-red-500 text-white text-2xl font-bold shadow-lg shadow-red-500/20">
+              Voltar para o Menu
             </Button>
           </div>
         )}
@@ -1005,18 +1116,56 @@ export function PerformanceSimulator() {
         {/* Controles e Botões PAD */}
         <div className="flex flex-col items-center gap-6 w-full max-w-lg relative">
           {status === 'idle' ? (
-            <div className="flex flex-col gap-4 w-full">
-              <div className="flex gap-2 w-full">
-                <Button onClick={() => setSelectedDifficulty(60)} className={cn("flex-1 font-bold", selectedDifficulty === 60 ? "bg-brand-gold text-brand-black" : "bg-brand-graphite text-brand-gray")}>Fácil (60)</Button>
-                <Button onClick={() => setSelectedDifficulty(70)} className={cn("flex-1 font-bold", selectedDifficulty === 70 ? "bg-brand-gold text-brand-black" : "bg-brand-graphite text-brand-gray")}>Médio (70)</Button>
-                <Button onClick={() => setSelectedDifficulty(90)} className={cn("flex-1 font-bold", selectedDifficulty === 90 ? "bg-brand-gold text-brand-black" : "bg-brand-graphite text-brand-gray")}>Difícil (90)</Button>
+            <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/90 backdrop-blur-md px-4">
+              <div className="bg-brand-graphite p-8 rounded-3xl w-full max-w-3xl flex flex-col gap-6 shadow-2xl border border-brand-gray/20">
+                <div className="flex justify-between items-center border-b border-brand-gray/20 pb-4">
+                  <h2 className="text-3xl font-headline font-black text-white uppercase tracking-widest">Selecionar Fase</h2>
+                  <div className="text-brand-gold font-bold text-xl">Fase {level} selecionada</div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                  {[1, 2, 3, 4, 5].map(mundoNum => {
+                    const mundoLevels = GAME_LEVELS.slice((mundoNum - 1) * 10, mundoNum * 10);
+                    if (mundoLevels.length === 0) return null;
+                    return (
+                      <div key={mundoNum} className="flex flex-col gap-2">
+                        <div className="text-brand-gray text-xs font-bold uppercase tracking-widest mb-1 text-center">Mundo {mundoNum}</div>
+                        <div className="grid grid-cols-2 gap-2">
+                          {mundoLevels.map(lvl => (
+                            <button
+                              key={lvl.id}
+                              onClick={() => setLevel(lvl.id)}
+                              title={lvl.name}
+                              className={cn(
+                                "h-12 rounded-xl font-bold flex items-center justify-center transition-all",
+                                level === lvl.id 
+                                  ? "bg-brand-gold text-brand-black scale-110 shadow-lg shadow-brand-gold/40 z-10" 
+                                  : "bg-brand-black text-brand-gray hover:bg-brand-gray/20 hover:text-white border border-brand-gray/30"
+                              )}
+                            >
+                              {lvl.id}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-4 mt-2">
+                  <div className="flex gap-2 flex-1">
+                    <Button onClick={() => setSelectedDifficulty(60)} className={cn("flex-1 font-bold h-16", selectedDifficulty === 60 ? "bg-brand-gold text-brand-black" : "bg-brand-black text-brand-gray border border-brand-gray/30")}>Fácil (60)</Button>
+                    <Button onClick={() => setSelectedDifficulty(70)} className={cn("flex-1 font-bold h-16", selectedDifficulty === 70 ? "bg-brand-gold text-brand-black" : "bg-brand-black text-brand-gray border border-brand-gray/30")}>Médio (70)</Button>
+                    <Button onClick={() => setSelectedDifficulty(90)} className={cn("flex-1 font-bold h-16", selectedDifficulty === 90 ? "bg-brand-gold text-brand-black" : "bg-brand-black text-brand-gray border border-brand-gray/30")}>Difícil (90)</Button>
+                  </div>
+                  <Button 
+                    onClick={startGame}
+                    className="flex-1 h-16 rounded-2xl bg-green-500 hover:bg-green-400 text-white text-2xl font-black shadow-lg shadow-green-500/30 uppercase tracking-widest"
+                  >
+                    Iniciar Fase {level}
+                  </Button>
+                </div>
               </div>
-              <Button 
-                onClick={startGame}
-                className="w-full rounded-2xl py-8 bg-brand-gold hover:bg-yellow-400 text-brand-black text-2xl font-black shadow-lg shadow-brand-gold/30 uppercase tracking-widest"
-              >
-                Iniciar
-              </Button>
             </div>
           ) : (
             <div className="h-[136px] w-full" />
