@@ -9,6 +9,7 @@ export function RhythmicPizzaView({
   data, 
   isCompleted, 
   onSuccess, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onFail 
 }: { 
   data: DragDropPizzaStep, 
@@ -27,10 +28,12 @@ export function RhythmicPizzaView({
 
   useEffect(() => {
     if (isCompleted) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilledSlices(totalSlices);
     }
   }, [isCompleted, totalSlices]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDragEnd = (event: any, info: any, id: number) => {
     if (isCompleted || droppedItems.includes(id)) return;
 

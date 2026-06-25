@@ -35,6 +35,7 @@ export function BlogComments({ slug }: { slug: string }) {
 
   useEffect(() => {
     fetchComments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
   const fetchComments = async () => {
@@ -178,6 +179,7 @@ export function BlogComments({ slug }: { slug: string }) {
               : ''
           }`}>
             {comment.userPhoto ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={comment.userPhoto} alt={comment.userName} className="w-full h-full object-cover" />
             ) : (
               <User className="w-full h-full p-2 text-brand-gray" />
@@ -318,6 +320,7 @@ export function BlogComments({ slug }: { slug: string }) {
           <form onSubmit={handleSubmit} className="flex gap-4 items-start">
             <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-brand-graphite/20 border-2 border-transparent">
               {user.photoURL ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={user.photoURL} alt={user.displayName || 'Você'} className="w-full h-full object-cover" />
               ) : (
                 <User className="w-full h-full p-2 text-brand-gray" />

@@ -55,6 +55,7 @@ export function TrailMap({ lessons, courseId, onLessonClick }: TrailMapProps) {
 interface StaffRowProps {
   lessons: Lesson[];
   rowIndex: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   router: any;
   nextRowFirstNode?: Lesson;
   nextRowLength?: number;

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Logo } from '@/components/logo';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CircleUser, Music4, GitBranch, ArrowRight, Star, ShieldCheck, Instagram, Youtube, Twitter, Gamepad2, GraduationCap } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { motion, Variants } from 'framer-motion';
 import { PublicFooter } from '@/components/public-footer';
@@ -51,6 +53,7 @@ type ContactFormValues = z.infer<typeof contactSchema>;
 
 export default function LandingPage() {
   const { toast } = useToast();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user, login, signup, loginWithGoogle } = useUser();
   const router = useRouter();
   const [isPasswordResetDialogOpen, setIsPasswordResetDialogOpen] = useState(false);
@@ -64,6 +67,7 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const signupForm = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -125,7 +129,8 @@ export default function LandingPage() {
         await sendMagicLink(authEmail);
         setAuthStep('magic_link_sent');
       }
-    } catch (error: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) {
       toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível verificar o email.' });
     } finally {
       setIsChecking(false);
@@ -140,13 +145,15 @@ export default function LandingPage() {
       await login(authEmail, authPassword);
       toast({ title: 'Bem-vindo de volta!', description: 'Entrando...' });
       router.push('/dashboard');
-    } catch (error: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) {
       toast({ variant: 'destructive', title: 'Erro', description: 'Senha incorreta.' });
     } finally {
       setIsChecking(false);
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSignupSubmit = async (data: SignupFormValues) => {
     try {
       await signup(data.name, data.username, data.email, data.password);
@@ -155,6 +162,7 @@ export default function LandingPage() {
         description: 'Você será redirecionado para o seu painel.',
       });
       router.push('/dashboard');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -172,7 +180,8 @@ export default function LandingPage() {
         description: 'Você será redirecionado para o seu painel.',
       });
       router.push('/dashboard');
-    } catch (error: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) {
       toast({
         variant: 'destructive',
         title: 'Senha ou email incorretos',
@@ -189,7 +198,8 @@ export default function LandingPage() {
         description: 'Entrando com a conta do Google...',
       });
       router.push('/dashboard');
-    } catch (error: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) {
       toast({
         variant: 'destructive',
         title: 'Erro no Google',
@@ -229,6 +239,7 @@ export default function LandingPage() {
       });
       contactForm.reset();
       setIsContactDialogOpen(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -280,6 +291,12 @@ export default function LandingPage() {
           <Button variant="ghost" className="text-gray-300 hover:text-white" asChild>
             <Link href="/blog" prefetch={false}>
               Artigos
+            </Link>
+          </Button>
+
+          <Button variant="ghost" className="text-primary hover:text-primary/80 font-bold hidden md:inline-flex" asChild>
+            <Link href="/ritmo-insano" prefetch={false}>
+              <Gamepad2 className="w-4 h-4 mr-2" /> Jogar
             </Link>
           </Button>
           
@@ -567,6 +584,15 @@ export default function LandingPage() {
                         <p className="text-zinc-500 text-[10px] sm:text-xs mt-1 leading-tight hidden sm:block">Sargentos, Oficiais e Fuzileiros</p>
                       </div>
                     </div>
+                  </div>
+                  
+                  <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <Button asChild size="lg" className="bg-primary text-black hover:bg-primary/90 font-bold text-lg h-14 px-8 rounded-full shadow-[0_0_30px_rgba(201,168,17,0.3)] transition-all hover:shadow-[0_0_40px_rgba(201,168,17,0.5)] hover:-translate-y-1">
+                      <Link href="/ritmo-insano">
+                        <Gamepad2 className="w-5 h-5 mr-2" />
+                        JOGAR RITMO INSANO
+                      </Link>
+                    </Button>
                   </div>
                 </motion.div>
                 

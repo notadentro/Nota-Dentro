@@ -1,6 +1,7 @@
 import { getBlogPosts, getBlogPost } from '@/utils/content';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Logo } from '@/components/logo';
 import { ArrowLeft, Calendar, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';

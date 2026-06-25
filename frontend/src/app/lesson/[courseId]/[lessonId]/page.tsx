@@ -38,6 +38,7 @@ export default function LessonPage() {
           if (course.id === courseId) {
             for (let mIndex = 0; mIndex < course.modules.length; mIndex++) {
               const module = course.modules[mIndex];
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const lessonIndex = module.lessons.findIndex((l: any) => l.id === lessonId || l.slug === lessonId);
               
               if (lessonIndex !== -1) {

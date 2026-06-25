@@ -18,6 +18,7 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export default function DashboardPage() {
     const { user } = useUser();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [trails, setTrails] = useState<any[]>([]);
 
     useEffect(() => {

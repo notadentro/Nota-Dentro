@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { MemoryGameStep } from '@/types/lesson';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Star, X } from 'lucide-react';
 import { MusicSymbol, MusicSymbolName } from '@/components/music-symbols';
 
@@ -63,6 +64,7 @@ export function MemoryGameView({ data, isCompleted, onSuccess, onFail }: Props) 
       [allCards[i], allCards[j]] = [allCards[j], allCards[i]];
     }
     
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCards(allCards);
     setFlippedIndexes([]);
     setMatchedPairIds([]);

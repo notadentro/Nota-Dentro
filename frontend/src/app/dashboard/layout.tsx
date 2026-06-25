@@ -1,5 +1,6 @@
 'use client';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { usePathname, useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 

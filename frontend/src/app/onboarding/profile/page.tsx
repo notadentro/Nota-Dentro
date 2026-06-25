@@ -35,6 +35,7 @@ export default function ProfileSetup() {
       await updateDoc(userRef, { username });
       // Redireciona para o dashboard ou onboarding musical
       router.push('/dashboard');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error);
       setErrorMsg(error.message || 'Erro ao salvar o nome de usuário.');

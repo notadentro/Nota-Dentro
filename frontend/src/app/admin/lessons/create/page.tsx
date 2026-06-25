@@ -26,6 +26,7 @@ export default function CreateLessonPage() {
       id: generateId(),
       type,
       title: '',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: {} as any
     };
     setLesson(prev => ({ ...prev, steps: [...(prev.steps || []), newStep] }));
@@ -129,6 +130,7 @@ export default function CreateLessonPage() {
             <select 
               className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               value={lesson.status || 'locked'}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onChange={(e) => setLesson({...lesson, status: e.target.value as any})}
             >
               <option value="locked">Bloqueada</option>

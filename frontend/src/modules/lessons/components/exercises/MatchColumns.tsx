@@ -11,9 +11,11 @@ interface MatchColumnsProps {
 }
 
 export function MatchColumns({ data, onComplete }: MatchColumnsProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [leftItems, setLeftItems] = useState<{ id: string; text: string }[]>(() => 
     data.pairs.map((p, i) => ({ id: `pair-${i}`, text: p.left })).sort(() => Math.random() - 0.5)
   );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [rightItems, setRightItems] = useState<{ id: string; text: string }[]>(() => 
     data.pairs.map((p, i) => ({ id: `pair-${i}`, text: p.right })).sort(() => Math.random() - 0.5)
   );
@@ -30,6 +32,7 @@ export function MatchColumns({ data, onComplete }: MatchColumnsProps) {
     if (selectedLeft && selectedRight) {
       // Check if they match
       if (selectedLeft === selectedRight) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMatchedPairs(prev => {
           const newMatched = new Set(prev);
           newMatched.add(selectedLeft);

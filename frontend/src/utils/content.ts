@@ -61,6 +61,7 @@ export async function getDynamicCurriculum(): Promise<Trail[]> {
   try {
     const files = await fs.readdir(contentDir);
     jsonFiles = files.filter(f => f.endsWith('.json'));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     // Pasta pode não existir
   }

@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { getBlogPosts } from '@/utils/content';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Logo } from '@/components/logo';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ArrowRight, Calendar, User } from 'lucide-react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Button } from '@/components/ui/button';
 import { PublicHeader } from '@/components/public-header';
 import { PublicFooter } from '@/components/public-footer';

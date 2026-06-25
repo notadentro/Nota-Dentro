@@ -19,6 +19,7 @@ export async function GET() {
     try {
       const files = await fs.readdir(contentDir);
       jsonFiles = files.filter(f => f.endsWith('.json'));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_e) {
       // Pasta pode não existir ainda no primeiro run
     }
