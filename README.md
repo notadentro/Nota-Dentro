@@ -26,6 +26,7 @@ A plataforma evoluiu para se tornar um verdadeiro CMS (Content Management System
 - **Gamificação em Tempo Real (Lesson Engine):** Sistema de vidas, ganho de XP e recompensas baseados em acertos.
 - **Simulador de Leitura Rítmica (Motor Proprietário):** Um módulo focado em percepção rítmica inspirado em jogos como _Guitar Hero_. Construído com a **Web Audio API**, ele apresenta:
   - **Motor Polifônico:** Suporte para múltiplas vozes independentes (mão direita e esquerda na percussão) executadas e analisadas simultaneamente.
+  - **Arquitetura Modular:** Código estruturado para alta manutenibilidade, separando regras de negócio (`useSimulatorEngine`), lógica de áudio (`audioUtils`), renderização visual (`renderUtils`), além de componentes de UI independentes (`SimulatorHUD`, `SimulatorTrack`, `SimulatorControls`, `SimulatorModals`).
   - **Estabilidade e Latência PWA:** Gerenciamento nativo de `AudioContext` em threads visuais e temporais independentes (`requestAnimationFrame`), blindando o jogo contra atrasos do navegador mobile.
   - **Figuração Musical Nativa:** Células rítmicas com suporte real a ligaduras de valor inter-compasso, pontos de aumento, síncopes e pausas.
   - **Avaliação Cirúrgica (Scoring Engine):** Sistema que mapeia os inputs (`keyDown`/`pointerDown` e suas respectivas solturas) fornecendo feedback milimétrico de precisão (Perfect, Early, Late, Miss) em tempo real, inclusive para a sustentação exata de notas longas.

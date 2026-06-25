@@ -15,6 +15,13 @@ export default function RitmoInsanoGameMenu() {
   const { user } = useUser();
   const [selectedDifficulty, setSelectedDifficulty] = useState<60 | 70 | 90>(60);
 
+  useEffect(() => {
+    const saved = localStorage.getItem('ritmo_bpm');
+    if (saved) {
+      setSelectedDifficulty(Number(saved) as 60 | 70 | 90);
+    }
+  }, []);
+
   const unlockedLessons = user?.progress?.[`simulator_${selectedDifficulty}_unlocked`] || ['1'];
   const highestUnlocked = Math.max(...unlockedLessons.map((l: string) => parseInt(l)));
 
@@ -96,15 +103,6 @@ export default function RitmoInsanoGameMenu() {
       </div>
 
       <div className="flex-1 overflow-y-auto pb-32 pt-10 flex flex-col items-center custom-scrollbar relative z-10">
-        
-        {/* Difficulty Selector */}
-        <div className="w-full max-w-[320px] mb-14 relative z-20">
-          <div className="bg-brand-graphite/60 backdrop-blur-md p-2 rounded-[24px] flex gap-2 border border-brand-gray/20 shadow-xl">
-            <Button onClick={() => setSelectedDifficulty(60)} className={cn("flex-1 h-12 rounded-[16px] font-black text-[13px] uppercase tracking-widest transition-all", selectedDifficulty === 60 ? "bg-green-500 text-white shadow-lg shadow-green-500/30 scale-105" : "bg-transparent text-brand-gray hover:text-white hover:bg-white/10")}>Fácil</Button>
-            <Button onClick={() => setSelectedDifficulty(70)} className={cn("flex-1 h-12 rounded-[16px] font-black text-[13px] uppercase tracking-widest transition-all", selectedDifficulty === 70 ? "bg-gradient-to-r from-brand-gold to-yellow-500 text-brand-black shadow-lg shadow-brand-gold/30 scale-105" : "bg-transparent text-brand-gray hover:text-white hover:bg-white/10")}>Médio</Button>
-            <Button onClick={() => setSelectedDifficulty(90)} className={cn("flex-1 h-12 rounded-[16px] font-black text-[13px] uppercase tracking-widest transition-all", selectedDifficulty === 90 ? "bg-red-500 text-white shadow-lg shadow-red-500/30 scale-105" : "bg-transparent text-brand-gray hover:text-white hover:bg-white/10")}>Insano</Button>
-          </div>
-        </div>
 
         {/* Path Layout (Trilha de Fases) */}
         <div className="flex flex-col items-center gap-14 w-full max-w-md px-4 pb-32 relative">

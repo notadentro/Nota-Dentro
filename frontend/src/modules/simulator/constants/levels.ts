@@ -500,5 +500,250 @@ export const GAME_LEVELS: LevelDefinition[] = [
       title: "Você é um Mestre!",
       text: "Último nível do curso base! Aqui tem tudo: silêncio, síncope, semicolcheias e ostinato rítmico. Se você passar daqui, não existe banca de teoria musical que te reprove. Boa sorte!"
     }
+  },
+
+  // ============================================================================
+  // MUNDO 6: A MARATONA DA SEMIBREVE (Resistência e Independência)
+  // Foco: Fases longas de 8 compassos (32 tempos). A Semibreve atua como um 
+  // ostinato de sustentação contínua contra subdivisões complexas.
+  // ============================================================================
+  {
+    id: 51,
+    name: "A Longa Jornada",
+    timeSignature: [4, 4],
+    // 8 compassos de 4/4 = 32 tempos
+    upperVoice: [
+      'semibreve', // C1
+      'seminima', 'seminima', 'seminima', 'seminima', // C2
+      'semibreve', // C3
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias', // C4
+      'semibreve', // C5
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', // C6
+      'semibreve', // C7
+      'minima', 'minima' // C8
+    ],
+    lowerVoice: [],
+    instruction: {
+      title: "Resistência Rítmica",
+      text: "Mundo 6! As fases agora têm o DOBRO do tamanho. Prepare o fôlego! Alterne entre segurar a nota o compasso inteiro (Semibreve) e explodir em agilidade."
+    }
+  },
+  {
+    id: 52,
+    name: "O Pilar de Sustentação",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'minima', 'minima',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'semibreve'
+    ],
+    // Mão esquerda trava no Hold por 8 compassos seguidos!
+    lowerVoice: [
+      'semibreve', 'semibreve', 'semibreve', 'semibreve', 
+      'semibreve', 'semibreve', 'semibreve', 'semibreve'
+    ],
+    instruction: {
+      title: "Independência Muscular",
+      text: "A sua mão esquerda (F) é o pilar. Ela vai segurar as Semibreves ininterruptamente! Seu cérebro vai tentar soltar o botão esquerdo quando a mão direita (J) acelerar. Não permita!"
+    }
+  },
+  {
+    id: 53,
+    name: "Resistência Mista",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'semibreve', 
+      'pausa', 'pausa', 'pausa', 'pausa', 
+      'semibreve', 
+      'pausa_minima', 'pausa_minima', 
+      'semibreve', 
+      'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 
+      'minima', 'minima',
+      'semibreve'
+    ],
+    lowerVoice: [] // Voltamos para 1 voz para descansar o cérebro (Intercalação)
+  },
+  {
+    id: 54,
+    name: "Inversão do Pilar",
+    timeSignature: [4, 4],
+    // Mão direita agora é o Pilar de Hold
+    upperVoice: [
+      'semibreve', 'semibreve', 'semibreve', 'semibreve', 
+      'semibreve', 'semibreve', 'semibreve', 'semibreve'
+    ],
+    lowerVoice: [
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'semibreve'
+    ],
+    instruction: {
+      title: "Ambidestria",
+      text: "Trocou! Agora a mão direita (J) fica travada na Semibreve, enquanto a esquerda (F) corre na esteira. Cuidado com a fadiga do dedo!"
+    }
+  },
+  {
+    id: 55,
+    name: "Fôlego Sincopado",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'semibreve',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'semibreve',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'semibreve',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'semibreve'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 56,
+    name: "Desafio de Gramani Estendido",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia'
+    ],
+    lowerVoice: [
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    instruction: {
+      title: "Ginga Infinita",
+      text: "A mão direita vai emendar 16 síncopes seguidas! Enquanto isso, a mão esquerda alterna entre segurar a Semibreve e marcar o pulso duro. Mantenha o foco!"
+    }
+  },
+  {
+    id: 57,
+    name: "A Calmaria (Espelho)",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'semibreve',
+      'minima', 'minima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'semibreve',
+      'semibreve'
+    ],
+    lowerVoice: [
+      'semibreve',
+      'minima', 'minima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'semibreve',
+      'semibreve'
+    ]
+  },
+  {
+    id: 58,
+    name: "Polirritmia de Longa Duração",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'semibreve',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'semibreve',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'semibreve',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'semibreve'
+    ],
+    lowerVoice: [
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'semibreve'
+    ]
+  },
+  {
+    id: 59,
+    name: "Mãos em Revezamento",
+    timeSignature: [4, 4],
+    // Uma mão toca a Semibreve enquanto a outra descansa por 4 tempos
+    upperVoice: [
+      'semibreve', 
+      'pausa_minima', 'pausa_minima', 
+      'semibreve', 
+      'pausa_minima', 'pausa_minima', 
+      'semibreve', 
+      'pausa_minima', 'pausa_minima', 
+      'semibreve', 
+      'pausa_minima', 'pausa_minima'
+    ],
+    lowerVoice: [
+      'pausa_minima', 'pausa_minima', 
+      'semibreve', 
+      'pausa_minima', 'pausa_minima', 
+      'semibreve', 
+      'pausa_minima', 'pausa_minima', 
+      'semibreve', 
+      'pausa_minima', 'pausa_minima', 
+      'semibreve'
+    ],
+    instruction: {
+      title: "Respiração",
+      text: "Fase de transição! Pressione F por 4 tempos, solte, e imediatamente pressione J por 4 tempos. Sinta a passagem do som de um lado para o outro."
+    }
+  },
+  {
+    id: 60,
+    name: "Boss do Mundo 6: A Maratona THE",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'semibreve',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'semibreve',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'semibreve'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve'
+    ],
+    instruction: {
+      title: "Prova Final de Resistência",
+      text: "8 bússolas completas! A mão esquerda não perdoa: bate 4 e segura 4 até o fim. A mão direita vai passar por TUDO que você aprendeu. Sobreviva a esta maratona!"
+    }
   }
 ];
