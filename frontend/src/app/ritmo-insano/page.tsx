@@ -138,7 +138,7 @@ export default function HomePage() {
           <Button 
             variant="outline" 
             className="border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black rounded-full px-6"
-            onClick={() => router.push('/auth/login')}
+            onClick={() => router.push('/auth/login?redirect=/ritmo-insano/niveis')}
           >
             Login
           </Button>

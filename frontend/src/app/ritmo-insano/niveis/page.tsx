@@ -100,7 +100,7 @@ export default function RitmoInsanoGameMenu() {
              </div>
           </div>
          ) : (
-           <Button onClick={() => router.push('/auth/login')} className="bg-brand-gold text-black font-black hover:bg-yellow-400">LOGIN</Button>
+           <Button onClick={() => router.push('/auth/login?redirect=/ritmo-insano/niveis')} className="bg-brand-gold text-black font-black hover:bg-yellow-400">LOGIN</Button>
          )}
       </div>
 
