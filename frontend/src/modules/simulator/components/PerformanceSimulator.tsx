@@ -555,6 +555,14 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   };
 
   const acceptInstruction = () => {
+    if (!audioCtxRef.current) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContext) {
+        audioCtxRef.current = new AudioContext();
+        audioCtxRef.current.resume();
+      }
+    }
     beginPrep(bpm, levelTotalBeats, audioCtxRef.current, levelDef.timeSignature[0]);
   };
 
