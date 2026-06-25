@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Play, RefreshCw, Heart, Zap, Info, ShieldAlert, Lock } from 'lucide-react';
+import { Play, RefreshCw, Heart, Zap, Info, ShieldAlert, Lock, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TimeSignature, RhythmCell, RhythmCellBase, GAME_LEVELS, LevelDefinition } from '../constants/levels';
 import { useUser } from '@/contexts/UserContext';
 import { useRouter } from 'next/navigation';
 
-type GameState = 'idle' | 'instruction' | 'prep' | 'playing' | 'level_complete' | 'level_failed' | 'game_over';
+type GameState = 'idle' | 'instruction' | 'prep' | 'playing' | 'level_complete' | 'level_failed' | 'game_over' | 'paused';
 type BeatResult = 'perfect' | 'early' | 'late' | 'missed' | 'penalty' | 'tied' | null;
 
 interface TapEvent {
@@ -218,7 +218,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   const scheduledOscillatorsRef = useRef<OscillatorNode[]>([]);
 
   const getCurrentTimeMs = () => {
-    if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
+    if (audioCtxRef.current) {
       return audioCtxRef.current.currentTime * 1000;
     }
     return performance.now();
@@ -329,7 +329,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
     }
   }, [status]);
 
-  const penalizedBeatsRef = useRef<Set<number>>(new Set());
+  const penalizedBeatsRef = useRef<Set<string>>(new Set());
 
   const showGhostMsg = (type: BeatResult, deltaMs?: number) => {
     if (type === 'tied') return;
@@ -348,11 +348,10 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
     setGhostMsg({ text: msg, id: Date.now(), type });
   };
 
-  const loseLife = (beatAbsolute?: number) => {
-    if (beatAbsolute !== undefined) {
-      const beatKey = Math.floor(beatAbsolute);
-      if (penalizedBeatsRef.current.has(beatKey)) return;
-      penalizedBeatsRef.current.add(beatKey);
+  const loseLife = (eventId?: string) => {
+    if (eventId !== undefined) {
+      if (penalizedBeatsRef.current.has(eventId)) return;
+      penalizedBeatsRef.current.add(eventId);
     }
 
     if (user) {
@@ -378,7 +377,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   });
 
   const tick = () => {
-    if (status === 'game_over' || status === 'level_complete' || status === 'level_failed') return;
+    if (status === 'game_over' || status === 'level_complete' || status === 'level_failed' || status === 'paused') return;
 
     const beatMs = (60 / bpm) * 1000;
     const elapsed = getCurrentTimeMs() - startTimeRef.current;
@@ -410,7 +409,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
               updatedEvents[i] = { ...ev, result: 'missed' };
               changed = true;
               showGhostMsg('missed');
-              loseLife(ev.beatAbsolute);
+              loseLife(ev.id);
            } else if (ev.type === 'rest') {
               updatedEvents[i] = { ...ev, result: 'perfect' };
               changed = true;
@@ -421,7 +420,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
          if (timeSinceExpectedEnd > TOLERANCE_MS) {
              updatedEvents[i] = { ...ev, isHeld: false, releaseResult: 'late' };
              changed = true;
-             loseLife(ev.beatAbsolute);
+             loseLife(`${ev.id}-held`);
          }
        }
     });
@@ -497,12 +496,8 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
       setLevelTotalBeats(totalBeats);
     }
     
-    if (showInstruction) {
-       setStatus('instruction');
-       if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    } else {
-       beginPrep(currentBpm, totalBeats, ctx, prepBts);
-    }
+    setStatus('instruction');
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
     
     penalizedBeatsRef.current.clear();
   };
@@ -533,6 +528,21 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
 
   const acceptInstruction = () => {
     beginPrep(bpm, levelTotalBeats, audioCtxRef.current, levelDef.timeSignature[0]);
+  };
+
+  const pauseGame = () => {
+    if (status !== 'playing' && status !== 'prep') return;
+    setStatus('paused');
+    if (audioCtxRef.current) audioCtxRef.current.suspend();
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+  };
+
+  const resumeGame = () => {
+    setStatus(elapsedTime < 0 ? 'prep' : 'playing');
+    if (audioCtxRef.current) audioCtxRef.current.resume();
+    animationRef.current = requestAnimationFrame(() => {
+      if (tickRef.current) tickRef.current();
+    });
   };
 
   const repeatLevel = () => {
@@ -608,7 +618,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
           if (ev.type === 'rest') {
              next[closestEventIndex] = { ...ev, result: 'penalty' };
              showGhostMsg('penalty');
-             loseLife(ev.beatAbsolute);
+             loseLife(ev.id);
           } else {
              let type: BeatResult = 'perfect';
              if (delta < -TOLERANCE_MS / 3) type = 'early';
@@ -644,7 +654,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
           if (delta < -earlyTolerance) {
              next[heldEventIndex] = { ...ev, isHeld: false, releaseResult: 'early' };
              showGhostMsg('early');
-             loseLife(ev.beatAbsolute);
+             loseLife(`${ev.id}-release`);
           } else {
              next[heldEventIndex] = { ...ev, isHeld: false, releaseResult: 'perfect' };
              showGhostMsg('perfect');
@@ -664,13 +674,19 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
         if (status === 'level_complete') { repeatLevel(); return; }
         if (status === 'level_failed') { repeatLevel(); return; }
         if (status === 'instruction') { acceptInstruction(); return; }
+        if (status === 'paused') { resumeGame(); return; }
         if (!e.repeat) { setLeftPadActive(true); handleTap(isSingleTrack ? 'upper' : 'lower'); }
       }
       if (e.key.toLowerCase() === 'j') {
         if (status === 'level_complete') { nextLevel(); return; }
         if (status === 'level_failed') { nextLevel(); return; }
         if (status === 'instruction') { acceptInstruction(); return; }
+        if (status === 'paused') { resumeGame(); return; }
         if (!e.repeat) { setRightPadActive(true); handleTap('upper'); }
+      }
+      if (e.key === 'Escape') {
+        if (status === 'playing' || status === 'prep') { pauseGame(); return; }
+        if (status === 'paused') { resumeGame(); return; }
       }
     };
 
@@ -1038,11 +1054,34 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
       `}</style>
       
       {/* HEADER */}
-      <div className="absolute top-8 left-0 right-0 flex justify-between items-center px-10 z-50">
-         <div className="flex gap-2">
-            {Array.from({ length: INITIAL_LIVES }).map((_, i) => (
-              <Heart key={i} className={cn("w-5 h-5 transition-all duration-300", i < lives ? "text-brand-gold fill-brand-gold scale-100" : "text-brand-gray/50 scale-75 opacity-50")} />
-            ))}
+      <div className="absolute top-8 left-0 right-0 flex justify-between items-center px-4 md:px-10 z-50">
+         <div className="flex gap-4 items-center">
+            <Button 
+              variant="ghost" 
+              className="text-brand-gray hover:text-white hidden md:flex"
+              onClick={() => {
+                if (status === 'playing' || status === 'prep') pauseGame();
+                else router.push('/ritmo-insano');
+              }}
+            >
+              Menu Principal
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="text-brand-gray hover:text-white md:hidden"
+              onClick={() => {
+                if (status === 'playing' || status === 'prep') pauseGame();
+                else router.push('/ritmo-insano');
+              }}
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </Button>
+            <div className="flex gap-1 md:gap-2">
+              {Array.from({ length: INITIAL_LIVES }).map((_, i) => (
+                <Heart key={i} className={cn("w-5 h-5 transition-all duration-300", i < lives ? "text-brand-gold fill-brand-gold scale-100" : "text-brand-gray/50 scale-75 opacity-50")} />
+              ))}
+            </div>
          </div>
 
          {/* Cachê UI */}
@@ -1053,15 +1092,32 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
            </div>
          )}
 
-         <div className="flex items-center gap-6">
+         <div className="flex items-center gap-4 md:gap-6">
             <div className="flex flex-col items-end">
-               <span className="text-brand-gray text-sm uppercase font-bold tracking-widest">Nível {level} - {levelDef.name}</span>
-               <span className="text-brand-gold font-headline text-2xl font-black">Compasso {levelDef.timeSignature[0]}/{levelDef.timeSignature[1]}</span>
+               <span className="text-brand-gray text-[10px] md:text-sm uppercase font-bold tracking-widest">
+                 <span className="hidden md:inline">Nível {level} - {levelDef.name}</span>
+                 <span className="md:hidden">Nível {level}</span>
+               </span>
+               <span className="text-brand-gold font-headline text-lg md:text-2xl font-black">Compasso {levelDef.timeSignature[0]}/{levelDef.timeSignature[1]}</span>
             </div>
             <div className="flex flex-col items-end">
-               <span className="text-brand-gray text-sm uppercase font-bold tracking-widest flex items-center"><Zap className="w-3 h-3 mr-1"/> BPM</span>
-               <span className="text-white font-headline text-3xl font-black">{bpm}</span>
+               <span className="text-brand-gray text-[10px] md:text-sm uppercase font-bold tracking-widest flex items-center"><Zap className="w-3 h-3 mr-1"/> BPM</span>
+               <span className="text-white font-headline text-xl md:text-3xl font-black">{bpm}</span>
             </div>
+            <Button 
+              variant="outline"
+              size="icon"
+              className="border-brand-gray/30 text-white bg-transparent hover:bg-white/10 w-10 h-10 md:w-12 md:h-12"
+              onClick={status === 'paused' ? resumeGame : pauseGame}
+              disabled={status !== 'playing' && status !== 'prep' && status !== 'paused'}
+            >
+              {status === 'paused' ? <Play className="w-4 h-4 fill-current" /> : (
+                <div className="flex gap-1">
+                  <div className="w-1 h-3 bg-white" />
+                  <div className="w-1 h-3 bg-white" />
+                </div>
+              )}
+            </Button>
          </div>
       </div>
 
@@ -1085,15 +1141,41 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
         </div>
         
         {/* OVERLAYS */}
+        {status === 'paused' && (
+          <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md px-4">
+            <div className="max-w-xl text-center flex flex-col items-center">
+              <h2 className="text-5xl font-headline font-black text-brand-gold mb-8 uppercase tracking-tight drop-shadow-[0_0_15px_rgba(242,211,73,0.5)]">
+                Pausado
+              </h2>
+              <div className="flex flex-col gap-4 w-64">
+                <Button onClick={resumeGame} className="w-full py-6 text-xl font-bold rounded-full bg-white text-brand-black hover:bg-gray-200 shadow-lg">
+                  Continuar
+                </Button>
+                <Button onClick={repeatLevel} variant="outline" className="w-full py-6 text-xl font-bold rounded-full border-2 border-brand-gray text-white hover:bg-brand-gray/20">
+                  Recomeçar Fase
+                </Button>
+                <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="w-full py-6 text-xl font-bold rounded-full text-red-400 hover:text-red-300 hover:bg-red-400/10">
+                  Sair para o Menu
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {status === 'instruction' && (
           <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md px-4">
             <div className="max-w-xl text-center flex flex-col items-center">
               <Info className="w-16 h-16 text-brand-gold mb-6" />
-              <h2 className="text-4xl font-headline font-black text-white mb-6 uppercase tracking-tight">{levelDef.instruction?.title || "Nova Mecânica"}</h2>
-              <p className="text-brand-gray text-xl mb-12 leading-relaxed">{levelDef.instruction?.text}</p>
-              <Button onClick={acceptInstruction} className="px-10 py-8 rounded-full bg-brand-gold hover:bg-yellow-400 text-brand-black text-2xl font-bold shadow-lg shadow-brand-gold/20">
-                Entendi, Começar!
-              </Button>
+              <h2 className="text-4xl font-headline font-black text-white mb-6 uppercase tracking-tight">{levelDef.instruction?.title || "Nível " + level}</h2>
+              <p className="text-brand-gray text-xl mb-12 leading-relaxed">{levelDef.instruction?.text || "Prepare-se para tocar a partitura!"}</p>
+              <div className="flex flex-col gap-4 w-full">
+                <Button onClick={acceptInstruction} className="px-10 py-8 rounded-full bg-brand-gold hover:bg-yellow-400 text-brand-black text-2xl font-bold shadow-lg shadow-brand-gold/20">
+                  Toque para Iniciar
+                </Button>
+                <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="px-10 py-6 rounded-full text-brand-gray hover:text-white hover:bg-white/10 text-xl font-bold">
+                  Sair para o Menu
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -1112,7 +1194,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
                   ))}
                 </div>
               </div>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 mb-4">
                 <Button onClick={repeatLevel} className="px-8 py-8 rounded-full bg-orange-600 hover:bg-orange-500 text-white text-2xl font-bold shadow-lg shadow-orange-500/20">
                   <RefreshCw className="mr-3 w-6 h-6" /> Tentar Novamente
                 </Button>
@@ -1120,6 +1202,9 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
                   Pular Fase
                 </Button>
               </div>
+              <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="text-brand-gray hover:text-white hover:bg-white/10 px-8 py-4 rounded-full text-lg font-bold">
+                Sair para o Menu
+              </Button>
             </div>
           </div>
         )}
@@ -1150,6 +1235,9 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
               <Button onClick={() => { setRetries(r => r > 0 ? r - 1 : 0); startLevel(level, bpm, true); }} className="px-8 py-4 bg-brand-graphite text-white font-bold rounded-xl">Repetir</Button>
               <Button onClick={nextLevel} className="px-8 py-4 bg-brand-gold text-brand-black font-bold rounded-xl">Avançar</Button>
             </div>
+            <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="mt-4 text-brand-gray hover:text-white hover:bg-white/10 px-8 py-2 rounded-full font-bold">
+              Sair para o Menu
+            </Button>
           </div>
         )}
         
