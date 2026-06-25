@@ -15,11 +15,22 @@ export default function HomePage() {
   const router = useRouter();
   const { user } = useUser();
   
-  const unlockedLessons = user?.progress?.unlockedLessons || ['1'];
-  const highestUnlocked = Math.max(...unlockedLessons.map((l: string) => parseInt(l)));
+  const sim60 = user?.progress?.simulator_60_unlocked || ['1'];
+  const sim70 = user?.progress?.simulator_70_unlocked || ['1'];
+  const sim90 = user?.progress?.simulator_90_unlocked || ['1'];
+  
+  const max60 = Math.max(...sim60.map(Number));
+  const max70 = Math.max(...sim70.map(Number));
+  const max90 = Math.max(...sim90.map(Number));
+
+  let highestUnlocked = max60;
+  let highestBpm = 60;
+  
+  if (max70 > highestUnlocked) { highestUnlocked = max70; highestBpm = 70; }
+  if (max90 > highestUnlocked) { highestUnlocked = max90; highestBpm = 90; }
 
   const onContinue = () => {
-    router.push(`/ritmo-insano/play?level=${highestUnlocked}&bpm=60`);
+    router.push(`/ritmo-insano/play?level=${highestUnlocked}&bpm=${highestBpm}`);
   };
 
   const onLevels = () => {

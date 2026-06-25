@@ -171,7 +171,7 @@ const calculateAccuracy = (events: TapEvent[]): number => {
 };
 
 export function PerformanceSimulator({ initialLevel, initialDifficulty }: { initialLevel?: number, initialDifficulty?: number }) {
-  const { user, addXP, updateProgress, deductLife, buyLives, addCache } = useUser();
+  const { user, addXP, updateSimulatorProgress, deductLife, buyLives, addCache } = useUser();
   const router = useRouter();
   const [showStore, setShowStore] = useState(false);
   const INITIAL_LIVES = 3;
@@ -198,8 +198,8 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   // Salvar progresso no Firebase quando a fase for concluída
   useEffect(() => {
     if (status === 'level_complete' && user) {
-      const completed = [...(user.progress?.completedLessons || [])];
-      const unlocked = [...(user.progress?.unlockedLessons || ['1'])];
+      const completed = [...(user.progress?.[`simulator_${bpm}_completed`] || [])];
+      const unlocked = [...(user.progress?.[`simulator_${bpm}_unlocked`] || ['1'])];
       const currentLvlStr = level.toString();
       const nextLvlStr = (level + 1).toString();
 
@@ -214,7 +214,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
       }
 
       if (changed) {
-        updateProgress(completed, unlocked);
+        updateSimulatorProgress(bpm, completed, unlocked);
       }
 
       if (accuracy >= 80) {

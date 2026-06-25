@@ -15,7 +15,7 @@ export default function RitmoInsanoGameMenu() {
   const { user } = useUser();
   const [selectedDifficulty, setSelectedDifficulty] = useState<60 | 70 | 90>(60);
 
-  const unlockedLessons = user?.progress?.unlockedLessons || ['1'];
+  const unlockedLessons = user?.progress?.[`simulator_${selectedDifficulty}_unlocked`] || ['1'];
   const highestUnlocked = Math.max(...unlockedLessons.map((l: string) => parseInt(l)));
 
   const handlePlay = (levelId: number) => {

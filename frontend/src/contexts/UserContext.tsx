@@ -19,7 +19,7 @@ import {
   User as FirebaseUser
 } from 'firebase/auth';
 import { db, auth } from '@/lib/firebase';
-import { addXPServer, updateProgressServer, updateLivesServer, updateCacheServer } from '@/app/actions/gamification';
+import { addXPServer, updateProgressServer, updateSimulatorProgressServer, updateLivesServer, updateCacheServer } from '@/app/actions/gamification';
 
 interface User {
   uid: string;
@@ -57,6 +57,7 @@ interface UserContextType {
   logout: () => Promise<void>;
   addXP: (amount: number) => Promise<void>;
   updateProgress: (completedLessons: string[], unlockedLessons: string[]) => Promise<void>;
+  updateSimulatorProgress: (bpm: number, completedLessons: string[], unlockedLessons: string[]) => Promise<void>;
   deductLife: () => Promise<void>;
   buyLives: (cost: number, amount: number) => Promise<boolean>;
   addCache: (amount: number) => Promise<void>;
@@ -256,6 +257,26 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateSimulatorProgress = async (bpm: number, completedLessons: string[], unlockedLessons: string[]) => {
+    if (!user?.uid) return;
+
+    // Atualização otimista na tela (UI)
+    setUser(prev => prev ? {
+      ...prev,
+      progress: {
+        ...prev.progress,
+        [`simulator_${bpm}_completed`]: completedLessons,
+        [`simulator_${bpm}_unlocked`]: unlockedLessons
+      }
+    } : null);
+
+    try {
+      await updateSimulatorProgressServer(user.uid, bpm, completedLessons, unlockedLessons);
+    } catch (error) {
+      console.error('Failed to update simulator progress on server:', error);
+    }
+  };
+
   const deductLife = async () => {
     if (!user?.uid) return;
     if (user.stats.lives <= 0) return;
@@ -328,7 +349,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <UserContext.Provider value={{ user, isUserLoading, login, signup, checkEmailExists, sendMagicLink, finishMagicLinkSignup, loginWithGoogle, logout, addXP, updateProgress, deductLife, buyLives, addCache, completeOnboarding }}>
+    <UserContext.Provider value={{ user, isUserLoading, login, signup, checkEmailExists, sendMagicLink, finishMagicLinkSignup, loginWithGoogle, logout, addXP, updateProgress, updateSimulatorProgress, deductLife, buyLives, addCache, completeOnboarding }}>
       {children}
     </UserContext.Provider>
   );
