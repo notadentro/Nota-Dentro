@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Play, Trophy, Zap, Heart, Waves, Target, Crown, ChevronRight, Map, ArrowLeft, UserCircle } from 'lucide-react';
+import { Play, Trophy, Zap, Heart, Waves, Target, Crown, ChevronRight, Map, ArrowLeft, UserCircle, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { HowToPlay } from './HowToPlay';
@@ -15,7 +15,27 @@ export default function HomePage() {
   const router = useRouter();
   const { user } = useUser();
   
-  const onStartGame = () => {
+  const [bpm, setBpm] = useState<60 | 70 | 90>(60);
+  const [mainTab, setMainTab] = useState<'play' | 'settings'>('play');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('ritmo_bpm');
+    if (saved) setBpm(Number(saved) as 60 | 70 | 90);
+  }, []);
+
+  const handleBpmChange = (newBpm: 60 | 70 | 90) => {
+    setBpm(newBpm);
+    localStorage.setItem('ritmo_bpm', newBpm.toString());
+  };
+
+  const simUnlocked = user?.progress?.[`simulator_${bpm}_unlocked`] || ['1'];
+  const highestUnlocked = Math.max(...simUnlocked.map(Number));
+
+  const onContinue = () => {
+    router.push(`/ritmo-insano/play?level=${highestUnlocked}&bpm=${bpm}`);
+  };
+
+  const onLevels = () => {
     router.push('/ritmo-insano/niveis');
   };
 
@@ -172,11 +192,166 @@ export default function HomePage() {
           </div>
         </motion.div>
 
+        {/* JOGAR CENTER BUTTON */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex flex-col sm:flex-row gap-4 items-center mb-8"
+        >
+          {highestUnlocked > 1 ? (
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                onClick={onContinue}
+                className="group relative px-8 py-6 text-xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-105 overflow-hidden border-2 border-transparent"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  <Play className="w-6 h-6 fill-current" />
+                  CONTINUAR (FASE {highestUnlocked})
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
+                />
+              </Button>
+              <Button
+                onClick={onLevels}
+                className="group relative px-8 py-6 text-xl font-headline font-black uppercase tracking-widest rounded-xl transition-all hover:scale-105 overflow-hidden border-2 bg-brand-graphite/50 text-white border-brand-gray/30 hover:bg-brand-gray/20 hover:border-brand-gray/50"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  <Map className="w-6 h-6" />
+                  FASES
+                </span>
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={onLevels}
+              className="group relative px-10 py-8 text-2xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-2xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-110 overflow-hidden border-2 border-transparent"
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                <Play className="w-8 h-8 fill-current" />
+                JOGAR AGORA
+              </span>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
+              />
+            </Button>
+          )}
+        </motion.div>
+
+        {/* TABS */}
+        <div className="w-full max-w-4xl mb-6">
+          <div className="flex justify-center gap-4 mb-6">
+            <Button 
+              variant="ghost" 
+              onClick={() => setMainTab('play')}
+              className={cn("text-lg font-headline font-black uppercase tracking-widest transition-all", mainTab === 'play' ? "text-brand-gold border-b-2 border-brand-gold bg-brand-gold/10" : "text-brand-gray hover:text-white")}
+            >
+              Modos de Jogo
+            </Button>
+            <Button 
+              variant="ghost" 
+              onClick={() => setMainTab('settings')}
+              className={cn("text-lg font-headline font-black uppercase tracking-widest transition-all", mainTab === 'settings' ? "text-brand-gold border-b-2 border-brand-gold bg-brand-gold/10" : "text-brand-gray hover:text-white")}
+            >
+              <Settings className="w-5 h-5 mr-2" />
+              Configurações
+            </Button>
+          </div>
+
+          {mainTab === 'play' && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="grid md:grid-cols-3 gap-3"
+            >
+              {modes.map((mode, i) => (
+                <motion.button
+                  key={mode.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  onClick={() => setSelectedMode(mode.id as any)}
+                  className={cn(
+                    "relative p-4 rounded-xl border-2 transition-all duration-300 group overflow-hidden text-left",
+                    selectedMode === mode.id
+                      ? `border-brand-gold bg-gradient-to-br ${mode.color} shadow-lg ${mode.glow} scale-105`
+                      : "border-brand-gray/20 bg-brand-graphite/50 hover:border-brand-gray/50 hover:scale-[1.02]"
+                  )}
+                >
+                  <div className={cn(
+                    "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br",
+                    mode.color,
+                    selectedMode === mode.id && "opacity-100"
+                  )} style={{ mixBlendMode: 'overlay' }} />
+                  
+                  <div className="relative z-10">
+                    <mode.icon className={cn(
+                      "w-8 h-8 mb-2 transition-all drop-shadow-md",
+                      selectedMode === mode.id ? "text-brand-black" : "text-brand-gray group-hover:text-white"
+                    )} />
+                    
+                    <h3 className={cn(
+                      "text-lg font-black mb-1 transition-colors font-headline uppercase",
+                      selectedMode === mode.id ? "text-brand-black" : "text-white"
+                    )}>
+                      {mode.name}
+                    </h3>
+                    
+                    <p className={cn(
+                      "text-sm transition-colors font-medium",
+                      selectedMode === mode.id ? "text-brand-black/80" : "text-brand-gray"
+                    )}>
+                      {mode.description}
+                    </p>
+                  </div>
+
+                  {selectedMode === mode.id && (
+                    <motion.div
+                      layoutId="selectedIndicator"
+                      className="absolute inset-0 border-4 border-white/20 rounded-2xl pointer-events-none"
+                    />
+                  )}
+                </motion.button>
+              ))}
+            </motion.div>
+          )}
+
+          {mainTab === 'settings' && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-brand-graphite/60 backdrop-blur-md p-6 rounded-2xl border border-brand-gray/20 shadow-xl w-full max-w-2xl mx-auto flex flex-col items-center"
+            >
+              <h3 className="text-xl font-headline font-black text-white mb-6 uppercase tracking-widest text-brand-gray/80">Dificuldade</h3>
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <Button onClick={() => handleBpmChange(60)} className={cn("flex-1 h-16 rounded-[16px] font-black text-lg uppercase tracking-widest transition-all", bpm === 60 ? "bg-green-500 text-white shadow-lg shadow-green-500/30 scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Fácil (60 BPM)</Button>
+                <Button onClick={() => handleBpmChange(70)} className={cn("flex-1 h-16 rounded-[16px] font-black text-lg uppercase tracking-widest transition-all", bpm === 70 ? "bg-gradient-to-r from-brand-gold to-yellow-500 text-brand-black shadow-lg shadow-brand-gold/30 scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Médio (70 BPM)</Button>
+                <Button onClick={() => handleBpmChange(90)} className={cn("flex-1 h-16 rounded-[16px] font-black text-lg uppercase tracking-widest transition-all", bpm === 90 ? "bg-red-500 text-white shadow-lg shadow-red-500/30 scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Insano (90 BPM)</Button>
+              </div>
+              <Button
+                variant="outline"
+                className="mt-8 px-6 py-6 text-base font-bold rounded-xl border-2 border-brand-gray/30 bg-brand-black text-white hover:bg-brand-gray/20 hover:border-brand-gray/50 backdrop-blur-sm transition-all"
+                onClick={() => setShowHowToPlay(true)}
+              >
+                <Waves className="w-4 h-4 mr-2 text-brand-gold" />
+                Como Jogar
+              </Button>
+            </motion.div>
+          )}
+        </div>
+
         {/* Stats Grid */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 w-full max-w-4xl"
         >
           {stats.map((stat, i) => (
@@ -184,7 +359,7 @@ export default function HomePage() {
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + i * 0.1 }}
+              transition={{ delay: 0.2 + i * 0.1 }}
               className="bg-brand-graphite/60 backdrop-blur-md border border-brand-gray/20 rounded-xl p-3 text-center hover:border-brand-gold/50 transition-all shadow-xl"
             >
               <stat.icon className={cn("w-6 h-6 mx-auto mb-1 drop-shadow-lg", stat.color)} />
@@ -192,114 +367,6 @@ export default function HomePage() {
               <div className="text-[10px] text-brand-gray font-bold uppercase tracking-wider">{stat.label}</div>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* Game Modes */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="w-full max-w-4xl mb-8"
-        >
-          <h2 className="text-xl font-headline font-black text-white mb-4 text-center uppercase tracking-widest text-brand-gray/80">
-            Escolha o Modo
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-3">
-            {modes.map((mode, i) => (
-              <motion.button
-                key={mode.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 + i * 0.1 }}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onClick={() => setSelectedMode(mode.id as any)}
-                className={cn(
-                  "relative p-4 rounded-xl border-2 transition-all duration-300 group overflow-hidden text-left",
-                  selectedMode === mode.id
-                    ? `border-brand-gold bg-gradient-to-br ${mode.color} shadow-lg ${mode.glow} scale-105`
-                    : "border-brand-gray/20 bg-brand-graphite/50 hover:border-brand-gray/50 hover:scale-[1.02]"
-                )}
-              >
-                {/* Background gradient overlay */}
-                <div className={cn(
-                  "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br",
-                  mode.color,
-                  selectedMode === mode.id && "opacity-100"
-                )} style={{ mixBlendMode: 'overlay' }} />
-                
-                <div className="relative z-10">
-                  <mode.icon className={cn(
-                    "w-8 h-8 mb-2 transition-all drop-shadow-md",
-                    selectedMode === mode.id ? "text-brand-black" : "text-brand-gray group-hover:text-white"
-                  )} />
-                  
-                  <h3 className={cn(
-                    "text-lg font-black mb-1 transition-colors font-headline uppercase",
-                    selectedMode === mode.id ? "text-brand-black" : "text-white"
-                  )}>
-                    {mode.name}
-                  </h3>
-                  
-                  <p className={cn(
-                    "text-sm transition-colors font-medium",
-                    selectedMode === mode.id ? "text-brand-black/80" : "text-brand-gray"
-                  )}>
-                    {mode.description}
-                  </p>
-                </div>
-
-                {selectedMode === mode.id && (
-                  <motion.div
-                    layoutId="selectedIndicator"
-                    className="absolute inset-0 border-4 border-white/20 rounded-2xl pointer-events-none"
-                  />
-                )}
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* CTA Buttons */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.9 }}
-          className="flex flex-col sm:flex-row gap-4 items-center"
-        >
-          <Button
-            onClick={onStartGame}
-            className="group relative px-8 py-6 text-xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-105 overflow-hidden border-2 border-transparent"
-          >
-            <span className="relative z-10 flex items-center gap-3">
-              <Play className="w-6 h-6 fill-current" />
-              JOGAR AGORA
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
-            
-            {/* Animated shine effect */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-              animate={{
-                x: ['-100%', '200%']
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatDelay: 1.5,
-                ease: "easeInOut"
-              }}
-            />
-          </Button>
-
-          <Button
-            variant="outline"
-            className="px-6 py-6 text-base font-bold rounded-xl border-2 border-brand-gray/30 bg-brand-graphite/50 text-white hover:bg-brand-gray/20 hover:border-brand-gray/50 backdrop-blur-sm transition-all"
-            onClick={() => setShowHowToPlay(true)}
-          >
-            <Waves className="w-4 h-4 mr-2 text-brand-gold" />
-            Como Jogar
-          </Button>
         </motion.div>
       </div>
 

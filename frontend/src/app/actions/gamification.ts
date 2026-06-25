@@ -47,6 +47,26 @@ export async function updateProgressServer(userId: string, completedLessons: str
   }
 }
 
+export async function updateSimulatorProgressServer(userId: string, bpm: number, completedLessons: string[], unlockedLessons: string[]) {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
+  try {
+    const userRef = adminDb.collection('users').doc(userId);
+    
+    await userRef.update({
+      [`progress.simulator_${bpm}_completed`]: completedLessons,
+      [`progress.simulator_${bpm}_unlocked`]: unlockedLessons
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating simulator progress on server:', error);
+    throw new Error('Failed to update simulator progress');
+  }
+}
+
 export async function updateLivesServer(userId: string, amount: number) {
   if (!userId) {
     throw new Error('User ID is required');
