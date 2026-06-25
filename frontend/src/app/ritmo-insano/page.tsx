@@ -15,7 +15,14 @@ export default function HomePage() {
   const router = useRouter();
   const { user } = useUser();
   
-  const onStartGame = () => {
+  const unlockedLessons = user?.progress?.unlockedLessons || ['1'];
+  const highestUnlocked = Math.max(...unlockedLessons.map((l: string) => parseInt(l)));
+
+  const onContinue = () => {
+    router.push(`/ritmo-insano/play?level=${highestUnlocked}&bpm=60`);
+  };
+
+  const onLevels = () => {
     router.push('/ritmo-insano/niveis');
   };
 
@@ -267,29 +274,33 @@ export default function HomePage() {
           transition={{ duration: 0.5, delay: 0.9 }}
           className="flex flex-col sm:flex-row gap-4 items-center"
         >
+          {highestUnlocked > 1 && (
+            <Button
+              onClick={onContinue}
+              className="group relative px-8 py-6 text-xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-105 overflow-hidden border-2 border-transparent"
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                <Play className="w-6 h-6 fill-current" />
+                CONTINUAR (FASE {highestUnlocked})
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+              
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
+              />
+            </Button>
+          )}
+
           <Button
-            onClick={onStartGame}
-            className="group relative px-8 py-6 text-xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-105 overflow-hidden border-2 border-transparent"
+            onClick={onLevels}
+            className={cn("group relative px-8 py-6 text-xl font-headline font-black uppercase tracking-widest rounded-xl transition-all hover:scale-105 overflow-hidden border-2", highestUnlocked > 1 ? "bg-brand-graphite/50 text-white border-brand-gray/30 hover:bg-brand-gray/20 hover:border-brand-gray/50" : "bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-xl shadow-brand-gold/40 hover:shadow-brand-gold/60 border-transparent")}
           >
             <span className="relative z-10 flex items-center gap-3">
-              <Play className="w-6 h-6 fill-current" />
-              JOGAR AGORA
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {highestUnlocked > 1 ? <Map className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
+              {highestUnlocked > 1 ? "FASES" : "JOGAR AGORA"}
             </span>
-            
-            {/* Animated shine effect */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-              animate={{
-                x: ['-100%', '200%']
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatDelay: 1.5,
-                ease: "easeInOut"
-              }}
-            />
           </Button>
 
           <Button
