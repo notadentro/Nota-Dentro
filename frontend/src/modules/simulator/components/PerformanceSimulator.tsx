@@ -381,17 +381,8 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
     if (user) {
       deductLife();
       livesRef.current -= 1;
-      if (livesRef.current <= 0) {
-        setStatus('level_failed');
-      }
     } else {
-      setLives(prev => {
-        const next = prev - 1;
-        if (next <= 0) {
-          setStatus('level_failed');
-        }
-        return next;
-      });
+      setLives(prev => prev - 1);
     }
   };
 
@@ -461,11 +452,30 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
     });
 
     if (allProcessed && status === 'playing') {
-       if (livesRef.current <= 0) {
-         setStatus('level_failed');
-         return;
-       } else if ((elapsed / beatMs) >= levelTotalBeats) {
-         setStatus('level_complete');
+       if ((elapsed / beatMs) >= levelTotalBeats) {
+         let totalPoints = 0;
+         let maxPoints = 0;
+         const notes = updatedEvents.filter(e => e.type === 'note' && e.result !== 'tied');
+         
+         notes.forEach(note => {
+           maxPoints += 1.0;
+           if (note.result === 'perfect') totalPoints += 1.0;
+           else if (note.result === 'early' || note.result === 'late') totalPoints += 0.5;
+           
+           if (note.duration >= 1.0) {
+             maxPoints += 1.0;
+             if (note.releaseResult === 'perfect') totalPoints += 1.0;
+             else if (note.releaseResult === 'early' || note.releaseResult === 'late') totalPoints += 0.5;
+           }
+         });
+         
+         const finalAccuracy = maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
+         
+         if (finalAccuracy >= 80) {
+           setStatus('level_complete');
+         } else {
+           setStatus('level_failed');
+         }
          return;
        }
     }
@@ -684,7 +694,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
        const expectedEndTimeMs = (ev.beatAbsolute + ev.duration) * beatMs;
        const delta = elapsed - expectedEndTimeMs;
        
-       const earlyTolerance = TOLERANCE_MS + (ev.duration * beatMs * 0.15);
+       const earlyTolerance = TOLERANCE_MS + (ev.duration * beatMs * 0.20);
 
        setEvents(prev => {
           const next = [...prev];
