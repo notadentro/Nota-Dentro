@@ -30,11 +30,13 @@ export default function RitmoInsanoGameMenu() {
   };
 
   const getWorldName = (levelId: number) => {
-    if (levelId <= 10) return "Mundo 1: O Domínio do Pulso";
-    if (levelId <= 20) return "Mundo 2: O Despertar das Colcheias";
-    if (levelId <= 30) return "Mundo 3: O Domínio do Silêncio";
-    if (levelId <= 40) return "Mundo 4: O Balanço Brasileiro";
-    return "Mundo 5: O Mestre Gramani";
+    if (levelId <= 10) return "Mundo 1: O Todo e as Metades";
+    if (levelId <= 20) return "Mundo 2: O Despertar da Semínima";
+    if (levelId <= 30) return "Mundo 3: O Domínio do Silêncio e o Contratempo";
+    if (levelId <= 40) return "Mundo 4: O Despertar das Colcheias";
+    if (levelId <= 50) return "Mundo 5: O Balanço Brasileiro";
+    if (levelId <= 60) return "Mundo 6: Os Divertimentos";
+    return "Mundo 7: A Extensão do Som";
   };
 
   const [particles, setParticles] = useState<Array<{id: number, left: number, top: number, delay: number, duration: number}>>([]);

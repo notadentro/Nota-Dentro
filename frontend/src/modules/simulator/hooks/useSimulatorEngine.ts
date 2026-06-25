@@ -18,7 +18,7 @@ const TOLERANCE_MS = 150;
 const LATENCY_OFFSET_MS = 0.3;
 
 export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowStore }: UseSimulatorEngineProps) {
-  const { user, addXP, updateSimulatorProgress, deductLife, addCache } = useUser();
+  const { user, isUserLoading, addXP, updateSimulatorProgress, deductLife, addCache } = useUser();
 
   const [level, setLevel] = useState(1);
   const [lives, setLives] = useState(INITIAL_LIVES);
@@ -88,13 +88,17 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
   const tickRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    if (initialLevel && initialDifficulty && status === 'idle') {
-      setLevel(initialLevel);
+    if (!isUserLoading && initialLevel && initialDifficulty && status === 'idle') {
+      const simUnlocked = user?.progress?.[`simulator_${initialDifficulty}_unlocked`] || ['1'];
+      const highestUnlocked = Math.max(...simUnlocked.map(Number));
+      const cappedLevel = Math.min(initialLevel, highestUnlocked);
+
+      setLevel(cappedLevel);
       setBpm(initialDifficulty);
-      startGame(initialLevel, initialDifficulty);
+      startGame(cappedLevel, initialDifficulty);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialLevel, initialDifficulty]);
+  }, [initialLevel, initialDifficulty, isUserLoading, user]);
 
   useEffect(() => {
     if (status === 'level_failed' || status === 'game_over') {
@@ -182,6 +186,13 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
       if (penalizedBeatsRef.current.has(eventId)) return;
       penalizedBeatsRef.current.add(eventId);
     }
+
+    // Se a fase já foi concluída, o erro não cobra vida (Modo Treino)
+    const isAlreadyCompleted = user?.progress?.[`simulator_${bpm}_completed`]?.includes(level.toString());
+    if (isAlreadyCompleted) {
+      return;
+    }
+
     if (user) {
       deductLife();
       livesRef.current -= 1;
@@ -251,7 +262,8 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
        if ((elapsed / beatMs) >= levelTotalBeats) {
          const finalAccuracy = calculateAccuracy(updatedEvents);
          if (finalAccuracy >= 80) setStatus('level_complete');
-         else setStatus('level_failed');
+         else if (retries > 0) setStatus('level_failed');
+         else setStatus('game_over');
          return;
        }
     }
@@ -368,8 +380,10 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
     const l = overrideLevel ?? level;
     const b = overrideBpm ?? INITIAL_BPM;
 
+    const isAlreadyCompleted = user?.progress?.[`simulator_${b}_completed`]?.includes(l.toString());
     const currentLives = user ? user.stats.lives : lives;
-    if (currentLives <= 0) {
+    
+    if (currentLives <= 0 && !isAlreadyCompleted) {
       setShowStore(true);
       return;
     }
