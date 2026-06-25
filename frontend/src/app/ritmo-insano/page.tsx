@@ -164,11 +164,11 @@ export default function HomePage() {
             </motion.div>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-headline font-black mb-2 bg-gradient-to-r from-[#ffeaa7] via-brand-gold to-[#e1b12c] bg-clip-text text-transparent drop-shadow-xl uppercase tracking-tighter">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-headline font-black mb-2 bg-gradient-to-r from-[#ffeaa7] via-brand-gold to-[#e1b12c] bg-clip-text text-transparent drop-shadow-xl uppercase tracking-tighter">
             Ritmo Insano
           </h1>
           
-          <p className="text-lg md:text-xl text-brand-gray font-medium tracking-wide max-w-xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-brand-gray font-medium tracking-wide max-w-xl mx-auto px-4">
             O jogo definitivo de leitura rítmica. Sincronize. Evolua. Conquiste.
           </p>
 
@@ -200,15 +200,15 @@ export default function HomePage() {
           className="flex flex-col sm:flex-row gap-4 items-center mb-8"
         >
           {highestUnlocked > 1 ? (
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 w-full px-4 sm:px-0 justify-center">
               <Button
                 onClick={onContinue}
-                className="group relative px-8 py-6 text-xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-105 overflow-hidden border-2 border-transparent"
+                className="group relative px-4 py-6 sm:px-8 sm:py-6 text-sm sm:text-xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-105 overflow-hidden border-2 border-transparent w-full sm:w-auto"
               >
-                <span className="relative z-10 flex items-center gap-3">
-                  <Play className="w-6 h-6 fill-current" />
+                <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
+                  <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current" />
                   CONTINUAR (FASE {highestUnlocked})
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
@@ -218,10 +218,10 @@ export default function HomePage() {
               </Button>
               <Button
                 onClick={onLevels}
-                className="group relative px-8 py-6 text-xl font-headline font-black uppercase tracking-widest rounded-xl transition-all hover:scale-105 overflow-hidden border-2 bg-brand-graphite/50 text-white border-brand-gray/30 hover:bg-brand-gray/20 hover:border-brand-gray/50"
+                className="group relative px-6 py-6 sm:px-8 sm:py-6 text-sm sm:text-xl font-headline font-black uppercase tracking-widest rounded-xl transition-all hover:scale-105 overflow-hidden border-2 bg-brand-graphite/50 text-white border-brand-gray/30 hover:bg-brand-gray/20 hover:border-brand-gray/50 w-full sm:w-auto"
               >
-                <span className="relative z-10 flex items-center gap-3">
-                  <Map className="w-6 h-6" />
+                <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
+                  <Map className="w-5 h-5 sm:w-6 sm:h-6" />
                   FASES
                 </span>
               </Button>
@@ -229,10 +229,10 @@ export default function HomePage() {
           ) : (
             <Button
               onClick={onLevels}
-              className="group relative px-10 py-8 text-2xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-2xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-110 overflow-hidden border-2 border-transparent"
+              className="group relative px-8 py-6 sm:px-10 sm:py-8 text-lg sm:text-2xl font-headline font-black uppercase tracking-widest rounded-xl bg-gradient-to-r from-brand-gold to-yellow-500 hover:from-yellow-400 hover:to-yellow-300 text-brand-black shadow-2xl shadow-brand-gold/40 hover:shadow-brand-gold/60 transition-all hover:scale-110 overflow-hidden border-2 border-transparent w-full sm:w-auto mx-4 sm:mx-0"
             >
-              <span className="relative z-10 flex items-center gap-3">
-                <Play className="w-8 h-8 fill-current" />
+              <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
+                <Play className="w-6 h-6 sm:w-8 sm:h-8 fill-current" />
                 JOGAR AGORA
               </span>
               <motion.div
@@ -245,21 +245,21 @@ export default function HomePage() {
         </motion.div>
 
         {/* TABS */}
-        <div className="w-full max-w-4xl mb-6">
-          <div className="flex justify-center gap-4 mb-6">
+        <div className="w-full max-w-4xl mb-6 px-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4 mb-6">
             <Button 
               variant="ghost" 
               onClick={() => setMainTab('play')}
-              className={cn("text-lg font-headline font-black uppercase tracking-widest transition-all", mainTab === 'play' ? "text-brand-gold border-b-2 border-brand-gold bg-brand-gold/10" : "text-brand-gray hover:text-white")}
+              className={cn("text-base sm:text-lg font-headline font-black uppercase tracking-widest transition-all w-full sm:w-auto", mainTab === 'play' ? "text-brand-gold border-b-2 sm:border-b-4 border-brand-gold bg-brand-gold/10" : "text-brand-gray hover:text-white")}
             >
               Modos de Jogo
             </Button>
             <Button 
               variant="ghost" 
               onClick={() => setMainTab('settings')}
-              className={cn("text-lg font-headline font-black uppercase tracking-widest transition-all", mainTab === 'settings' ? "text-brand-gold border-b-2 border-brand-gold bg-brand-gold/10" : "text-brand-gray hover:text-white")}
+              className={cn("text-base sm:text-lg font-headline font-black uppercase tracking-widest transition-all w-full sm:w-auto", mainTab === 'settings' ? "text-brand-gold border-b-2 sm:border-b-4 border-brand-gold bg-brand-gold/10" : "text-brand-gray hover:text-white")}
             >
-              <Settings className="w-5 h-5 mr-2" />
+              <Settings className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Configurações
             </Button>
           </div>
@@ -329,11 +329,11 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-brand-graphite/60 backdrop-blur-md p-6 rounded-2xl border border-brand-gray/20 shadow-xl w-full max-w-2xl mx-auto flex flex-col items-center"
             >
-              <h3 className="text-xl font-headline font-black text-white mb-6 uppercase tracking-widest text-brand-gray/80">Dificuldade</h3>
+              <h3 className="text-lg sm:text-xl font-headline font-black text-white mb-6 uppercase tracking-widest text-brand-gray/80 text-center">Dificuldade</h3>
               <div className="flex flex-col sm:flex-row gap-3 w-full">
-                <Button onClick={() => handleBpmChange(60)} className={cn("flex-1 h-16 rounded-[16px] font-black text-lg uppercase tracking-widest transition-all", bpm === 60 ? "bg-green-500 text-white shadow-lg shadow-green-500/30 scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Fácil (60 BPM)</Button>
-                <Button onClick={() => handleBpmChange(70)} className={cn("flex-1 h-16 rounded-[16px] font-black text-lg uppercase tracking-widest transition-all", bpm === 70 ? "bg-gradient-to-r from-brand-gold to-yellow-500 text-brand-black shadow-lg shadow-brand-gold/30 scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Médio (70 BPM)</Button>
-                <Button onClick={() => handleBpmChange(90)} className={cn("flex-1 h-16 rounded-[16px] font-black text-lg uppercase tracking-widest transition-all", bpm === 90 ? "bg-red-500 text-white shadow-lg shadow-red-500/30 scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Insano (90 BPM)</Button>
+                <Button onClick={() => handleBpmChange(60)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 60 ? "bg-green-500 text-white shadow-lg shadow-green-500/30 sm:scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Fácil (60)</Button>
+                <Button onClick={() => handleBpmChange(70)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 70 ? "bg-gradient-to-r from-brand-gold to-yellow-500 text-brand-black shadow-lg shadow-brand-gold/30 sm:scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Médio (70)</Button>
+                <Button onClick={() => handleBpmChange(90)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 90 ? "bg-red-500 text-white shadow-lg shadow-red-500/30 sm:scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Insano (90)</Button>
               </div>
               <Button
                 variant="outline"
