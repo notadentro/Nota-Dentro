@@ -270,12 +270,9 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               className="grid md:grid-cols-3 gap-3"
             >
-              {modes.map((mode, i) => (
+              {modes.map((mode) => (
                 <motion.button
                   key={mode.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1, type: "spring", stiffness: 100 }}
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onClick={() => setSelectedMode(mode.id as any)}
                   className={cn(
@@ -356,12 +353,9 @@ export default function HomePage() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 w-full max-w-4xl"
         >
-          {stats.map((stat, i) => (
+          {stats.map((stat) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.1, type: "spring", stiffness: 100 }}
               className="bg-brand-graphite/60 backdrop-blur-md border border-brand-gray/20 rounded-xl p-3 text-center hover:border-brand-gold/50 transition-all shadow-xl"
             >
               <stat.icon className={cn("w-6 h-6 mx-auto mb-1 drop-shadow-lg", stat.color)} />
