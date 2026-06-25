@@ -271,14 +271,14 @@ export default function HomePage() {
               className="grid md:grid-cols-3 gap-3"
             >
               {modes.map((mode) => (
-                <motion.button
+                <button
                   key={mode.id}
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onClick={() => setSelectedMode(mode.id as any)}
                   className={cn(
                     "relative p-4 rounded-xl border-2 transition-all duration-300 group overflow-hidden text-left",
                     selectedMode === mode.id
-                      ? `border-brand-gold bg-gradient-to-br ${mode.color} shadow-lg ${mode.glow} scale-105`
+                      ? `border-brand-gold bg-gradient-to-br ${mode.color} shadow-lg ${mode.glow} hover:scale-[1.02]`
                       : "border-brand-gray/20 bg-brand-graphite/50 hover:border-brand-gray/50 hover:scale-[1.02]"
                   )}
                 >
@@ -310,14 +310,11 @@ export default function HomePage() {
                   </div>
 
                   {selectedMode === mode.id && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="absolute inset-0 border-4 border-white/20 rounded-xl pointer-events-none"
+                    <div
+                      className="absolute inset-0 border-4 border-white/20 rounded-xl pointer-events-none animate-in fade-in duration-300"
                     />
                   )}
-                </motion.button>
+                </button>
               ))}
             </motion.div>
           )}
@@ -330,9 +327,9 @@ export default function HomePage() {
             >
               <h3 className="text-lg sm:text-xl font-headline font-black text-white mb-6 uppercase tracking-widest text-brand-gray/80 text-center">Dificuldade</h3>
               <div className="flex flex-col sm:flex-row gap-3 w-full">
-                <Button onClick={() => handleBpmChange(60)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 60 ? "bg-green-500 text-white shadow-lg shadow-green-500/30 sm:scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Fácil (60)</Button>
-                <Button onClick={() => handleBpmChange(70)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 70 ? "bg-gradient-to-r from-brand-gold to-yellow-500 text-brand-black shadow-lg shadow-brand-gold/30 sm:scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Médio (70)</Button>
-                <Button onClick={() => handleBpmChange(90)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 90 ? "bg-red-500 text-white shadow-lg shadow-red-500/30 sm:scale-105" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50")}>Insano (90)</Button>
+                <Button onClick={() => handleBpmChange(60)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 60 ? "bg-green-500 text-white shadow-lg shadow-green-500/30 hover:scale-[1.02]" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50 hover:scale-[1.02]")}>Fácil (60)</Button>
+                <Button onClick={() => handleBpmChange(70)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 70 ? "bg-gradient-to-r from-brand-gold to-yellow-500 text-brand-black shadow-lg shadow-brand-gold/30 hover:scale-[1.02]" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50 hover:scale-[1.02]")}>Médio (70)</Button>
+                <Button onClick={() => handleBpmChange(90)} className={cn("flex-1 h-14 sm:h-16 rounded-[16px] font-black text-sm sm:text-lg uppercase tracking-widest transition-all", bpm === 90 ? "bg-red-500 text-white shadow-lg shadow-red-500/30 hover:scale-[1.02]" : "bg-brand-black text-brand-gray border border-brand-gray/20 hover:text-white hover:border-brand-gray/50 hover:scale-[1.02]")}>Insano (90)</Button>
               </div>
               <Button
                 variant="outline"
@@ -354,14 +351,14 @@ export default function HomePage() {
           className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 w-full max-w-4xl"
         >
           {stats.map((stat) => (
-            <motion.div
+            <div
               key={stat.label}
               className="bg-brand-graphite/60 backdrop-blur-md border border-brand-gray/20 rounded-xl p-3 text-center hover:border-brand-gold/50 transition-all shadow-xl"
             >
               <stat.icon className={cn("w-6 h-6 mx-auto mb-1 drop-shadow-lg", stat.color)} />
               <div className="text-2xl font-black text-white mb-0.5 font-headline">{stat.value}</div>
               <div className="text-[10px] text-brand-gray font-bold uppercase tracking-wider">{stat.label}</div>
-            </motion.div>
+            </div>
           ))}
         </motion.div>
       </div>
