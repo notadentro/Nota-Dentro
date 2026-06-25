@@ -163,7 +163,7 @@ export default function LandingPage() {
       });
       router.push('/dashboard');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: unknown) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: 'Erro ao criar conta',
