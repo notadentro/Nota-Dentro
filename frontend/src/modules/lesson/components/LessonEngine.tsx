@@ -169,7 +169,7 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
   };
 
   return (
-    <div className="flex-1 flex flex-col h-[100dvh] overflow-hidden">
+    <div className="flex flex-col fixed inset-0 overflow-hidden bg-background z-[100] h-[-webkit-fill-available]">
       {/* Top Bar */}
       <div className="h-16 px-4 md:px-8 flex items-center gap-4 z-50 relative bg-background/90 backdrop-blur">
         <button onClick={onClose} className="p-2 hover:bg-brand-graphite/10 rounded-full transition-colors text-brand-gray">
@@ -235,15 +235,12 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
       </div>
 
       {/* Bottom Bar (Navigation) */}
-      <div 
-        className="p-3 pb-8 md:px-8 md:py-6 border-t border-brand-graphite/20 bg-background flex items-center justify-between gap-4 sticky bottom-0 z-50 w-full"
-        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
-      >
+      <div className="px-4 py-5 pb-[40px] md:pb-8 border-t border-brand-graphite/20 bg-background flex items-center justify-between gap-4 w-full mt-auto shrink-0 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
         <Button 
           variant="outline" 
           onClick={handlePrev} 
           disabled={currentIndex === 0}
-          className="rounded-2xl font-bold py-6 px-6 md:py-8 md:px-8 text-brand-gray border-brand-graphite/30 hover:bg-brand-graphite/10 text-base md:text-lg min-w-[120px] md:min-w-[150px] min-h-[60px]"
+          className="rounded-2xl font-bold py-8 px-4 text-brand-gray border-brand-graphite/30 hover:bg-brand-graphite/10 text-base md:text-lg min-w-[100px] min-h-[64px]"
         >
           Voltar
         </Button>
@@ -251,9 +248,9 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
           onClick={handleNext} 
           disabled={!isCompleted}
           className={cn(
-            "rounded-2xl font-bold py-6 px-6 md:py-8 md:px-8 text-base md:text-lg min-w-[120px] md:min-w-[150px] transition-all min-h-[60px]",
+            "rounded-2xl font-bold py-8 px-6 text-base md:text-lg flex-1 max-w-[250px] transition-all min-h-[64px] active:scale-95",
             isCompleted 
-              ? "bg-system-success hover:bg-green-600 text-white shadow-[0_4px_0_0_#1e5f3f] hover:-translate-y-1 hover:shadow-[0_6px_0_0_#1e5f3f] active:translate-y-1 active:shadow-[0_0px_0_0_#1e5f3f]" 
+              ? "bg-system-success hover:bg-green-600 text-white shadow-[0_6px_0_0_#1e5f3f] active:shadow-[0_0px_0_0_#1e5f3f]" 
               : "bg-brand-graphite/20 text-brand-gray cursor-not-allowed border-none shadow-none"
           )}
         >
