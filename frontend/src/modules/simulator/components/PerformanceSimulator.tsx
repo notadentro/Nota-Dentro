@@ -152,8 +152,8 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   const { user, addXP, updateProgress, deductLife, buyLives, addCache } = useUser();
   const router = useRouter();
   const [showStore, setShowStore] = useState(false);
-  const INITIAL_LIVES = 5;
-  const INITIAL_RETRIES = 5;
+  const INITIAL_LIVES = 3;
+  const INITIAL_RETRIES = 3;
   const INITIAL_BPM = 60;
   const TOLERANCE_MS = 150; 
 
@@ -176,8 +176,25 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   const accuracy = (() => {
     const notes = events.filter(e => e.type === 'note' && e.result !== 'tied');
     if (notes.length === 0) return 0;
-    const hits = notes.filter(e => e.result === 'perfect' || e.result === 'early' || e.result === 'late');
-    return Math.round((hits.length / notes.length) * 100);
+    
+    let totalPoints = 0;
+    let maxPoints = 0;
+
+    notes.forEach(note => {
+      // Pontuação do Toque (Tap)
+      maxPoints += 1.0;
+      if (note.result === 'perfect') totalPoints += 1.0;
+      else if (note.result === 'early' || note.result === 'late') totalPoints += 0.5;
+      
+      // Pontuação da Soltura (Release) apenas para notas longas
+      if (note.duration >= 1.0) {
+        maxPoints += 1.0;
+        if (note.releaseResult === 'perfect') totalPoints += 1.0;
+        else if (note.releaseResult === 'early' || note.releaseResult === 'late') totalPoints += 0.5;
+      }
+    });
+
+    return Math.round((totalPoints / maxPoints) * 100);
   })();
 
   // Salvar progresso no Firebase quando a fase for concluída
@@ -439,7 +456,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
     const allProcessed = updatedEvents.every(ev => {
       if (ev.type === 'rest') return ev.result !== null;
       if (ev.result === 'tied') return true;
-      if (ev.duration > 1.0) return ev.result !== null && (ev.releaseResult !== null || ev.result === 'missed');
+      if (ev.duration >= 1.0) return ev.result !== null && (ev.releaseResult !== null || ev.result === 'missed');
       return ev.result !== null;
     });
 
@@ -585,6 +602,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   const nextLevel = () => {
     const nextLvl = level + 1;
     setLevel(nextLvl);
+    setRetries(INITIAL_RETRIES);
     startLevel(nextLvl, bpm);
   };
 
@@ -637,7 +655,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
              else if (delta > TOLERANCE_MS / 3) type = 'late';
              else type = 'perfect';
 
-             next[closestEventIndex] = { ...ev, result: type, isHeld: ev.duration > 1.0 };
+             next[closestEventIndex] = { ...ev, result: type, isHeld: ev.duration >= 1.0 };
              showGhostMsg(type, delta);
           }
           return next;
@@ -1229,7 +1247,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
               </div>
             )}
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
-              <Button onClick={() => { setRetries(r => r > 0 ? r - 1 : 0); startLevel(level, bpm, true); }} className="px-8 py-4 bg-brand-graphite text-white font-bold rounded-xl">Repetir</Button>
+              <Button onClick={() => startLevel(level, bpm, true)} className="px-8 py-4 bg-brand-graphite text-white font-bold rounded-xl">Repetir</Button>
               <Button onClick={nextLevel} className="px-8 py-4 bg-brand-gold text-brand-black font-bold rounded-xl">Avançar</Button>
             </div>
             <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="mt-4 text-brand-gray hover:text-white hover:bg-white/10 px-8 py-2 rounded-full font-bold">
@@ -1261,7 +1279,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
                 <Button 
                   onClick={async () => {
                     if (!user) return;
-                    const success = await buyLives(50, 5);
+                    const success = await buyLives(50, 3);
                     if (success) {
                       setShowStore(false);
                     } else {
@@ -1288,7 +1306,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
         )}
 
         {/* Level Title */}
-        <div className="flex flex-col items-center mb-6 w-full text-center">
+        <div className="flex flex-col items-center mb-12 w-full text-center">
            <span className="text-brand-gray text-[10px] md:text-sm uppercase font-bold tracking-widest">Nível {level} - {levelDef.name}</span>
            <span className="text-brand-gold font-headline text-lg md:text-2xl font-black">Compasso {levelDef.timeSignature[0]}/{levelDef.timeSignature[1]}</span>
         </div>
