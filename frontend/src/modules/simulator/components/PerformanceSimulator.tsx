@@ -580,7 +580,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
 
   const startGame = (overrideLevel?: number, overrideBpm?: number) => {
     const l = overrideLevel ?? level;
-    const b = overrideBpm ?? selectedDifficulty;
+    const b = overrideBpm ?? INITIAL_BPM;
 
     const currentLives = user ? user.stats.lives : lives;
     if (currentLives <= 0) {
