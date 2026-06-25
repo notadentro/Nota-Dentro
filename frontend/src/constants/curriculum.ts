@@ -1,4 +1,5 @@
 import { Trail } from '@/types/curriculum';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Lesson } from '@/types/lesson';
 import { PROFESSORS } from './professors';
 

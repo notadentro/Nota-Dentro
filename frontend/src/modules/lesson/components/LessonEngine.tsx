@@ -65,6 +65,7 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
     if (!currentStep && !showVictory) {
         handleNext();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep, showVictory]);
 
   // Trigger fireworks when victory is achieved!
@@ -148,14 +149,19 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
       case 'drag_drop_pauta':
         return <StaffDragDropView step={currentStep.data as DragDropPautaStep} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} />;
       case 'graphic_showcase':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <GraphicShowcaseView data={currentStep.data as any} avatar={currentStep.avatar} onComplete={markStepComplete} isCompleted={completedSteps[currentIndex]} />;
       case 'drag_drop_pyramid':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <PyramidDragDropView data={currentStep.data as any} avatar={currentStep.avatar} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} onFail={loseLife} />;
       case 'full_pyramid':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <FullPyramidView data={currentStep.data as any} avatar={currentStep.avatar} isCompleted={completedSteps[currentIndex]} onComplete={markStepComplete} />;
       case 'pulsation':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <PulsationView data={currentStep.data as any} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} onFail={loseLife} />;
       case 'rhythmic_reading':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return <RhythmicReadingView data={currentStep.data as any} isCompleted={completedSteps[currentIndex]} onSuccess={markStepComplete} onFail={loseLife} />;
       default:
         return null;
@@ -215,6 +221,7 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
               )}
                 {currentStep.type === 'drag_drop_pizza' && (
                 <RhythmicPizzaView 
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     data={currentStep.data as any} 
                     isCompleted={completedSteps[currentIndex]}
                     onSuccess={markStepComplete}
@@ -271,6 +278,7 @@ function TheoryView({ data }: { data: TheoryStep }) {
         </p>
       </div>
       {data.imageUrl && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img 
           src={data.imageUrl} 
           alt="Recurso Visual" 

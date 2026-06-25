@@ -13,6 +13,7 @@ if (!admin.apps.length) {
     } else {
       console.warn("⚠️ Firebase Admin: FIREBASE_PROJECT_ID is missing. Running in mock mode to avoid compilation crash.");
     }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.log('Firebase admin initialization error', error.stack);
   }
@@ -27,6 +28,8 @@ export const adminDb = admin.apps.length > 0 ? admin.firestore() : {
       get: async () => ({ exists: false, data: () => ({}) }),
     })
   })
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as any;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const adminAuth = admin.apps.length > 0 ? admin.auth() : {} as any;

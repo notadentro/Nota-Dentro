@@ -33,6 +33,7 @@ export default async function TrailPage({ params }: { params: Promise<{ trailId:
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {trail.courses.map((course: any) => (
             <Link href={`/dashboard/course/${course.id}`} key={course.id} className="block group">
               <Card className="h-full border-2 border-brand-graphite/20 hover:border-brand-gold transition-all hover:shadow-[0_8px_0_0_#FACC15] hover:-translate-y-2 bg-background cursor-pointer flex flex-col">

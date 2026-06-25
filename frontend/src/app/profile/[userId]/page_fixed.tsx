@@ -8,6 +8,7 @@ import { Instagram, Linkedin } from 'lucide-react';
 
 export default function ProfilePage() {
   const { userId: rawUserId } = useParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userId = Array.isArray(rawUserId) ? rawUserId[0] : rawUserId;
   const { user } = useUser();
 

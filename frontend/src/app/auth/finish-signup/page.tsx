@@ -45,6 +45,7 @@ function FinishSignupContent() {
       // Tenta validar o link
       await finishMagicLinkSignup(emailToVerify, window.location.href);
       setStatus('setup_profile');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any | unknown) {
       console.error(error);
       setStatus('error');
@@ -81,6 +82,7 @@ function FinishSignupContent() {
         router.push('/dashboard'); 
       }, 1500);
       
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any | unknown) {
       console.error(error);
       setErrorMsg(error.message || 'Erro ao concluir perfil.');

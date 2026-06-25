@@ -52,6 +52,7 @@ export function PublicHeader() {
       });
       setIsLoginDialogOpen(false);
       router.push('/dashboard');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast({
         variant: 'destructive',

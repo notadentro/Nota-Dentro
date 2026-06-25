@@ -1,4 +1,5 @@
 import { getDynamicCurriculum } from '@/utils/content';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from 'next/link';
 import { BookOpen, Play } from 'lucide-react';

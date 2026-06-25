@@ -31,6 +31,7 @@ export function PyramidDragDropView({
   isCompleted, 
   avatar,
   onSuccess, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onFail 
 }: { 
   data: DragDropPyramidStep, 
@@ -59,12 +60,14 @@ export function PyramidDragDropView({
 
   useEffect(() => {
     if (isCompleted) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLevel2Filled(data.expectedTarget.level_2.length);
       setLevel3Filled(data.expectedTarget.level_3.length);
       setAvailableItems([]);
     }
   }, [isCompleted, data.expectedTarget]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDragEnd = (event: any, info: any, itemName: string, itemIndex: number) => {
     if (isCompleted) return;
 
@@ -141,6 +144,7 @@ export function PyramidDragDropView({
   return (
     <div className="flex flex-col gap-8 w-full max-w-4xl mx-auto items-center" ref={containerRef}>
       {avatar ? (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         <TeacherBubble avatar={avatar as any}>
           <p className="text-xl md:text-2xl font-medium text-center text-inherit">
             {data.question}

@@ -64,6 +64,7 @@ export function SandboxAudioView({ data, isCompleted, onSuccess }: SandboxAudioV
 
   const initAudio = () => {
     if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
   };

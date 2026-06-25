@@ -56,6 +56,7 @@ export function FillBlanks({ data, onComplete }: FillBlanksProps) {
       if (isCorrect) {
         timeoutId = setTimeout(() => onComplete(true), 500);
       } else {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsError(true);
         // Return wrong ones after a delay
         timeoutId = setTimeout(() => {

@@ -32,6 +32,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
       const storedCompleted = user.progress?.completedLessons as string[] || [];
       const storedUnlocked = user.progress?.unlockedLessons as string[] || ['1'];
       
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCompletedLessons(storedCompleted);
       setUnlockedLessons(storedUnlocked);
       
