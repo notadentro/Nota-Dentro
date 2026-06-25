@@ -3,10 +3,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Play, RefreshCw, Heart, Zap, Info, ShieldAlert, Lock, ArrowLeft } from 'lucide-react';
+import { Play, RefreshCw, Heart, Zap, Info, ShieldAlert, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { TimeSignature, RhythmCell, RhythmCellBase, GAME_LEVELS, LevelDefinition } from '../constants/levels';
+import { RhythmCell, RhythmCellBase, GAME_LEVELS, LevelDefinition } from '../constants/levels';
 import { useUser } from '@/contexts/UserContext';
 import { useRouter } from 'next/navigation';
 
@@ -161,8 +161,6 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   const [lives, setLives] = useState(INITIAL_LIVES);
   const [retries, setRetries] = useState(INITIAL_RETRIES);
   const [bpm, setBpm] = useState(INITIAL_BPM);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedDifficulty, setSelectedDifficulty] = useState<60 | 70 | 90>(60);
   const [leftPadActive, setLeftPadActive] = useState(false);
   const [rightPadActive, setRightPadActive] = useState(false);
   const [levelDef, setLevelDef] = useState<LevelDefinition>(GAME_LEVELS[0]);
@@ -506,7 +504,6 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
     };
 
     let totalBeats = 0;
-    let showInstruction = false;
     let prepBts = GAME_LEVELS[0].timeSignature[0];
 
     if (!keepSequence) {
@@ -514,9 +511,6 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
       const pInfo = GAME_LEVELS[index];
       setLevelDef(pInfo);
       prepBts = pInfo.timeSignature[0];
-      
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      if (pInfo.instruction) showInstruction = true;
 
       const upperEvents = flattenSequence(pInfo.upperVoice, 'upper');
       const lowerEvents = flattenSequence(pInfo.lowerVoice, 'lower');
@@ -784,9 +778,6 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   const visualBeatFloat = elapsedTime / beatMs;
   const prepBeats = levelDef.timeSignature[0];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const validEvents = events.filter(e => e.result !== 'tied' && e.type === 'note');
-  
   const buildVisualCells = (sequence: RhythmCell[]) => {
     const visuals: { cellRaw: RhythmCell, absoluteBeat: number }[] = [];
     let currentBeat = 0;
@@ -795,6 +786,45 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
       currentBeat += getCellDuration(cellRaw);
     });
     return visuals;
+  };
+
+  const isNoteActiveGlobal = (ev: TapEvent | undefined) => {
+    if (!ev) return false;
+    return visualBeatFloat >= ev.beatAbsolute && visualBeatFloat < ev.beatAbsolute + 0.2;
+  };
+
+  const getColorCodeGlobal = (ev: TapEvent | undefined, isActive: boolean) => {
+    if (!ev) return isActive ? "#F2D349" : "#1A1A1A";
+    if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "#ef4444";
+    if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "#F2D349";
+    return "#1A1A1A";
+  };
+
+  const getBgClassGlobal = (ev: TapEvent | undefined, isActive: boolean) => {
+    if (!ev) return isActive ? "bg-brand-gold" : "bg-[#1A1A1A]";
+    if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "bg-red-500";
+    if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "bg-brand-gold";
+    return "bg-[#1A1A1A]";
+  };
+
+  const renderLigaduraDynamicGlobal = (cellRawStr: RhythmCell) => {
+    const tieWidth = Math.max(10, getCellDuration(cellRawStr) * 80 - 30);
+    return (
+      <svg 
+        className="absolute top-[60%] z-10 pointer-events-none overflow-visible" 
+        style={{ left: '50%', transform: 'translateX(15px)', width: `${tieWidth}px`, height: '24px' }}
+        viewBox={`0 0 ${tieWidth} 24`}
+      >
+        <path 
+          d={`M 0 0 Q ${tieWidth / 2} 24 ${tieWidth} 0`} 
+          fill="transparent" 
+          stroke="#F2D349" 
+          strokeWidth="3" 
+          strokeLinecap="round" 
+          opacity="0.6" 
+        />
+      </svg>
+    );
   };
 
   const renderTrack = (trackId: 'upper' | 'lower', sequence: RhythmCell[]) => {
@@ -853,44 +883,10 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
           const isOtherTrackSimple = otherEventsInMeasure.length <= 1;
           const shouldCenter = isFullMeasure && isOtherTrackSimple;
 
-          const isNoteActive = (ev: TapEvent | undefined) => {
-            if (!ev) return false;
-            return visualBeatFloat >= ev.beatAbsolute && visualBeatFloat < ev.beatAbsolute + 0.2;
-          };
-
-          const getColorCode = (ev: TapEvent | undefined, isActive: boolean) => {
-            if (!ev) return isActive ? "#F2D349" : "#1A1A1A";
-            if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "#ef4444";
-            if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "#F2D349";
-            return "#1A1A1A";
-          };
-
-          const getBgClass = (ev: TapEvent | undefined, isActive: boolean) => {
-            if (!ev) return isActive ? "bg-brand-gold" : "bg-[#1A1A1A]";
-            if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "bg-red-500";
-            if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "bg-brand-gold";
-            return "bg-[#1A1A1A]";
-          };
-
-          const renderLigaduraDynamic = () => {
-            const tieWidth = Math.max(10, getCellDuration(cellRaw) * 80 - 30);
-            return (
-              <svg 
-                className="absolute top-[60%] z-10 pointer-events-none overflow-visible" 
-                style={{ left: '50%', transform: 'translateX(15px)', width: `${tieWidth}px`, height: '24px' }}
-                viewBox={`0 0 ${tieWidth} 24`}
-              >
-                <path 
-                  d={`M 0 0 Q ${tieWidth / 2} 24 ${tieWidth} 0`} 
-                  fill="transparent" 
-                  stroke="#F2D349" 
-                  strokeWidth="3" 
-                  strokeLinecap="round" 
-                  opacity="0.6" 
-                />
-              </svg>
-            );
-          };
+          const isNoteActive = (ev: TapEvent | undefined) => isNoteActiveGlobal(ev);
+          const getColorCode = (ev: TapEvent | undefined, isActive: boolean) => getColorCodeGlobal(ev, isActive);
+          const getBgClass = (ev: TapEvent | undefined, isActive: boolean) => getBgClassGlobal(ev, isActive);
+          const renderLigaduraDynamic = () => renderLigaduraDynamicGlobal(cellRaw);
 
           return (
             <div 
