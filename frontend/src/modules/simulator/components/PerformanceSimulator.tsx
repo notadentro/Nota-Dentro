@@ -695,20 +695,22 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
 
   useEffect(() => {
     handleKeyDownRef.current = (e: KeyboardEvent) => {
+      if (e.repeat) return;
+
       const isSingleTrack = levelDef.lowerVoice.length === 0;
       if (e.key.toLowerCase() === 'f') {
         if (status === 'level_complete') { repeatLevel(); return; }
         if (status === 'level_failed') { repeatLevel(); return; }
         if (status === 'instruction') { acceptInstruction(); return; }
         if (status === 'paused') { resumeGame(); return; }
-        if (!e.repeat) { setLeftPadActive(true); handleTap(isSingleTrack ? 'upper' : 'lower'); }
+        setLeftPadActive(true); handleTap(isSingleTrack ? 'upper' : 'lower');
       }
       if (e.key.toLowerCase() === 'j') {
         if (status === 'level_complete') { nextLevel(); return; }
         if (status === 'level_failed') { nextLevel(); return; }
         if (status === 'instruction') { acceptInstruction(); return; }
         if (status === 'paused') { resumeGame(); return; }
-        if (!e.repeat) { setRightPadActive(true); handleTap('upper'); }
+        setRightPadActive(true); handleTap('upper');
       }
       if (e.key === 'Escape') {
         if (status === 'playing' || status === 'prep') { pauseGame(); return; }
