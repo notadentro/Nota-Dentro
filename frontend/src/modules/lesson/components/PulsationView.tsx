@@ -56,10 +56,7 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
   const resultsRef = useRef<BeatResult[]>(Array(beatsToComplete).fill(null));
   const failTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const getCurrentTimeMs = () => {
-    if (audioCtxRef.current) return audioCtxRef.current.currentTime * 1000;
-    return performance.now();
-  };
+  const getCurrentTimeMs = () => performance.now();
 
   useEffect(() => {
     resultsRef.current = results;
@@ -138,7 +135,7 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
       for (let i = 0; i <= currentBeat; i++) {
         if (i < beatsToComplete) {
           const beatExpectedTime = i * beatMs;
-          if (elapsed > beatExpectedTime + toleranceMs && nextResults[i] === null) {
+          if (elapsed > beatExpectedTime + (beatMs * 0.4) && nextResults[i] === null) {
             nextResults[i] = 'missed';
             changed = true;
             // Only show ghost for missed beat if it's the current one we just missed
@@ -188,10 +185,10 @@ export function PulsationView({ data, isCompleted, onSuccess, onFail }: Props) {
     const beatSec = 60 / bpm;
 
     if (ctx) {
-      // Metrônomo contínuo: Toca nos 4 tempos de prep E em todos os tempos do jogo
+      const audioNow = ctx.currentTime;
       for (let i = 0; i < 4 + beatsToComplete; i++) {
         const freq = (i === 0) ? 1200 : 800;
-        scheduleClick(ctx, freq, (nowTimeMs / 1000) + 0.1 + i * beatSec);
+        scheduleClick(ctx, freq, audioNow + 0.1 + i * beatSec);
       }
     }
 

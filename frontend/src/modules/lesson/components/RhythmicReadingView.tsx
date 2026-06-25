@@ -54,12 +54,7 @@ export function RhythmicReadingView({ data, isCompleted, onSuccess, onFail }: Pr
   const resultsRef = useRef<BeatResult[]>(Array(beatsToComplete).fill(null));
   const failTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const getCurrentTimeMs = () => {
-    if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
-      return audioCtxRef.current.currentTime * 1000;
-    }
-    return performance.now();
-  };
+  const getCurrentTimeMs = () => performance.now();
 
   useEffect(() => {
     resultsRef.current = results;
@@ -97,7 +92,7 @@ export function RhythmicReadingView({ data, isCompleted, onSuccess, onFail }: Pr
     const timeSinceBeat = elapsed - (currentBeatIndex * beatMs);
 
     if (currentBeatIndex >= 0 && currentBeatIndex < beatsToComplete) {
-      if (timeSinceBeat > toleranceMs && resultsRef.current[currentBeatIndex] === null) {
+      if (timeSinceBeat > (beatMs * 0.4) && resultsRef.current[currentBeatIndex] === null) {
         if (sequence[currentBeatIndex] === 'note') {
           // It was a note and we missed it
           setResults(prev => {
@@ -175,10 +170,10 @@ export function RhythmicReadingView({ data, isCompleted, onSuccess, onFail }: Pr
     const beatSec = 60 / bpm;
 
     if (ctx) {
-      // Metrônomo contínuo em toda a lição
+      const audioNow = ctx.currentTime;
       for (let i = 0; i < 4 + beatsToComplete; i++) {
         const freq = (i === 0) ? 1200 : 800;
-        scheduleClick(ctx, freq, (nowTimeMs / 1000) + 0.1 + i * beatSec);
+        scheduleClick(ctx, freq, audioNow + 0.1 + i * beatSec);
       }
     }
 

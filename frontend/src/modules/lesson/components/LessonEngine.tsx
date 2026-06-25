@@ -235,12 +235,15 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
       </div>
 
       {/* Bottom Bar (Navigation) */}
-      <div className="p-3 md:px-8 md:py-6 border-t border-brand-graphite/20 bg-background flex items-center justify-between gap-4 sticky bottom-0 z-50">
+      <div 
+        className="p-3 pb-8 md:px-8 md:py-6 border-t border-brand-graphite/20 bg-background flex items-center justify-between gap-4 sticky bottom-0 z-50 w-full"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
+      >
         <Button 
           variant="outline" 
           onClick={handlePrev} 
           disabled={currentIndex === 0}
-          className="rounded-2xl font-bold py-4 px-6 md:py-6 md:px-8 text-brand-gray border-brand-graphite/30 hover:bg-brand-graphite/10 text-base md:text-lg min-w-[120px] md:min-w-[150px]"
+          className="rounded-2xl font-bold py-6 px-6 md:py-8 md:px-8 text-brand-gray border-brand-graphite/30 hover:bg-brand-graphite/10 text-base md:text-lg min-w-[120px] md:min-w-[150px] min-h-[60px]"
         >
           Voltar
         </Button>
@@ -248,7 +251,7 @@ export function LessonEngine({ lesson, nextLessonId, onClose }: LessonEngineProp
           onClick={handleNext} 
           disabled={!isCompleted}
           className={cn(
-            "rounded-2xl font-bold py-4 px-6 md:py-6 md:px-8 text-base md:text-lg min-w-[120px] md:min-w-[150px] transition-all",
+            "rounded-2xl font-bold py-6 px-6 md:py-8 md:px-8 text-base md:text-lg min-w-[120px] md:min-w-[150px] transition-all min-h-[60px]",
             isCompleted 
               ? "bg-system-success hover:bg-green-600 text-white shadow-[0_4px_0_0_#1e5f3f] hover:-translate-y-1 hover:shadow-[0_6px_0_0_#1e5f3f] active:translate-y-1 active:shadow-[0_0px_0_0_#1e5f3f]" 
               : "bg-brand-graphite/20 text-brand-gray cursor-not-allowed border-none shadow-none"
