@@ -823,17 +823,17 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
           };
 
           const getColorCode = (ev: TapEvent | undefined, isActive: boolean) => {
-            if (!ev) return isActive ? "#F2D349" : "black";
+            if (!ev) return isActive ? "#F2D349" : "#1A1A1A";
             if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "#ef4444";
             if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "#F2D349";
-            return "black";
+            return "#1A1A1A";
           };
 
           const getBgClass = (ev: TapEvent | undefined, isActive: boolean) => {
-            if (!ev) return isActive ? "bg-brand-gold" : "bg-black";
+            if (!ev) return isActive ? "bg-brand-gold" : "bg-[#1A1A1A]";
             if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "bg-red-500";
             if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "bg-brand-gold";
-            return "bg-black";
+            return "bg-[#1A1A1A]";
           };
 
           const renderLigaduraDynamic = () => {
@@ -939,7 +939,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
                 if (color0 === color1) {
                   if (color0 === "#F2D349") bgClass = "bg-brand-gold";
                   else if (color0 === "#ef4444") bgClass = "bg-red-500";
-                  else bgClass = "bg-black";
+                  else bgClass = "bg-[#1A1A1A]";
                 } else {
                   style = { background: `linear-gradient(to right, ${color0} 50%, ${color1} 50%)` };
                 }
@@ -1066,9 +1066,9 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
         }
       `}</style>
       
-      {/* HEADER */}
-      <div className="absolute top-8 left-0 right-0 flex justify-between items-center px-4 md:px-10 z-50">
-         <div className="flex gap-4 items-center">
+      {/* Header with Back, Lives, Cache, BPM and Pause */}
+      <div className="w-full flex flex-wrap justify-between items-center gap-4 z-50 mb-6">
+         <div className="flex gap-2 items-center">
             <Button 
               variant="ghost" 
               className="text-brand-gray hover:text-white hidden md:flex"
@@ -1090,29 +1090,31 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
             >
               <ArrowLeft className="w-6 h-6" />
             </Button>
-            <div className="flex gap-1 md:gap-2">
-              {Array.from({ length: INITIAL_LIVES }).map((_, i) => (
-                <Heart key={i} className={cn("w-5 h-5 transition-all duration-300", i < lives ? "text-brand-gold fill-brand-gold scale-100" : "text-brand-gray/50 scale-75 opacity-50")} />
-              ))}
+            <div className="flex flex-col items-start gap-1">
+              <span className="text-brand-gray text-[10px] md:text-sm uppercase font-bold tracking-widest leading-none">Mundo {Math.ceil(level / 10)}</span>
+              <div className="flex gap-1">
+                {Array.from({ length: INITIAL_LIVES }).map((_, i) => (
+                  <Heart 
+                    key={i} 
+                    className={cn(
+                      "w-4 h-4 md:w-6 md:h-6 transition-all", 
+                      i < lives ? "fill-red-500 text-red-500" : "fill-brand-graphite text-brand-graphite opacity-50"
+                    )} 
+                  />
+                ))}
+              </div>
             </div>
          </div>
 
          {/* Cachê UI */}
          {user && (
-           <div className="flex items-center gap-1 bg-brand-gold/20 px-3 py-1 rounded-full text-brand-gold font-bold ml-4 border border-brand-gold/30 cursor-pointer hover:bg-brand-gold/30 transition-colors" onClick={() => setShowStore(true)}>
+           <div className="flex items-center gap-1 bg-brand-gold/20 px-3 py-1 rounded-full text-brand-gold font-bold border border-brand-gold/30 cursor-pointer hover:bg-brand-gold/30 transition-colors" onClick={() => setShowStore(true)}>
              <Zap className="w-4 h-4 fill-brand-gold" />
              <span>{user.stats.cache}</span>
            </div>
          )}
 
-         <div className="flex items-center gap-4 md:gap-6">
-            <div className="flex flex-col items-end">
-               <span className="text-brand-gray text-[10px] md:text-sm uppercase font-bold tracking-widest">
-                 <span className="hidden md:inline">Nível {level} - {levelDef.name}</span>
-                 <span className="md:hidden">Nível {level}</span>
-               </span>
-               <span className="text-brand-gold font-headline text-lg md:text-2xl font-black">Compasso {levelDef.timeSignature[0]}/{levelDef.timeSignature[1]}</span>
-            </div>
+         <div className="flex items-center gap-3 md:gap-6 ml-auto">
             <div className="flex flex-col items-end">
                <span className="text-brand-gray text-[10px] md:text-sm uppercase font-bold tracking-widest flex items-center"><Zap className="w-3 h-3 mr-1"/> BPM</span>
                <span className="text-white font-headline text-xl md:text-3xl font-black">{bpm}</span>
@@ -1120,7 +1122,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
             <Button 
               variant="outline"
               size="icon"
-              className="border-brand-gray/30 text-white bg-transparent hover:bg-white/10 w-10 h-10 md:w-12 md:h-12"
+              className="border-brand-gray/30 text-white bg-transparent hover:bg-white/10 w-10 h-10 md:w-12 md:h-12 shrink-0"
               onClick={status === 'paused' ? resumeGame : pauseGame}
               disabled={status !== 'playing' && status !== 'prep' && status !== 'paused'}
             >
@@ -1134,25 +1136,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
          </div>
       </div>
 
-      <div className="flex flex-col items-center w-full max-w-5xl relative mt-20">
-        
-        {/* Ghost Message */}
-        <div className="absolute -top-14 left-1/2 -translate-x-1/2 h-10 flex items-center justify-center pointer-events-none z-50">
-          {ghostMsg && (
-            <div 
-              key={ghostMsg.id} 
-              className={cn(
-                "font-headline text-2xl md:text-3xl font-black animate-ping-short drop-shadow-md whitespace-nowrap",
-                ghostMsg.type === 'perfect' ? 'text-green-400' :
-                ghostMsg.type === 'penalty' ? 'text-purple-400' :
-                ghostMsg.type === 'missed' ? 'text-red-400' : 'text-yellow-400'
-              )}
-            >
-              {ghostMsg.text}
-            </div>
-          )}
-        </div>
-        
+      <div className="flex flex-col items-center w-full max-w-5xl relative mt-1">
         {/* OVERLAYS */}
         {status === 'paused' && (
           <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md px-4">
@@ -1303,8 +1287,34 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
           </div>
         )}
 
-        {/* Pauta Polirrítmica */}
-        <div className="w-full h-72 relative bg-white rounded-2xl mb-16 flex flex-col overflow-hidden border-2 border-brand-gray/30 shadow-inner">
+        {/* Level Title */}
+        <div className="flex flex-col items-center mb-6 w-full text-center">
+           <span className="text-brand-gray text-[10px] md:text-sm uppercase font-bold tracking-widest">Nível {level} - {levelDef.name}</span>
+           <span className="text-brand-gold font-headline text-lg md:text-2xl font-black">Compasso {levelDef.timeSignature[0]}/{levelDef.timeSignature[1]}</span>
+        </div>
+
+        {/* Wrapper da Pauta e Ghost Message */}
+        <div className="w-full relative">
+          
+          {/* Ghost Message */}
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 h-10 flex items-center justify-center pointer-events-none z-50">
+            {ghostMsg && (
+              <div 
+                key={ghostMsg.id} 
+                className={cn(
+                  "font-headline text-2xl md:text-3xl font-black animate-ping-short drop-shadow-md whitespace-nowrap",
+                  ghostMsg.type === 'perfect' ? 'text-green-400' :
+                  ghostMsg.type === 'penalty' ? 'text-purple-400' :
+                  ghostMsg.type === 'missed' ? 'text-red-400' : 'text-yellow-400'
+                )}
+              >
+                {ghostMsg.text}
+              </div>
+            )}
+          </div>
+
+          {/* Pauta Polirrítmica */}
+          <div className="w-full h-72 relative bg-white rounded-2xl mb-2 flex flex-col overflow-hidden border-2 border-brand-gray/30 shadow-inner">
           
           {/* Fundo do Grid com Barras de Compasso */}
           <div 
@@ -1361,35 +1371,37 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
           ) : (
             <>
               <div className="flex-1 relative border-b-2 border-brand-gray/20 overflow-visible">
-                <div className="absolute left-2 top-2 bg-brand-graphite text-white font-bold px-2 py-1 rounded text-xs z-10">Mão Dir (J)</div>
+                <div className="absolute left-2 top-2 bg-brand-graphite text-white font-bold px-2 py-1 rounded text-xs z-10">
+                  Voz 1 <span className="hidden md:inline">(J)</span>
+                </div>
                 {renderTrack('upper', levelDef.upperVoice)}
               </div>
               <div className="flex-1 relative overflow-visible">
-                <div className="absolute left-2 bottom-2 bg-brand-graphite text-white font-bold px-2 py-1 rounded text-xs z-10">Mão Esq (F)</div>
+                <div className="absolute left-2 bottom-2 bg-brand-graphite text-white font-bold px-2 py-1 rounded text-xs z-10">
+                  Voz 2 <span className="hidden md:inline">(F)</span>
+                </div>
                 {renderTrack('lower', levelDef.lowerVoice)}
               </div>
             </>
           )}
-
+        </div>
         </div>
 
         {/* Controles e Botões PAD */}
-        <div className="flex flex-col items-center gap-6 w-full max-w-lg relative">
-          {status === 'idle' ? (
+        <div className="flex flex-col items-center w-full max-w-lg relative">
+          {status === 'idle' && (
             <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md px-4">
                <div className="w-16 h-16 border-4 border-brand-gold border-t-transparent rounded-full animate-spin"></div>
             </div>
-          ) : (
-            <div className="h-[136px] w-full" />
           )}
 
-          <div className="flex justify-center gap-12 mt-2 w-full">
+          <div className="flex justify-center gap-12 w-full">
             {/* PAD F */}
             <div className="flex flex-col items-center gap-4">
               <Button
-                onPointerDown={(e) => { e.preventDefault(); setLeftPadActive(true); handleTap('upper'); }}
-                onPointerUp={() => { setLeftPadActive(false); handleRelease('upper'); }}
-                onPointerLeave={() => { setLeftPadActive(false); handleRelease('upper'); }}
+                onPointerDown={(e) => { e.preventDefault(); setLeftPadActive(true); handleTap(levelDef.lowerVoice.length === 0 ? 'upper' : 'lower'); }}
+                onPointerUp={() => { setLeftPadActive(false); handleRelease(levelDef.lowerVoice.length === 0 ? 'upper' : 'lower'); }}
+                onPointerLeave={() => { setLeftPadActive(false); handleRelease(levelDef.lowerVoice.length === 0 ? 'upper' : 'lower'); }}
                 className={cn(
                   "w-28 h-28 md:w-36 md:h-36 rounded-3xl flex items-center justify-center transition-all p-0 overflow-hidden border-4",
                   (status === 'playing' || status === 'prep') 
@@ -1399,15 +1411,17 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
               >
                 <div className={cn("w-12 h-12 rounded-full transition-colors", leftPadActive ? "bg-yellow-200" : "bg-brand-gray/20")} />
               </Button>
-              <span className="font-bold text-brand-gray/50 text-xl tracking-widest mt-2">Mão Esquerda (F)</span>
+              <span className="font-bold text-brand-gray/50 text-xl tracking-widest mt-2">
+                Voz 2 <span className="hidden md:inline">(F)</span>
+              </span>
             </div>
 
             {/* PAD J */}
             <div className="flex flex-col items-center gap-4">
               <Button
-                onPointerDown={(e) => { e.preventDefault(); setRightPadActive(true); handleTap('lower'); }}
-                onPointerUp={() => { setRightPadActive(false); handleRelease('lower'); }}
-                onPointerLeave={() => { setRightPadActive(false); handleRelease('lower'); }}
+                onPointerDown={(e) => { e.preventDefault(); setRightPadActive(true); handleTap('upper'); }}
+                onPointerUp={() => { setRightPadActive(false); handleRelease('upper'); }}
+                onPointerLeave={() => { setRightPadActive(false); handleRelease('upper'); }}
                 className={cn(
                   "w-28 h-28 md:w-36 md:h-36 rounded-3xl flex items-center justify-center transition-all p-0 overflow-hidden border-4",
                   (status === 'playing' || status === 'prep') 
@@ -1417,7 +1431,9 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
               >
                 <div className={cn("w-12 h-12 rounded-full transition-colors", rightPadActive ? "bg-yellow-200" : "bg-brand-gray/20")} />
               </Button>
-              <span className="font-bold text-brand-gray/50 text-xl tracking-widest mt-2">Mão Direita (J)</span>
+              <span className="font-bold text-brand-gray/50 text-xl tracking-widest mt-2">
+                Voz 1 <span className="hidden md:inline">(J)</span>
+              </span>
             </div>
           </div>
         </div>
