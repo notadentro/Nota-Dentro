@@ -22,7 +22,7 @@ const GamificationContext = createContext<GamificationContextType | undefined>(u
 
 export function GamificationProvider({ children }: { children: ReactNode }) {
   const { user, addXP, updateProgress } = useUser();
-  const [lives, setLives] = useState(5);
+  const [lives, setLives] = useState(3);
   const [isHydrated, setIsHydrated] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [unlockedLessons, setUnlockedLessons] = useState<string[]>(['1']);
@@ -66,7 +66,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
   };
 
   const restoreLives = () => {
-    setLives(5);
+    setLives(3);
   };
 
   return (

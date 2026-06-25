@@ -92,7 +92,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
               xp: data.stats?.xp || 0, 
               level: data.stats?.level || 1, 
               streak: data.stats?.streak || 0,
-              lives: data.stats?.lives ?? 5,
+              lives: data.stats?.lives ?? 3,
               cache: data.stats?.cache ?? 100
             },
             achievements: data.achievements || [],
@@ -110,7 +110,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             email: firebaseUser.email || '',
             username: `user_${firebaseUser.uid.substring(0,5)}`,
             photoURL: firebaseUser.photoURL || `https://picsum.photos/seed/${firebaseUser.uid}/200`,
-            stats: { xp: 0, level: 1, streak: 0, lives: 5, cache: 100 },
+            stats: { xp: 0, level: 1, streak: 0, lives: 3, cache: 100 },
             achievements: [],
             progress: {},
             hasCompletedOnboarding: false,
