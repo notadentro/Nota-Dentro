@@ -148,6 +148,28 @@ const scheduleClick = (ctx: AudioContext, freq: number, time: number) => {
   return osc;
 };
 
+const calculateAccuracy = (events: TapEvent[]): number => {
+  const notes = events.filter(e => e.type === 'note' && e.result !== 'tied');
+  if (notes.length === 0) return 0;
+  
+  let totalPoints = 0;
+  let maxPoints = 0;
+
+  notes.forEach(note => {
+    maxPoints += 1.0;
+    if (note.result === 'perfect') totalPoints += 1.0;
+    else if (note.result === 'early' || note.result === 'late') totalPoints += 0.5;
+    
+    if (note.duration >= 1.0) {
+      maxPoints += 1.0;
+      if (note.releaseResult === 'perfect') totalPoints += 1.0;
+      else if (note.releaseResult === 'early' || note.releaseResult === 'late') totalPoints += 0.5;
+    }
+  });
+
+  return Math.round((totalPoints / maxPoints) * 100);
+};
+
 export function PerformanceSimulator({ initialLevel, initialDifficulty }: { initialLevel?: number, initialDifficulty?: number }) {
   const { user, addXP, updateProgress, deductLife, buyLives, addCache } = useUser();
   const router = useRouter();
@@ -171,29 +193,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
   const [elapsedTime, setElapsedTime] = useState(0);
   const [ghostMsg, setGhostMsg] = useState<{ text: string, id: number, type: BeatResult } | null>(null);
 
-  const accuracy = (() => {
-    const notes = events.filter(e => e.type === 'note' && e.result !== 'tied');
-    if (notes.length === 0) return 0;
-    
-    let totalPoints = 0;
-    let maxPoints = 0;
-
-    notes.forEach(note => {
-      // Pontuação do Toque (Tap)
-      maxPoints += 1.0;
-      if (note.result === 'perfect') totalPoints += 1.0;
-      else if (note.result === 'early' || note.result === 'late') totalPoints += 0.5;
-      
-      // Pontuação da Soltura (Release) apenas para notas longas
-      if (note.duration >= 1.0) {
-        maxPoints += 1.0;
-        if (note.releaseResult === 'perfect') totalPoints += 1.0;
-        else if (note.releaseResult === 'early' || note.releaseResult === 'late') totalPoints += 0.5;
-      }
-    });
-
-    return Math.round((totalPoints / maxPoints) * 100);
-  })();
+  const accuracy = calculateAccuracy(events);
 
   // Salvar progresso no Firebase quando a fase for concluída
   useEffect(() => {
@@ -451,23 +451,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: { init
 
     if (allProcessed && status === 'playing') {
        if ((elapsed / beatMs) >= levelTotalBeats) {
-         let totalPoints = 0;
-         let maxPoints = 0;
-         const notes = updatedEvents.filter(e => e.type === 'note' && e.result !== 'tied');
-         
-         notes.forEach(note => {
-           maxPoints += 1.0;
-           if (note.result === 'perfect') totalPoints += 1.0;
-           else if (note.result === 'early' || note.result === 'late') totalPoints += 0.5;
-           
-           if (note.duration >= 1.0) {
-             maxPoints += 1.0;
-             if (note.releaseResult === 'perfect') totalPoints += 1.0;
-             else if (note.releaseResult === 'early' || note.releaseResult === 'late') totalPoints += 0.5;
-           }
-         });
-         
-         const finalAccuracy = maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
+         const finalAccuracy = calculateAccuracy(updatedEvents);
          
          if (finalAccuracy >= 80) {
            setStatus('level_complete');
