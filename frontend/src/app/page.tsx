@@ -282,6 +282,12 @@ export default function LandingPage() {
               Artigos
             </Link>
           </Button>
+
+          <Button variant="ghost" className="text-primary hover:text-primary/80 font-bold hidden md:inline-flex" asChild>
+            <Link href="/ritmo-insano" prefetch={false}>
+              <Gamepad2 className="w-4 h-4 mr-2" /> Jogar
+            </Link>
+          </Button>
           
           <Dialog open={isContactDialogOpen} onOpenChange={setIsContactDialogOpen}>
             <DialogTrigger asChild>
@@ -567,6 +573,15 @@ export default function LandingPage() {
                         <p className="text-zinc-500 text-[10px] sm:text-xs mt-1 leading-tight hidden sm:block">Sargentos, Oficiais e Fuzileiros</p>
                       </div>
                     </div>
+                  </div>
+                  
+                  <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <Button asChild size="lg" className="bg-primary text-black hover:bg-primary/90 font-bold text-lg h-14 px-8 rounded-full shadow-[0_0_30px_rgba(201,168,17,0.3)] transition-all hover:shadow-[0_0_40px_rgba(201,168,17,0.5)] hover:-translate-y-1">
+                      <Link href="/ritmo-insano">
+                        <Gamepad2 className="w-5 h-5 mr-2" />
+                        JOGAR RITMO INSANO
+                      </Link>
+                    </Button>
                   </div>
                 </motion.div>
                 
