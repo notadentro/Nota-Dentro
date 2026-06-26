@@ -126,9 +126,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
             displayName: newUser.name,
           });
         }
+        
+        // Define cookie de sessão para o Middleware reconhecer
+        document.cookie = `user_session=true; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 dias
       } else {
         // Ninguém logado
         setUser(null);
+        document.cookie = 'user_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
       setIsUserLoading(false);
     });
