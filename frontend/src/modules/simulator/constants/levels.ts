@@ -30,720 +30,1310 @@ export interface LevelDefinition {
   };
 }
 
-export const GAME_LEVELS: LevelDefinition[] = [
-  // ============================================================================
-  // MUNDO 1: O DOMÍNIO DO PULSO E A INDEPENDÊNCIA (Apenas figuras inteiras)
-  // Foco: Memória muscular nas teclas F e J, Segurar (Hold) vs Tocar (Tap), 
-  // Alternância de mãos e a primeira Polirritmia (Boss).
+export const GAME_LEVELS: LevelDefinition[] = [  // ============================================================================
+  // MUNDO 1: O TODO E AS METADES (A Beleza das Notas Longas)
+  // Foco: 8 Compassos (32 tempos) usando APENAS Semibreves e Mínimas. 
+  // O aluno vivencia a Unidade e a respiração antes da agilidade.
   // ============================================================================
   {
     id: 1,
-    name: "Iniciação ao Pulso",
-    timeSignature: [2, 4],
-    upperVoice: ['minima', 'seminima', 'seminima', 'minima', 'seminima', 'seminima', 'seminima', 'seminima'],
+    name: "A Unidade do Tempo",
+    timeSignature: [4, 4],
+    // 8 Semibreves = 32 tempos cravados
+    upperVoice: [
+      'semibreve', 'semibreve', 'semibreve', 'semibreve', 
+      'semibreve', 'semibreve', 'semibreve', 'semibreve'
+    ],
     lowerVoice: [],
     instruction: {
-      title: "O Seu Primeiro Passo",
-      text: "Bem-vindo ao Nota Dentro! Use a tecla J. Para a Semínima (1 tempo), dê um toque rápido. Para a Mínima e a Semibreve, SEGURE o botão até a barra preencher!"
+      title: "Respire com a Música",
+      text: "Bem-vindo ao Mundo 1! A Semibreve é o Todo (a Unidade). Quando ela atingir o alvo, pressione J e SEGURE firmemente por 4 tempos inteiros. Sinta a beleza da nota longa!"
     }
   },
   {
     id: 2,
-    name: "O Valor do Silêncio",
-    timeSignature: [2, 4],
-    upperVoice: ['minima', 'minima', 'seminima', 'pausa', 'minima'],
-    lowerVoice: [],
-    instruction: {
-      title: "Respire",
-      text: "A música também é feita de silêncio. Quando aparecer o símbolo da pausa, tire o dedo da tecla e espere o próximo tempo!"
-    }
+    name: "O Despertar da Mínima",
+    timeSignature: [4, 4],
+    // Mistura de Semibreves (4) e Mínimas (2) = 32 tempos
+    upperVoice: [
+      'semibreve', 'semibreve', 
+      'minima', 'minima', 'minima', 'minima', 
+      'semibreve', 'semibreve',
+      'minima', 'minima', 'minima', 'minima'
+    ],
+    lowerVoice: []
   },
   {
     id: 3,
-    name: "O Espelho (Mãos Juntas)",
-    timeSignature: [2, 4],
-    upperVoice: ['minima', 'minima', 'seminima', 'seminima', 'minima'],
-    lowerVoice: ['minima', 'minima', 'seminima', 'seminima', 'minima'],
+    name: "Uníssono Motor",
+    timeSignature: [4, 4],
+    // Espelho perfeito por 8 compassos
+    upperVoice: [
+      'minima', 'minima', 'semibreve', 
+      'minima', 'minima', 'semibreve',
+      'semibreve', 'semibreve', 'semibreve', 'semibreve'
+    ],
+    lowerVoice: [
+      'minima', 'minima', 'semibreve', 
+      'minima', 'minima', 'semibreve',
+      'semibreve', 'semibreve', 'semibreve', 'semibreve'
+    ],
     instruction: {
-      title: "Uníssono Motor",
-      text: "A tela dividiu! F para a pauta de baixo e J para a de cima. Neste nível, as duas mãos tocam EXATAMENTE ao mesmo tempo."
+      title: "O Espelho",
+      text: "A tela dividiu! Use F (esquerda) e J (direita) EXATAMENTE ao mesmo tempo. Suas mãos devem trabalhar em simetria por 8 compassos."
     }
   },
   {
     id: 4,
-    name: "Passos Alternados",
-    timeSignature: [2, 4],
-    upperVoice: ['seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima'],
-    lowerVoice: ['pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima'],
-    instruction: {
-      title: "Caminhada Rítmica",
-      text: "Agora as mãos não tocam juntas. É como caminhar: direita (J), depois esquerda (F). Olhe para as pausas que guiam o descanso de cada mão."
-    }
+    name: "Transferência de Peso",
+    timeSignature: [4, 4],
+    // Alternância longa usando pausas fantasma
+    upperVoice: [
+      'minima', 'pausa_minima', 'minima', 'pausa_minima',
+      'semibreve', 'pausa_minima', 'pausa_minima',
+      'minima', 'pausa_minima', 'minima', 'pausa_minima'
+    ],
+    lowerVoice: [
+      'pausa_minima', 'minima', 'pausa_minima', 'minima',
+      'pausa_minima', 'pausa_minima', 'semibreve',
+      'pausa_minima', 'minima', 'pausa_minima', 'minima'
+    ]
   },
   {
     id: 5,
-    name: "O Cânone (Pergunta e Resposta)",
-    timeSignature: [2, 4],
-    upperVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'pausa_minima', 'pausa_minima'],
-    lowerVoice: ['pausa_minima', 'pausa_minima', 'seminima', 'seminima', 'seminima', 'seminima']
+    name: "Ostinato Lento",
+    timeSignature: [4, 4],
+    // U: 8 semibreves = 32 tempos
+    upperVoice: [
+      'semibreve', 'semibreve', 'semibreve', 'semibreve',
+      'semibreve', 'semibreve', 'semibreve', 'semibreve'
+    ],
+    // L: 16 minimas = 32 tempos
+    lowerVoice: [
+      'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima',
+      'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima'
+    ],
+    instruction: {
+      title: "Independência Primária",
+      text: "A mão esquerda (F) agora é um pêndulo lento e ininterrupto de Mínimas (2 em 2 tempos). A direita (J) segura as Semibreves. Não deixe o pêndulo parar!"
+    }
   },
   {
     id: 6,
-    name: "Espelho com Pausas",
-    timeSignature: [2, 4],
-    upperVoice: ['seminima', 'pausa', 'seminima', 'seminima', 'minima', 'pausa', 'seminima'],
-    lowerVoice: ['seminima', 'pausa', 'seminima', 'seminima', 'minima', 'pausa', 'seminima']
+    name: "Ostinato Lento Reverso",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima',
+      'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima'
+    ],
+    lowerVoice: [
+      'semibreve', 'semibreve', 'semibreve', 'semibreve',
+      'semibreve', 'semibreve', 'semibreve', 'semibreve'
+    ]
   },
   {
     id: 7,
-    name: "Alternância Longa",
-    timeSignature: [2, 4],
-    upperVoice: ['minima', 'pausa_minima', 'seminima', 'pausa', 'minima'],
-    lowerVoice: ['pausa_minima', 'minima', 'pausa', 'seminima', 'minima']
+    name: "O Silêncio Maior",
+    timeSignature: [4, 4],
+    // Treinando o freio inibitório com blocos grandes de tempo
+    upperVoice: [
+      'semibreve', 'pausa_minima', 'pausa_minima',
+      'minima', 'minima', 'pausa_minima', 'minima',
+      'semibreve', 'semibreve', 'pausa_minima', 'pausa_minima'
+    ],
+    lowerVoice: []
   },
   {
     id: 8,
-    name: "Preparação para o Ostinato",
-    timeSignature: [2, 4],
-    upperVoice: ['minima', 'pausa_minima', 'pausa_minima', 'minima', 'minima', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'minima', 'minima']
+    name: "O Cânone de Mínimas",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'minima', 'minima', 'pausa_minima', 'minima',
+      'semibreve', 'semibreve',
+      'minima', 'minima', 'pausa_minima', 'pausa_minima'
+    ],
+    lowerVoice: [
+      'pausa_minima', 'minima', 'minima', 'minima',
+      'semibreve', 'semibreve',
+      'pausa_minima', 'minima', 'minima', 'minima'
+    ]
   },
   {
     id: 9,
-    name: "O Despertar da Independência",
-    timeSignature: [2, 4],
-    upperVoice: ['pausa', 'seminima', 'pausa', 'seminima', 'minima', 'pausa_minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'pausa_minima', 'minima']
+    name: "Pêndulo Quebrado",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'semibreve', 'minima', 'minima', 
+      'semibreve', 'pausa_minima', 'minima',
+      'semibreve', 'minima', 'minima'
+    ],
+    lowerVoice: [
+      'minima', 'minima', 'semibreve',
+      'pausa_minima', 'minima', 'semibreve',
+      'minima', 'minima', 'semibreve'
+    ]
   },
   {
     id: 10,
-    name: "Boss do Mundo 1: Polirritmia",
-    timeSignature: [2, 4],
-    upperVoice: ['minima', 'seminima', 'seminima', 'minima_ligada', 'minima', 'minima', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
+    name: "Boss do Mundo 1: Resistência Tética",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'semibreve', 'pausa_minima', 'minima',
+      'semibreve', 'minima', 'pausa_minima',
+      'semibreve', 'semibreve', 'pausa_minima', 'minima'
+    ],
+    // Mão esquerda inabalável por 8 compassos
+    lowerVoice: [
+      'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima',
+      'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima'
+    ],
     instruction: {
-      title: "O Grande Desafio",
-      text: "Chegou o Boss! A mão esquerda (F) é o seu bumbo de bateria: ela não para de bater Semínimas. A mão direita (J) faz a melodia por cima. Ancore sua mente na esquerda!"
+      title: "O Pêndulo de Aço",
+      text: "Boss do Mundo 1! A sua mão esquerda baterá Mínimas por 8 compassos seguidos sem errar. A direita terá notas longas e pausas falsas. Ancore a mente na esquerda!"
     }
   },
 
   // ============================================================================
-  // MUNDO 2: O DESPERTAR DAS COLCHEIAS (A Subdivisão Binária)
-  // Foco: Entender que 1 tempo (Semínima) agora comporta 2 notas (Colcheias).
+  // MUNDO 2: O DESPERTAR DA SEMÍNIMA (Os Quartos de Tempo)
+  // Foco: 8 Compassos (32 tempos). A Semínima vira o passo natural (Tap rápido).
   // ============================================================================
   {
     id: 11,
-    name: "Apoio e Impulso",
-    timeSignature: [2, 4],
-    upperVoice: ['seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima'],
+    name: "A Marcha",
+    timeSignature: [4, 4],
+    // 32 seminimas
+    upperVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
     lowerVoice: [],
     instruction: {
-      title: "Dividindo o Tempo",
-      text: "Mundo 2! Agora a Semínima foi cortada ao meio. Quando ver as duas Colcheias unidas, você dará dois toques rápidos (Apoio e Impulso) dentro da mesma pulsação!"
+      title: "Um Quarto da Unidade",
+      text: "Mundo 2! A Semibreve foi dividida em 4 partes iguais. Agora a Semínima pede apenas um toque (Tap) rápido. Sinta o pulso de marcha por 8 compassos."
     }
   },
   {
     id: 12,
-    name: "Correndo Mais",
-    timeSignature: [2, 4],
-    upperVoice: ['duas_colcheias', 'seminima', 'duas_colcheias', 'seminima', 'duas_colcheias', 'duas_colcheias', 'minima'],
+    name: "Hold vs Tap",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'semibreve', 
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'minima', 'minima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'semibreve',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'minima', 'minima',
+      'semibreve'
+    ],
     lowerVoice: []
   },
   {
     id: 13,
+    name: "Passos Alternados",
+    timeSignature: [4, 4],
+    // Direita e Esquerda conversam com semínimas e pausas
+    upperVoice: [
+      'seminima', 'pausa', 'seminima', 'pausa',
+      'minima', 'minima',
+      'seminima', 'pausa', 'seminima', 'pausa',
+      'semibreve',
+      'seminima', 'pausa', 'seminima', 'pausa',
+      'minima', 'minima',
+      'seminima', 'seminima', 'minima'
+    ],
+    lowerVoice: [
+      'pausa', 'seminima', 'pausa', 'seminima',
+      'minima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima',
+      'semibreve',
+      'pausa', 'seminima', 'pausa', 'seminima',
+      'minima', 'minima',
+      'minima', 'seminima', 'seminima'
+    ],
+    instruction: {
+      title: "Caminhada Rítmica",
+      text: "Use F e J alternadamente, como se fossem os passos dos seus pés (Direito, Esquerdo, Direto...). Cuidado com as Mínimas e Semibreves intrusas!"
+    }
+  },
+  {
+    id: 14,
+    name: "O Pulo (Pausas)",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'pausa', 'pausa', 'seminima',
+      'seminima', 'seminima', 'minima',
+      'pausa', 'seminima', 'seminima', 'pausa',
+      'semibreve',
+      'seminima', 'pausa', 'pausa', 'seminima',
+      'minima', 'minima',
+      'pausa', 'pausa', 'minima',
+      'semibreve'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 15,
+    name: "Ostinato de Marcha",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'semibreve', 
+      'minima', 'minima',
+      'semibreve',
+      'minima', 'minima',
+      'semibreve',
+      'minima', 'minima',
+      'semibreve',
+      'semibreve'
+    ],
+    // Bumbo ininterrupto de semínimas na esquerda (32 batidas)
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    instruction: {
+      title: "O Bumbo Inabalável",
+      text: "A sua mão esquerda fará 32 Semínimas sem parar! É o motor da música. A sua mão direita fará as notas longas. Não deixe o dedo direito influenciar a batida do esquerdo."
+    }
+  },
+  {
+    id: 16,
+    name: "Ostinato Invertido de Marcha",
+    timeSignature: [4, 4],
+    // Bumbo ininterrupto na direita
+    upperVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    lowerVoice: [
+      'minima', 'minima', 
+      'semibreve',
+      'minima', 'minima',
+      'semibreve',
+      'minima', 'minima',
+      'semibreve',
+      'semibreve',
+      'semibreve'
+    ]
+  },
+  {
+    id: 17,
+    name: "Metades e Quartos",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'seminima', 'minima',
+      'minima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'minima',
+      'semibreve',
+      'seminima', 'seminima', 'minima',
+      'minima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'minima',
+      'semibreve'
+    ],
+    lowerVoice: [
+      'minima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'minima',
+      'minima', 'seminima', 'seminima',
+      'semibreve',
+      'minima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'minima',
+      'minima', 'seminima', 'seminima',
+      'semibreve'
+    ]
+  },
+  {
+    id: 18,
+    name: "Espelho com Buracos",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'pausa', 'seminima', 'seminima',
+      'seminima', 'seminima', 'pausa', 'seminima',
+      'minima', 'pausa_minima',
+      'semibreve',
+      'seminima', 'pausa', 'seminima', 'seminima',
+      'seminima', 'seminima', 'pausa', 'seminima',
+      'pausa_minima', 'minima',
+      'semibreve'
+    ],
+    lowerVoice: [
+      'seminima', 'pausa', 'seminima', 'seminima',
+      'seminima', 'seminima', 'pausa', 'seminima',
+      'minima', 'pausa_minima',
+      'semibreve',
+      'seminima', 'pausa', 'seminima', 'seminima',
+      'seminima', 'seminima', 'pausa', 'seminima',
+      'pausa_minima', 'minima',
+      'semibreve'
+    ]
+  },
+  {
+    id: 19,
+    name: "Independência Falsa",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'pausa', 'minima',
+      'pausa', 'seminima', 'minima',
+      'semibreve',
+      'seminima', 'pausa', 'minima',
+      'pausa', 'seminima', 'minima',
+      'semibreve',
+      'seminima', 'seminima', 'minima',
+      'semibreve'
+    ],
+    lowerVoice: [
+      'pausa', 'seminima', 'minima',
+      'seminima', 'pausa', 'minima',
+      'semibreve',
+      'pausa', 'seminima', 'minima',
+      'seminima', 'pausa', 'minima',
+      'semibreve',
+      'seminima', 'seminima', 'minima',
+      'semibreve'
+    ]
+  },
+  {
+    id: 20,
+    name: "Boss do Mundo 2: Duelo de Pulsações",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'seminima', 'minima',
+      'minima', 'minima',
+      'seminima', 'pausa', 'minima',
+      'semibreve',
+      'seminima', 'seminima', 'minima',
+      'minima', 'minima',
+      'seminima', 'pausa', 'minima',
+      'semibreve'
+    ],
+    // A mão esquerda faz o bumbo nos contratempos ou tempos fracos
+    lowerVoice: [
+      'minima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'minima', 'pausa', 'seminima',
+      'semibreve',
+      'minima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'minima', 'pausa', 'seminima',
+      'semibreve'
+    ],
+    instruction: {
+      title: "Desafio de Gramani",
+      text: "Cuidado! Pela primeira vez as mãos vão tocar a mesma figura (Semínima) em tempos diferentes do compasso. Uma ataca enquanto a outra segura. Sobreviva aos 8 compassos!"
+    }
+  },
+  // ============================================================================
+  // MUNDO 3: O DOMÍNIO DO SILÊNCIO E O CONTRATEMPO (O Freio Inibitório)
+  // Foco: 8 Compassos. Introdução das pausas e da "Penalidade do Silêncio". 
+  // O jogador precisa interromper ativamente o fluxo motor.
+  // ============================================================================
+  {
+    id: 21,
+    name: "O Toque e o Silêncio",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima'
+    ],
+    lowerVoice: [],
+    instruction: {
+      title: "Segure o Impulso!",
+      text: "Mundo 3! Agora o motor detecta a 'Penalidade do Silêncio'. Dê o toque rápido na semínima e TIRE o dedo ativamente na pausa. Controle seus reflexos por 8 compassos!"
+    }
+  },
+  {
+    id: 22,
+    name: "O Vazio Constante",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 23,
+    name: "Diálogo Interrompido",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima'
+    ],
+    lowerVoice: [
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima'
+    ],
+    instruction: {
+      title: "Passos e Buracos",
+      text: "As mãos alternam, mas agora temos silêncios longos no meio. Se você bater junto ou esquecer de pausar, o combo zera!"
+    }
+  },
+  {
+    id: 24,
+    name: "Ostinato com Silêncio",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ]
+  },
+  {
+    id: 25,
+    name: "Contratempos Simples",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa', 'seminima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa', 'seminima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa', 'seminima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa', 'seminima', 'minima'
+    ],
+    lowerVoice: [],
+    instruction: {
+      title: "O Contratempo",
+      text: "Na teoria, contratempo é a pausa no tempo forte e som no tempo fraco. Sinta o balanço de tocar sempre na 'volta' da batida!"
+    }
+  },
+  {
+    id: 26,
+    name: "Contratempo e Bumbo",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa', 'seminima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa', 'seminima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa', 'seminima', 'minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa', 'seminima', 'minima'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ]
+  },
+  {
+    id: 27,
+    name: "O Silêncio Maior",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'minima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'minima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'minima', 'pausa', 'seminima', 'pausa_minima', 'minima',
+      'minima', 'pausa', 'seminima', 'pausa_minima', 'minima'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 28,
+    name: "Alternância Sincopada",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'pausa_minima', 'seminima', 'pausa_minima', 'minima',
+      'seminima', 'pausa_minima', 'seminima', 'pausa_minima', 'minima',
+      'seminima', 'pausa_minima', 'seminima', 'pausa_minima', 'minima',
+      'seminima', 'pausa_minima', 'seminima', 'pausa_minima', 'minima'
+    ],
+    lowerVoice: [
+      'pausa', 'minima', 'seminima', 'minima', 'pausa_minima',
+      'pausa', 'minima', 'seminima', 'minima', 'pausa_minima',
+      'pausa', 'minima', 'seminima', 'minima', 'pausa_minima',
+      'pausa', 'minima', 'seminima', 'minima', 'pausa_minima'
+    ]
+  },
+  {
+    id: 29,
+    name: "O Soluço Tcheco",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'pausa_minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'pausa_minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'pausa_minima',
+      'pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'pausa_minima'
+    ],
+    lowerVoice: [
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'minima', 'minima'
+    ]
+  },
+  {
+    id: 30,
+    name: "Boss do Mundo 3: Prova do Silêncio",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'pausa', 'seminima', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'pausa', 'seminima', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'pausa', 'seminima', 'seminima', 'pausa', 'minima', 'pausa_minima',
+      'pausa', 'seminima', 'seminima', 'pausa', 'minima', 'pausa_minima'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    instruction: {
+      title: "O Exame de Final",
+      text: "Mantenha o pulso de bumbo cravado na esquerda por 8 compassos, enquanto a direita desvia das pausas! Confie no pulso!"
+    }
+  },
+
+  // ============================================================================
+  // MUNDO 4: O DESPERTAR DAS COLCHEIAS (A Subdivisão Binária)
+  // Foco: 8 Compassos. Introdução da célula 'duas_colcheias'. O aluno 
+  // divide fisicamente o pulso em apoio e impulso.
+  // ============================================================================
+  {
+    id: 31,
+    name: "Apoio e Impulso",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima'
+    ],
+    lowerVoice: [],
+    instruction: {
+      title: "Dividindo o Tempo",
+      text: "Mundo 4! A Semínima foi cortada ao meio. Quando ver as duas Colcheias ligadas, dê dois toques rápidos (Apoio e Impulso) na mesma pulsação."
+    }
+  },
+  {
+    id: 32,
+    name: "Correndo Mais",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'duas_colcheias', 'seminima', 'duas_colcheias', 'seminima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'seminima', 'duas_colcheias', 'seminima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'seminima', 'duas_colcheias', 'seminima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'seminima', 'duas_colcheias', 'seminima', 'duas_colcheias', 'duas_colcheias', 'minima'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 33,
     name: "Espelho de Colcheias",
-    timeSignature: [2, 4],
-    upperVoice: ['seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima'],
-    lowerVoice: ['seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima'],
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima'
+    ],
+    lowerVoice: [
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'seminima', 'minima'
+    ],
     instruction: {
       title: "Agilidade Dupla",
       text: "As duas mãos vão executar as colcheias juntas. Sinta o tempo dobrar de velocidade no seu dedo."
     }
   },
   {
-    id: 14,
-    name: "Alternando a Subdivisão",
-    timeSignature: [2, 4],
-    upperVoice: ['duas_colcheias', 'pausa', 'duas_colcheias', 'pausa', 'minima', 'pausa_minima'],
-    lowerVoice: ['pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa_minima', 'minima']
-  },
-  {
-    id: 15,
-    name: "Acelerando e Freando",
-    timeSignature: [2, 4],
-    upperVoice: ['seminima', 'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'duas_colcheias', 'seminima', 'pausa'],
-    lowerVoice: []
-  },
-  {
-    id: 16,
-    name: "Ostinato com Colcheias 1",
-    timeSignature: [2, 4],
-    upperVoice: ['duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
-    instruction: {
-      title: "Polirritmia Acelerada",
-      text: "A mão esquerda (F) faz o ostinato de semínimas. A mão direita (J) vai encaixar duas colcheias para cada batida da mão esquerda!"
-    }
-  },
-  {
-    id: 17,
-    name: "Ostinato com Colcheias 2",
-    timeSignature: [2, 4],
-    upperVoice: ['seminima', 'duas_colcheias', 'duas_colcheias', 'seminima', 'duas_colcheias', 'seminima', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima']
-  },
-  {
-    id: 18,
-    name: "O Espelho Quebrado",
-    timeSignature: [2, 4],
-    upperVoice: ['duas_colcheias', 'seminima', 'pausa_minima', 'seminima', 'duas_colcheias', 'minima'],
-    lowerVoice: ['pausa_minima', 'duas_colcheias', 'seminima', 'minima', 'pausa_minima']
-  },
-  {
-    id: 19,
-    name: "Ostinato Reverso",
-    timeSignature: [2, 4],
-    upperVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
-    lowerVoice: ['duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima'],
-    instruction: {
-      title: "Inversão de Papéis",
-      text: "Trocou! Agora a sua mão direita (J) é quem segura o pulso constante de semínimas, enquanto a esquerda (F) sua para fazer a melodia com colcheias."
-    }
-  },
-  {
-    id: 20,
-    name: "Boss do Mundo 2: Colisão Rítmica",
-    timeSignature: [2, 4],
-    upperVoice: ['duas_colcheias', 'seminima', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima'],
-    lowerVoice: ['duas_colcheias', 'seminima', 'minima', 'seminima', 'duas_colcheias', 'seminima', 'seminima']
-  },
-  // ============================================================================
-  // MUNDO 3: O DOMÍNIO DO SILÊNCIO (O Freio Inibitório)
-  // Foco: Introdução das Pausas, Penalidade do Silêncio e Contratempos Básicos.
-  // ============================================================================
-  {
-    id: 21,
-    name: "O Toque e o Silêncio",
-    timeSignature: [4, 4],
-    upperVoice: ['seminima', 'pausa', 'seminima', 'pausa', 'minima', 'pausa_minima'],
-    lowerVoice: [],
-    instruction: {
-      title: "Segure o Impulso!",
-      text: "Mundo 3! Agora o nosso motor detecta a 'Penalidade do Silêncio'. Se você tocar a tecla na hora da pausa, perderá corações. Toque a semínima e ativamente TIRE o dedo no silêncio!"
-    }
-  },
-  {
-    id: 22,
-    name: "Freio Inibitório",
-    timeSignature: [4, 4],
-    upperVoice: ['pausa', 'seminima', 'pausa', 'seminima', 'pausa_minima', 'minima'],
-    lowerVoice: []
-  },
-  {
-    id: 23,
-    name: "A Pausa e a Colcheia",
-    timeSignature: [4, 4],
-    upperVoice: ['duas_colcheias', 'pausa', 'duas_colcheias', 'pausa', 'seminima', 'pausa', 'minima'],
-    lowerVoice: [],
-    instruction: {
-      title: "Agilidade e Pausa",
-      text: "Dê os dois toques rápidos das colcheias e congele a mão imediatamente para respeitar a pausa seguinte."
-    }
-  },
-  {
-    id: 24,
-    name: "Buracos no Caminho",
-    timeSignature: [4, 4],
-    upperVoice: ['seminima', 'duas_colcheias', 'pausa_minima', 'pausa', 'duas_colcheias', 'minima'],
-    lowerVoice: []
-  },
-  {
-    id: 25,
-    name: "Ostinato com Silêncio",
-    timeSignature: [4, 4],
-    upperVoice: ['seminima', 'pausa', 'duas_colcheias', 'pausa', 'minima', 'pausa_minima'],
-    // Mão esquerda faz o pulso reto, sem parar.
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
-    instruction: {
-      title: "Independência Total",
-      text: "A sua mão esquerda (F) não pode parar! Ela fará o pulso constante. A sua mão direita (J) vai tocar a melodia e DEVE parar durante as pausas, enquanto a esquerda continua batendo!"
-    }
-  },
-  {
-    id: 26,
-    name: "O Contratempo Fantasma",
-    timeSignature: [4, 4],
-    upperVoice: ['pausa', 'seminima', 'pausa', 'duas_colcheias', 'pausa', 'seminima', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima']
-  },
-  {
-    id: 27,
-    name: "Alternância Rápida",
-    timeSignature: [4, 4],
-    upperVoice: ['duas_colcheias', 'pausa', 'duas_colcheias', 'pausa', 'pausa_minima', 'minima'],
-    lowerVoice: ['pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'minima', 'pausa_minima'],
-    instruction: {
-      title: "O Soluço Tcheco",
-      text: "Agora as mãos conversam: a direita toca as colcheias enquanto a esquerda faz silêncio, e vice-versa. Não deixe as duas tocarem juntas no início!"
-    }
-  },
-  {
-    id: 28,
-    name: "Ostinato Invertido com Pausas",
-    timeSignature: [4, 4],
-    upperVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
-    lowerVoice: ['pausa', 'duas_colcheias', 'seminima', 'pausa', 'pausa_minima', 'minima']
-  },
-  {
-    id: 29,
-    name: "Diálogo Interrompido",
-    timeSignature: [4, 4],
-    upperVoice: ['duas_colcheias', 'pausa', 'seminima', 'pausa', 'pausa_minima', 'minima'],
-    lowerVoice: ['pausa', 'duas_colcheias', 'pausa', 'seminima', 'minima', 'pausa_minima']
-  },
-  {
-    id: 30,
-    name: "Boss: A Prova do Silêncio",
-    timeSignature: [4, 4], // 12 tempos totais na pista
-    upperVoice: ['pausa', 'duas_colcheias', 'seminima', 'pausa', 'duas_colcheias', 'pausa', 'minima', 'pausa_minima', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
-    instruction: {
-      title: "O Exame!",
-      text: "Para derrotar este Boss, você deve manter o pulso cravado na mão esquerda por 3 compassos inteiros, enquanto a mão direita desvia das pausas de forma completamente irregular. Respire e confie no pulso!"
-    }
-  },
-  // ============================================================================
-  // MUNDO 4: O BALANÇO BRASILEIRO (Síncopes)
-  // Foco: Deslocamento de acento com a célula 'colcheia_seminima_colcheia' (2 tempos).
-  // ============================================================================
-  {
-    id: 31,
-    name: "A Ginga da Síncope",
-    timeSignature: [4, 4],
-    upperVoice: ['colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima'],
-    lowerVoice: [],
-    instruction: {
-      title: "O Balanço Brasileiro",
-      text: "Mundo 4! A Síncope desloca o acento da música. Você dará um toque rápido (colcheia) e vai SEGURAR a próxima nota (Hold) atravessando o tempo forte! Sinta a ginga."
-    }
-  },
-  {
-    id: 32,
-    name: "Síncope no Contratempo",
-    timeSignature: [4, 4],
-    upperVoice: ['seminima', 'colcheia_seminima_colcheia', 'seminima', 'colcheia_seminima_colcheia', 'minima'],
-    lowerVoice: []
-  },
-  {
-    id: 33,
-    name: "Síncopes Sucessivas",
-    timeSignature: [4, 4],
-    upperVoice: ['colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'minima', 'minima'],
-    lowerVoice: [],
-    instruction: {
-      title: "Ondas Rítmicas",
-      text: "Duas síncopes seguidas! Cuidado para não transformar a semínima do meio (o Hold) em um toque rápido. Respeite as durações exatas."
-    }
-  },
-  {
     id: 34,
-    name: "Apoio, Impulso e Síncope",
+    name: "Alternando a Subdivisão",
     timeSignature: [4, 4],
-    upperVoice: ['duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'minima', 'minima'],
-    lowerVoice: []
+    upperVoice: [
+      'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa', 'minima', 'pausa_minima',
+      'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa', 'minima', 'pausa_minima',
+      'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa', 'minima', 'pausa_minima',
+      'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa', 'minima', 'pausa_minima'
+    ],
+    lowerVoice: [
+      'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa_minima', 'minima',
+      'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa_minima', 'minima',
+      'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa_minima', 'minima',
+      'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'pausa_minima', 'minima'
+    ]
   },
   {
     id: 35,
-    name: "Ostinato Sincopado 1",
+    name: "Ostinato com Colcheias 1",
     timeSignature: [4, 4],
-    upperVoice: ['colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
+    upperVoice: [
+      'duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
     instruction: {
-      title: "O Bumbo e o Tamborim",
-      text: "A mão esquerda (F) é o bumbo reto. A direita (J) é o tamborim fazendo a síncope. O seu cérebro vai bugar: o 'Hold' da mão direita vai acontecer ENQUANTO a esquerda dá um novo Tap!"
+      title: "Polirritmia Acelerada",
+      text: "A mão esquerda (F) faz o ostinato de semínimas. A mão direita (J) encaixa as duas colcheias entre as batidas do bumbo."
     }
   },
   {
     id: 36,
-    name: "Ostinato Sincopado 2",
+    name: "Ostinato Reverso Motor",
     timeSignature: [4, 4],
-    upperVoice: ['seminima', 'colcheia_seminima_colcheia', 'seminima', 'colcheia_seminima_colcheia', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima']
-  },
-  {
-    id: 37,
-    name: "Mar de Síncopes",
-    timeSignature: [4, 4],
-    upperVoice: ['colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima']
-  },
-  {
-    id: 38,
-    name: "Ostinato Reverso Sincopado",
-    timeSignature: [4, 4],
-    upperVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
-    lowerVoice: ['colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima'],
+    upperVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    lowerVoice: [
+      'duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'minima', 'seminima', 'duas_colcheias', 'minima'
+    ],
     instruction: {
-      title: "Síncope na Mão Esquerda",
-      text: "Inversão de hemisférios! Agora a mão direita (J) segura a pulsação constante, enquanto a mão esquerda (F) ginga com a síncope."
+      title: "Inversão de Papéis",
+      text: "Agora a sua mão direita (J) segura o pulso constante, enquanto a esquerda (F) trabalha duro na subdivisão das colcheias."
     }
   },
   {
-    id: 39,
-    name: "Silêncio antes da Ginga",
+    id: 37,
+    name: "A Valsa Dividida",
     timeSignature: [4, 4],
-    upperVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
-    lowerVoice: ['pausa', 'pausa', 'colcheia_seminima_colcheia', 'minima', 'minima']
+    upperVoice: [
+      'duas_colcheias', 'seminima', 'seminima', 'seminima', 'duas_colcheias', 'seminima', 'minima',
+      'duas_colcheias', 'seminima', 'seminima', 'seminima', 'duas_colcheias', 'seminima', 'minima',
+      'duas_colcheias', 'seminima', 'seminima', 'seminima', 'duas_colcheias', 'seminima', 'minima',
+      'duas_colcheias', 'seminima', 'seminima', 'seminima', 'duas_colcheias', 'seminima', 'minima'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 38,
+    name: "Colisão Rítmica",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima',
+      'seminima', 'duas_colcheias', 'minima', 'duas_colcheias', 'duas_colcheias', 'minima'
+    ],
+    lowerVoice: [
+      'duas_colcheias', 'seminima', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'seminima', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'seminima', 'minima', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'seminima', 'minima', 'seminima', 'duas_colcheias', 'minima'
+    ]
+  },
+  {
+    id: 39,
+    name: "Contratempo e Colcheia",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'minima', 'minima',
+      'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'minima', 'minima',
+      'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'minima', 'minima',
+      'pausa', 'duas_colcheias', 'pausa', 'duas_colcheias', 'minima', 'minima'
+    ],
+    lowerVoice: [
+      'seminima', 'pausa', 'seminima', 'pausa', 'pausa_minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'pausa_minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'pausa_minima', 'pausa_minima',
+      'seminima', 'pausa', 'seminima', 'pausa', 'pausa_minima', 'pausa_minima'
+    ]
   },
   {
     id: 40,
-    name: "Boss do Mundo 4: O Choro",
+    name: "Boss do Mundo 4: A Resistência",
     timeSignature: [4, 4],
-    upperVoice: ['colcheia_seminima_colcheia', 'duas_colcheias', 'seminima', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'minima', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
+    upperVoice: [
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'seminima', 'duas_colcheias', 'minima',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'seminima', 'duas_colcheias', 'minima'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
     instruction: {
-      title: "A Roda de Choro",
-      text: "O teste final do balanço! Mantenha a mão esquerda cravada no tempo e não deixe que os acentos deslocados da mão direita tirem a sua pulsação do trilho."
+      title: "Cãibra Rítmica!",
+      text: "Boss Final do Mundo 4! Sua mão direita terá que fatiar a subdivisão sem parar enquanto a esquerda faz a marcação. Respire e sobreviva aos 8 compassos!"
     }
   },
 
   // ============================================================================
-  // MUNDO 5: O MESTRE GRAMANI (Semicolcheias e Divertimentos)
-  // Foco: A subdivisão quaternária ('quatro_semicolcheias') e independência extrema.
+  // MUNDO 5: O BALANÇO BRASILEIRO (A Ginga e as Síncopes)
+  // Foco: 8 Compassos (32 tempos) em 4/4. Deslocamento do acento natural 
+  // usando a célula 'colcheia_seminima_colcheia' (que vale 2 tempos).
   // ============================================================================
   {
     id: 41,
-    name: "Divertimento em 2/4",
-    timeSignature: [2, 4],
-    upperVoice: ['quatro_semicolcheias', 'seminima', 'quatro_semicolcheias', 'seminima'],
+    name: "A Ginga da Síncope",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima'
+    ],
     lowerVoice: [],
     instruction: {
-      title: "A Metralhadora",
-      text: "Bem-vindo ao Mundo 5! Agora a Semínima se dividiu em QUATRO Semicolcheias. Você precisará dar 4 toques muito rápidos dentro de uma única pulsação de tempo!"
+      title: "O Balanço Brasileiro",
+      text: "Mundo 5! A síncope desloca o acento forte da música. Dê um toque rápido e SEGURE a próxima nota atravessando o tempo! Mantenha a ginga por 8 compassos."
     }
   },
   {
     id: 42,
-    name: "Agilidade",
+    name: "Síncope no Contratempo",
     timeSignature: [4, 4],
-    upperVoice: ['quatro_semicolcheias', 'quatro_semicolcheias', 'duas_colcheias', 'seminima', 'minima', 'pausa_minima'],
+    upperVoice: [
+      'seminima', 'colcheia_seminima_colcheia', 'seminima', 'seminima', 'colcheia_seminima_colcheia', 'seminima',
+      'seminima', 'colcheia_seminima_colcheia', 'seminima', 'seminima', 'colcheia_seminima_colcheia', 'seminima',
+      'seminima', 'colcheia_seminima_colcheia', 'seminima', 'seminima', 'colcheia_seminima_colcheia', 'seminima',
+      'seminima', 'colcheia_seminima_colcheia', 'seminima', 'seminima', 'colcheia_seminima_colcheia', 'seminima'
+    ],
     lowerVoice: []
   },
   {
     id: 43,
-    name: "Semicolcheias e Silêncio",
-    timeSignature: [2, 4],
-    upperVoice: ['quatro_semicolcheias', 'pausa', 'duas_colcheias', 'quatro_semicolcheias', 'seminima', 'pausa'],
-    lowerVoice: [],
-    instruction: {
-      title: "Acelera e Freia",
-      text: "O segredo da música está no controle. Dê os 4 toques rápidos da semicolcheia e freie a mão bruscamente para respeitar a pausa."
-    }
+    name: "Ondas Rítmicas",
+    timeSignature: [4, 4],
+    // Duas síncopes seguidas geram uma tensão incrível!
+    upperVoice: [
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia'
+    ],
+    lowerVoice: []
   },
   {
     id: 44,
-    name: "Síncope e Semicolcheia",
+    name: "Apoio, Impulso e Síncope",
     timeSignature: [4, 4],
-    upperVoice: ['colcheia_seminima_colcheia', 'quatro_semicolcheias', 'seminima', 'minima', 'minima'],
+    upperVoice: [
+      'duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia',
+      'duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia',
+      'duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia',
+      'duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'duas_colcheias', 'duas_colcheias', 'colcheia_seminima_colcheia'
+    ],
     lowerVoice: []
   },
   {
     id: 45,
-    name: "Ostinato de Gramani 1",
-    timeSignature: [2, 4],
-    upperVoice: ['quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima'],
+    name: "Ostinato Sincopado 1",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
     instruction: {
-      title: "Independência Extrema",
-      text: "A mão esquerda marca o passo da marcha (semínimas). A direita faz a subdivisão de 4 notas. Mantenha os hemisférios isolados!"
+      title: "Bumbo e Tamborim",
+      text: "A verdadeira polirritmia! A mão esquerda faz o bumbo cravado de semínimas. O 'Hold' da síncope na mão direita vai acontecer ENQUANTO a esquerda dá um novo toque. Isole o cérebro!"
     }
   },
   {
     id: 46,
-    name: "A Marcha Quebrada",
+    name: "Ostinato Sincopado 2",
     timeSignature: [4, 4],
-    upperVoice: ['quatro_semicolcheias', 'pausa', 'quatro_semicolcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima']
+    upperVoice: [
+      'seminima', 'colcheia_seminima_colcheia', 'seminima', 'seminima', 'colcheia_seminima_colcheia', 'seminima',
+      'seminima', 'colcheia_seminima_colcheia', 'seminima', 'seminima', 'colcheia_seminima_colcheia', 'seminima',
+      'seminima', 'colcheia_seminima_colcheia', 'seminima', 'seminima', 'colcheia_seminima_colcheia', 'seminima',
+      'seminima', 'colcheia_seminima_colcheia', 'seminima', 'seminima', 'colcheia_seminima_colcheia', 'seminima'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ]
   },
   {
     id: 47,
-    name: "Ostinato Reverso Motor",
+    name: "O Mar de Síncopes",
     timeSignature: [4, 4],
-    upperVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
-    lowerVoice: ['quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima', 'colcheia_seminima_colcheia', 'minima'],
-    instruction: {
-      title: "O Motor Esquerdo",
-      text: "Trocou! Agora sua mão direita dita o tempo (pulso) e a sua mão esquerda será a metralhadora de semicolcheias."
-    }
+    upperVoice: [
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
+      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia'
+    ],
+    lowerVoice: [
+      'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima',
+      'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima', 'minima'
+    ]
   },
   {
     id: 48,
-    name: "Polirritmia: 4 contra 2",
-    timeSignature: [2, 4],
-    upperVoice: ['quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias'],
-    lowerVoice: ['duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias']
+    name: "Ostinato Reverso Sincopado",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    lowerVoice: [
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'minima'
+    ],
+    instruction: {
+      title: "Inversão de Hemisférios",
+      text: "Agora a mão direita segura a pulsação ininterrupta, enquanto a esquerda ginga com as síncopes. Domine a ambidestria!"
+    }
   },
   {
     id: 49,
-    name: "O Paradoxo",
+    name: "Silêncio antes da Ginga",
     timeSignature: [4, 4],
-    upperVoice: ['colcheia_seminima_colcheia', 'quatro_semicolcheias', 'pausa', 'colcheia_seminima_colcheia', 'duas_colcheias', 'seminima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima']
+    upperVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    lowerVoice: [
+      'pausa', 'pausa', 'colcheia_seminima_colcheia', 'pausa', 'pausa', 'colcheia_seminima_colcheia',
+      'pausa', 'pausa', 'colcheia_seminima_colcheia', 'pausa', 'pausa', 'colcheia_seminima_colcheia',
+      'pausa', 'pausa', 'colcheia_seminima_colcheia', 'pausa', 'pausa', 'colcheia_seminima_colcheia',
+      'pausa', 'pausa', 'colcheia_seminima_colcheia', 'pausa', 'pausa', 'colcheia_seminima_colcheia'
+    ]
   },
   {
     id: 50,
-    name: "Boss Final: A Aprovação",
+    name: "Boss do Mundo 5: A Roda de Choro",
     timeSignature: [4, 4],
-    upperVoice: ['quatro_semicolcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'pausa', 'quatro_semicolcheias', 'colcheia_seminima_colcheia', 'minima', 'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'seminima', 'minima'],
-    lowerVoice: ['seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'],
+    upperVoice: [
+      'colcheia_seminima_colcheia', 'duas_colcheias', 'seminima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'duas_colcheias', 'seminima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'duas_colcheias', 'seminima', 'colcheia_seminima_colcheia', 'minima',
+      'colcheia_seminima_colcheia', 'duas_colcheias', 'seminima', 'colcheia_seminima_colcheia', 'minima'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
     instruction: {
-      title: "Você é um Mestre!",
-      text: "Último nível do curso base! Aqui tem tudo: silêncio, síncope, semicolcheias e ostinato rítmico. Se você passar daqui, não existe banca de teoria musical que te reprove. Boa sorte!"
+      title: "Resistência Sincopada!",
+      text: "Boss do Mundo 5! A mão esquerda não perdoa um único tempo. A mão direita vai balançar entre colcheias e síncopes. Segure o ritmo!"
     }
   },
 
   // ============================================================================
-  // MUNDO 6: A MARATONA DA SEMIBREVE (Resistência e Independência)
-  // Foco: Fases longas de 8 compassos (32 tempos). A Semibreve atua como um 
-  // ostinato de sustentação contínua contra subdivisões complexas.
+  // MUNDO 6: OS DIVERTIMENTOS (O Ápice da Agilidade)
+  // Foco: 8 Compassos em 2/4 (16 tempos). A subdivisão quaternária: 
+  // O aluno executará 'quatro_semicolcheias' (1 tempo visual) em andamento rápido.
   // ============================================================================
   {
     id: 51,
-    name: "A Longa Jornada",
-    timeSignature: [4, 4],
-    // 8 compassos de 4/4 = 32 tempos
+    name: "A Metralhadora",
+    timeSignature: [2, 4],
     upperVoice: [
-      'semibreve', // C1
-      'seminima', 'seminima', 'seminima', 'seminima', // C2
-      'semibreve', // C3
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias', // C4
-      'semibreve', // C5
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', // C6
-      'semibreve', // C7
-      'minima', 'minima' // C8
+      'quatro_semicolcheias', 'seminima', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'seminima', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'seminima', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'seminima', 'quatro_semicolcheias', 'seminima'
     ],
     lowerVoice: [],
     instruction: {
-      title: "Resistência Rítmica",
-      text: "Mundo 6! As fases agora têm o DOBRO do tamanho. Prepare o fôlego! Alterne entre segurar a nota o compasso inteiro (Semibreve) e explodir em agilidade."
+      title: "Subdivisão Quaternária",
+      text: "Mundo 6! O compasso agora é 2/4. A semínima se dividiu em QUATRO Semicolcheias. Dê 4 toques extremamente rápidos dentro de um único tempo!"
     }
   },
   {
     id: 52,
-    name: "O Pilar de Sustentação",
-    timeSignature: [4, 4],
+    name: "Fôlego Rápido",
+    timeSignature: [2, 4],
     upperVoice: [
-      'seminima', 'seminima', 'seminima', 'seminima', 
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
-      'minima', 'minima',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'semibreve'
-    ],
-    // Mão esquerda trava no Hold por 8 compassos seguidos!
-    lowerVoice: [
-      'semibreve', 'semibreve', 'semibreve', 'semibreve', 
-      'semibreve', 'semibreve', 'semibreve', 'semibreve'
-    ],
-    instruction: {
-      title: "Independência Muscular",
-      text: "A sua mão esquerda (F) é o pilar. Ela vai segurar as Semibreves ininterruptamente! Seu cérebro vai tentar soltar o botão esquerdo quando a mão direita (J) acelerar. Não permita!"
-    }
-  },
-  {
-    id: 53,
-    name: "Resistência Mista",
-    timeSignature: [4, 4],
-    upperVoice: [
-      'semibreve', 
-      'pausa', 'pausa', 'pausa', 'pausa', 
-      'semibreve', 
-      'pausa_minima', 'pausa_minima', 
-      'semibreve', 
-      'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 
-      'minima', 'minima',
-      'semibreve'
-    ],
-    lowerVoice: [] // Voltamos para 1 voz para descansar o cérebro (Intercalação)
-  },
-  {
-    id: 54,
-    name: "Inversão do Pilar",
-    timeSignature: [4, 4],
-    // Mão direita agora é o Pilar de Hold
-    upperVoice: [
-      'semibreve', 'semibreve', 'semibreve', 'semibreve', 
-      'semibreve', 'semibreve', 'semibreve', 'semibreve'
-    ],
-    lowerVoice: [
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
-      'semibreve'
-    ],
-    instruction: {
-      title: "Ambidestria",
-      text: "Trocou! Agora a mão direita (J) fica travada na Semibreve, enquanto a esquerda (F) corre na esteira. Cuidado com a fadiga do dedo!"
-    }
-  },
-  {
-    id: 55,
-    name: "Fôlego Sincopado",
-    timeSignature: [4, 4],
-    upperVoice: [
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'semibreve',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'semibreve',
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
-      'semibreve',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'semibreve'
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'minima',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'minima',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'minima',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'minima'
     ],
     lowerVoice: []
   },
   {
-    id: 56,
-    name: "Desafio de Gramani Estendido",
-    timeSignature: [4, 4],
+    id: 53,
+    name: "Semicolcheias e Silêncio",
+    timeSignature: [2, 4],
     upperVoice: [
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia'
+      'quatro_semicolcheias', 'pausa', 'duas_colcheias', 'pausa',
+      'quatro_semicolcheias', 'pausa', 'duas_colcheias', 'pausa',
+      'quatro_semicolcheias', 'pausa', 'duas_colcheias', 'pausa',
+      'quatro_semicolcheias', 'pausa', 'duas_colcheias', 'pausa'
     ],
-    lowerVoice: [
-      'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima'
-    ],
+    lowerVoice: [],
     instruction: {
-      title: "Ginga Infinita",
-      text: "A mão direita vai emendar 16 síncopes seguidas! Enquanto isso, a mão esquerda alterna entre segurar a Semibreve e marcar o pulso duro. Mantenha o foco!"
+      title: "Acelera e Freia",
+      text: "O controle absoluto! Exploda em 4 toques e no milissegundo seguinte paralise a mão para respeitar o silêncio."
     }
   },
   {
-    id: 57,
-    name: "A Calmaria (Espelho)",
-    timeSignature: [4, 4],
+    id: 54,
+    name: "Síncope e Semicolcheia",
+    timeSignature: [2, 4],
+    // Lembrando: Síncope vale 2 tempos inteiros no 2/4.
     upperVoice: [
-      'semibreve',
-      'minima', 'minima',
-      'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
-      'semibreve',
-      'semibreve'
+      'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'seminima',
+      'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'seminima',
+      'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'seminima',
+      'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'seminima'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 55,
+    name: "Divertimento em 2/4",
+    timeSignature: [2, 4],
+    upperVoice: [
+      'quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima'
     ],
     lowerVoice: [
-      'semibreve',
-      'minima', 'minima',
-      'semibreve',
       'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
-      'semibreve',
-      'semibreve'
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    instruction: {
+      title: "Polirritmia Extrema",
+      text: "A mão esquerda marca as Semínimas. A direita faz a leitura do Divertimento. Isole os hemisférios!"
+    }
+  },
+  {
+    id: 56,
+    name: "A Marcha Quebrada",
+    timeSignature: [2, 4],
+    upperVoice: [
+      'quatro_semicolcheias', 'pausa', 'colcheia_seminima_colcheia',
+      'quatro_semicolcheias', 'pausa', 'colcheia_seminima_colcheia',
+      'quatro_semicolcheias', 'pausa', 'colcheia_seminima_colcheia',
+      'quatro_semicolcheias', 'pausa', 'colcheia_seminima_colcheia'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima'
     ]
   },
   {
-    id: 58,
-    name: "Polirritmia de Longa Duração",
-    timeSignature: [4, 4],
+    id: 57,
+    name: "O Motor Esquerdo",
+    timeSignature: [2, 4],
     upperVoice: [
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
-      'semibreve',
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
-      'semibreve',
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
-      'semibreve',
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
-      'semibreve'
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima'
     ],
     lowerVoice: [
-      'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
-      'semibreve'
+      'quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima',
+      'quatro_semicolcheias', 'duas_colcheias', 'quatro_semicolcheias', 'seminima'
+    ],
+    instruction: {
+      title: "Inversão da Agilidade",
+      text: "Agora a sua mão direita é o relógio constante. A mão esquerda assume a tarefa de disparar as semicolcheias."
+    }
+  },
+  {
+    id: 58,
+    name: "Polirritmia 4 contra 2",
+    timeSignature: [2, 4],
+    upperVoice: [
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
+      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias'
+    ],
+    lowerVoice: [
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
+      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias'
     ]
   },
   {
     id: 59,
-    name: "Mãos em Revezamento",
-    timeSignature: [4, 4],
-    // Uma mão toca a Semibreve enquanto a outra descansa por 4 tempos
+    name: "O Paradoxo",
+    timeSignature: [2, 4],
     upperVoice: [
-      'semibreve', 
-      'pausa_minima', 'pausa_minima', 
-      'semibreve', 
-      'pausa_minima', 'pausa_minima', 
-      'semibreve', 
-      'pausa_minima', 'pausa_minima', 
-      'semibreve', 
-      'pausa_minima', 'pausa_minima'
+      'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'pausa',
+      'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'pausa',
+      'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'pausa',
+      'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'pausa'
     ],
     lowerVoice: [
-      'pausa_minima', 'pausa_minima', 
-      'semibreve', 
-      'pausa_minima', 'pausa_minima', 
-      'semibreve', 
-      'pausa_minima', 'pausa_minima', 
-      'semibreve', 
-      'pausa_minima', 'pausa_minima', 
-      'semibreve'
-    ],
-    instruction: {
-      title: "Respiração",
-      text: "Fase de transição! Pressione F por 4 tempos, solte, e imediatamente pressione J por 4 tempos. Sinta a passagem do som de um lado para o outro."
-    }
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima'
+    ]
   },
   {
     id: 60,
-    name: "Boss do Mundo 6: A Maratona THE",
-    timeSignature: [4, 4],
+    name: "Boss Final: A Aprovação no THE",
+    timeSignature: [2, 4],
     upperVoice: [
-      'semibreve',
-      'colcheia_seminima_colcheia', 'colcheia_seminima_colcheia',
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
-      'semibreve',
-      'duas_colcheias', 'duas_colcheias', 'duas_colcheias', 'duas_colcheias',
-      'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia', 'pausa_colcheia_colcheia',
-      'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias', 'quatro_semicolcheias',
-      'semibreve'
+      'quatro_semicolcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'pausa', 'minima',
+      'quatro_semicolcheias', 'duas_colcheias', 'colcheia_seminima_colcheia', 'quatro_semicolcheias', 'pausa', 'minima'
     ],
     lowerVoice: [
       'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
       'seminima', 'seminima', 'seminima', 'seminima',
-      'semibreve',
       'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    instruction: {
+      title: "VOCÊ É UM MESTRE!",
+      text: "Último nível! Aqui tem tudo: silêncio, síncope, semicolcheias e ostinato contínuo por 8 compassos. Zere esta fase e não haverá banca que o reprove!"
+    }
+  },
+  // ============================================================================
+  // MUNDO 7: A EXTENSÃO DO SOM (Ligaduras e Pontos de Aumento)
+  // Foco: 8 Compassos (32 tempos) em 4/4. Treinar a sustentação do "Hold" 
+  // fundindo figuras através da barra de compasso e usando pontos de aumento.
+  // ============================================================================
+  {
+    id: 61,
+    name: "O Poder da Ligadura",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'semibreve', // C1 (4 tempos)
+      'minima_ligada', 'minima', // C2 (Toca no 1, segura até o final do 4)
+      'seminima', 'seminima', 'minima_ligada', // C3 (Toca 1, 2, segura 3 e 4...)
+      'minima', 'minima', // C4 (...fundindo com o início deste compasso)
+      'seminima', 'seminima_ligada', 'seminima', 'seminima', // C5
+      'semibreve', // C6
+      'minima_ligada', 'minima', // C7
+      'semibreve' // C8
+    ],
+    lowerVoice: [],
+    instruction: {
+      title: "Sons Amarrados",
+      text: "Mundo 7! Quando a nota tiver uma ligadura, você não deve soltar o botão e apertar de novo. Apenas mantenha o 'Hold' segurado somando a duração das duas figuras!"
+    }
+  },
+  {
+    id: 62,
+    name: "O Ponto de Aumento",
+    timeSignature: [4, 4],
+    // A mínima vale 2. O ponto aumenta metade (1). Total: 3 tempos de Hold.
+    upperVoice: [
+      'minima_pontuada', 'seminima', 
+      'minima_pontuada', 'seminima',
+      'minima', 'minima', 
       'semibreve',
-      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'minima_pontuada', 
+      'seminima', 'minima_pontuada',
+      'minima', 'minima', 
+      'semibreve'
+    ],
+    lowerVoice: [],
+    instruction: {
+      title: "A Matemática do Ponto",
+      text: "O ponto à direita aumenta METADE do valor da nota. Uma Mínima Pontuada exige que você segure o botão por exatos 3 tempos. Solte apenas na Semínima final!"
+    }
+  },
+  {
+    id: 63,
+    name: "Teoria na Prática (O Espelho)",
+    timeSignature: [4, 4],
+    // Upper usa Ponto. Lower usa Ligadura. A execução auditiva e motora é IDÊNTICA.
+    upperVoice: [
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima',
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima',
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima',
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima'
+    ],
+    lowerVoice: [
+      'minima_ligada', 'seminima', 'seminima', 'minima_ligada', 'seminima', 'seminima',
+      'minima_ligada', 'seminima', 'seminima', 'minima_ligada', 'seminima', 'seminima',
+      'minima_ligada', 'seminima', 'seminima', 'minima_ligada', 'seminima', 'seminima',
+      'minima_ligada', 'seminima', 'seminima', 'minima_ligada', 'seminima', 'seminima'
+    ],
+    instruction: {
+      title: "O Paradoxo Visual",
+      text: "As mãos farão exatamenta a mesma coisa! Na música, uma Mínima Pontuada soa igual a uma Mínima ligada a uma Semínima. Sinta a matemática sonora com as duas mãos."
+    }
+  },
+  {
+    id: 64,
+    name: "Síncope por Ligadura",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'minima_ligada', 'seminima', 
+      'seminima', 'minima_ligada', 'seminima',
+      'semibreve', 'semibreve',
+      'seminima', 'seminima_ligada', 'minima',
+      'seminima', 'seminima_ligada', 'minima',
+      'semibreve', 'semibreve'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 65,
+    name: "Ostinato Pontuado",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima',
+      'semibreve', 'semibreve',
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima',
+      'semibreve', 'semibreve'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    instruction: {
+      title: "O Ponto e o Pulso",
+      text: "A mão esquerda marca as Semínimas constantes (o pulso). A mão direita ataca no tempo 1, e segura o 'Hold' através dos tempos 2 and 3 (o ponto), batendo novamente só no tempo 4."
+    }
+  },
+  {
+    id: 66,
+    name: "Ostinato Reverso Ligado",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    lowerVoice: [
+      'seminima', 'minima_ligada', 'seminima', 
+      'seminima', 'minima_ligada', 'seminima',
+      'semibreve', 'semibreve',
+      'seminima', 'minima_ligada', 'seminima', 
+      'seminima', 'minima_ligada', 'seminima',
+      'semibreve', 'semibreve'
+    ],
+    instruction: {
+      title: "Inversão de Carga",
+      text: "Agora a mão direita é a base inabalável. A mão esquerda esconde uma síncope disfarçada de ligadura."
+    }
+  },
+  {
+    id: 67,
+    name: "Balanço Oculto",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'minima_pontuada', 'seminima', 
+      'seminima_ligada', 'seminima', 'minima',
+      'semibreve', 'semibreve',
+      'minima_pontuada', 'seminima', 
+      'seminima_ligada', 'seminima', 'minima',
+      'semibreve', 'semibreve'
+    ],
+    lowerVoice: []
+  },
+  {
+    id: 68,
+    name: "A Marcha Amarrada",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima', 'seminima'
+    ],
+    lowerVoice: [
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima',
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima',
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima',
+      'minima_pontuada', 'seminima', 'minima_pontuada', 'seminima'
+    ]
+  },
+  {
+    id: 69,
+    name: "Sustentação Cruzada",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'minima_ligada', 'seminima', 'seminima', 
+      'minima_ligada', 'seminima', 'seminima',
+      'semibreve', 'semibreve',
+      'minima_ligada', 'seminima', 'seminima', 
+      'minima_ligada', 'seminima', 'seminima',
+      'semibreve', 'semibreve'
+    ],
+    lowerVoice: [
+      'seminima', 'minima_pontuada', 
+      'seminima', 'minima_pontuada',
+      'semibreve', 'semibreve',
+      'seminima', 'minima_pontuada', 
+      'seminima', 'minima_pontuada',
+      'semibreve', 'semibreve'
+    ],
+    instruction: {
+      title: "Desafio Diagonal",
+      text: "Preste atenção! A mão direita segura o início do compasso e ataca no final. A mão esquerda ataca no início e segura até o final (falso contratempo). Cuidado para não bugar!"
+    }
+  },
+  {
+    id: 70,
+    name: "Boss do Mundo 7: A Corda Bamba",
+    timeSignature: [4, 4],
+    upperVoice: [
+      'minima_pontuada', 'seminima', 
+      'minima_ligada', 'minima', 
+      'seminima', 'seminima_ligada', 'minima', 
+      'semibreve',
+      'minima_pontuada', 'seminima', 
+      'minima_ligada', 'minima', 
+      'seminima', 'seminima_ligada', 'minima', 
+      'semibreve'
+    ],
+    lowerVoice: [
+      'seminima', 'seminima', 'minima', 
+      'seminima', 'seminima', 'minima',
+      'minima_pontuada', 'seminima', 
+      'semibreve',
+      'seminima', 'seminima', 'minima', 
+      'seminima', 'seminima', 'minima',
+      'minima_pontuada', 'seminima', 
       'semibreve'
     ],
     instruction: {
-      title: "Prova Final de Resistência",
-      text: "8 bússolas completas! A mão esquerda não perdoa: bate 4 e segura 4 até o fim. A mão direita vai passar por TUDO que você aprendeu. Sobreviva a esta maratona!"
+      title: "O Ponto e o Laço",
+      text: "O Boss Final! Um teste absoluto de resistência. Intercalamos pontos de aumento com ligaduras de prolongação. A sua mão precisará de vida própria para sobreviver aos 8 compassos."
     }
   }
 ];
