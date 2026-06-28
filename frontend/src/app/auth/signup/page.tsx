@@ -61,9 +61,10 @@ function SignupForm() {
       } else {
         setErrorMsg('Erro ao autenticar com Google.');
       }
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       console.error(err);
-      setErrorMsg('Erro ao autenticar com Google.');
+      setErrorMsg('Erro Google: ' + (err.message || 'Erro desconhecido.'));
     } finally {
       setIsSubmitting(false);
     }

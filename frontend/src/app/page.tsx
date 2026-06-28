@@ -198,12 +198,13 @@ export default function LandingPage() {
         description: 'Entrando com a conta do Google...',
       });
       router.push('/dashboard');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error: unknown) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Google Login Error:", error);
       toast({
         variant: 'destructive',
         title: 'Erro no Google',
-        description: 'Não foi possível fazer login com o Google.',
+        description: `Não foi possível fazer login: ${error.message || 'Erro desconhecido'}`,
       });
     }
   };
