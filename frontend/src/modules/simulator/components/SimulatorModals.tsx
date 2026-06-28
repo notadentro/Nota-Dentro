@@ -34,19 +34,19 @@ export function SimulatorModals({
   return (
     <>
       {status === 'paused' && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md px-4">
+        <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-slate-950/95 backdrop-blur-md px-4">
           <div className="max-w-xl text-center flex flex-col items-center">
-            <h2 className="text-5xl font-headline font-black text-brand-gold mb-8 uppercase tracking-tight drop-shadow-[0_0_15px_rgba(242,211,73,0.5)]">
+            <h2 className="text-5xl font-headline font-black text-cyan-400 mb-8 uppercase tracking-tight drop-shadow-[0_0_20px_rgba(6,182,212,0.8)]">
               Pausado
             </h2>
             <div className="flex flex-col gap-4 w-64">
-              <Button onClick={resumeGame} className="w-full py-6 text-xl font-bold rounded-full bg-white text-brand-black hover:bg-gray-200 shadow-lg">
+              <Button onClick={resumeGame} className="w-full py-6 text-xl font-bold rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 shadow-[0_0_20px_rgba(6,182,212,0.5)]">
                 Continuar
               </Button>
-              <Button onClick={repeatLevel} variant="outline" className="w-full py-6 text-xl font-bold rounded-full border-2 border-brand-gray text-white hover:bg-brand-gray/20">
+              <Button onClick={repeatLevel} variant="outline" className="w-full py-6 text-xl font-bold rounded-full border-2 border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/20 backdrop-blur-sm">
                 Recomeçar Fase
               </Button>
-              <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="w-full py-6 text-xl font-bold rounded-full text-red-400 hover:text-red-300 hover:bg-red-400/10">
+              <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="w-full py-6 text-xl font-bold rounded-full text-pink-400 hover:text-pink-300 hover:bg-pink-500/20">
                 Sair para o Menu
               </Button>
             </div>
@@ -55,16 +55,16 @@ export function SimulatorModals({
       )}
 
       {status === 'instruction' && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md px-4">
+        <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-slate-950/95 backdrop-blur-md px-4">
           <div className="max-w-xl text-center flex flex-col items-center">
-            <Info className="w-16 h-16 text-brand-gold mb-6" />
-            <h2 className="text-4xl font-headline font-black text-white mb-6 uppercase tracking-tight">{levelDef.instruction?.title || "Nível " + level}</h2>
-            <p className="text-brand-gray text-xl mb-12 leading-relaxed">{levelDef.instruction?.text || "Prepare-se para tocar a partitura!"}</p>
+            <Info className="w-16 h-16 text-cyan-400 mb-6 drop-shadow-[0_0_15px_rgba(6,182,212,0.8)]" />
+            <h2 className="text-4xl font-headline font-black text-white mb-6 uppercase tracking-tight drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{levelDef.instruction?.title || "Nível " + level}</h2>
+            <p className="text-slate-300 text-xl mb-12 leading-relaxed">{levelDef.instruction?.text || "Prepare-se para tocar a partitura!"}</p>
             <div className="flex flex-col gap-4 w-full">
-              <Button onClick={acceptInstruction} className="px-10 py-8 rounded-full bg-brand-gold hover:bg-yellow-400 text-brand-black text-2xl font-bold shadow-lg shadow-brand-gold/20">
+              <Button onClick={acceptInstruction} className="px-10 py-8 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 text-2xl font-bold shadow-[0_0_30px_rgba(6,182,212,0.6)]">
                 Toque para Iniciar
               </Button>
-              <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="px-10 py-6 rounded-full text-brand-gray hover:text-white hover:bg-white/10 text-xl font-bold">
+              <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="px-10 py-6 rounded-full text-slate-400 hover:text-white hover:bg-white/10 text-xl font-bold">
                 Sair para o Menu
               </Button>
             </div>
@@ -73,61 +73,61 @@ export function SimulatorModals({
       )}
 
       {status === 'level_failed' && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md px-4">
+        <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-slate-950/95 backdrop-blur-md px-4">
           <div className="max-w-xl text-center flex flex-col items-center">
-            <ShieldAlert className="w-16 h-16 text-orange-500 mb-6" />
-            <h2 className="text-4xl font-headline font-black text-orange-500 mb-2 uppercase tracking-tight">Você Errou!</h2>
-            <p className="text-brand-gray text-xl mb-8">O ritmo saiu de controle e a música parou.</p>
+            <ShieldAlert className="w-16 h-16 text-pink-500 mb-6 drop-shadow-[0_0_15px_rgba(236,72,153,0.8)]" />
+            <h2 className="text-4xl font-headline font-black text-pink-500 mb-2 uppercase tracking-tight drop-shadow-[0_0_15px_rgba(236,72,153,0.5)]">Você Errou!</h2>
+            <p className="text-slate-400 text-xl mb-8">O ritmo saiu de controle e a música parou.</p>
             <div className="mb-8">
               <span className="text-white text-lg block mb-2">Tentativas Restantes da Fase</span>
               <div className="flex gap-2 justify-center">
                 {[...Array(INITIAL_RETRIES)].map((_, i) => (
-                  <div key={i} className={cn("w-4 h-4 rounded-full", i < retries ? "bg-orange-500" : "bg-brand-graphite")} />
+                  <div key={i} className={cn("w-4 h-4 rounded-full shadow-[0_0_10px_currentColor]", i < retries ? "bg-pink-500 text-pink-500" : "bg-slate-800 text-transparent")} />
                 ))}
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 mb-4">
-              <Button onClick={repeatLevel} className="px-8 py-8 rounded-full bg-orange-600 hover:bg-orange-500 text-white text-2xl font-bold shadow-lg shadow-orange-500/20">
+              <Button onClick={repeatLevel} className="px-8 py-8 rounded-full bg-pink-600 hover:bg-pink-500 text-white text-2xl font-bold shadow-[0_0_20px_rgba(236,72,153,0.5)]">
                 <RefreshCw className="mr-3 w-6 h-6" /> Tentar Novamente
               </Button>
-              <Button onClick={nextLevel} className="px-8 py-8 rounded-full bg-brand-graphite hover:bg-brand-gray/20 text-brand-gray text-xl font-bold border-2 border-brand-gray/30">
+              <Button onClick={nextLevel} className="px-8 py-8 rounded-full bg-slate-900/50 hover:bg-slate-800/80 text-slate-400 hover:text-white text-xl font-bold border-2 border-slate-700/50">
                 Pular Fase
               </Button>
             </div>
-            <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="text-brand-gray hover:text-white hover:bg-white/10 px-8 py-4 rounded-full text-lg font-bold">
+            <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="text-slate-400 hover:text-white hover:bg-white/10 px-8 py-4 rounded-full text-lg font-bold">
               Sair para o Menu
             </Button>
           </div>
         </div>
       )}
 
-      {status === 'game_over' && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-brand-black/95 backdrop-blur-md">
-          <h2 className="text-5xl font-headline font-black text-red-500 mb-2 uppercase tracking-tight">Game Over Total</h2>
-          <p className="text-brand-gray text-xl mb-8">Você esgotou todas as tentativas para esta fase.</p>
-          <Button onClick={() => router.push('/ritmo-insano')} className="px-10 py-8 rounded-full bg-red-600 hover:bg-red-500 text-white text-2xl font-bold shadow-lg shadow-red-500/20">
+      {status === 'gameover' && (
+        <div className="fixed inset-0 flex flex-col items-center justify-center z-[100] bg-slate-950/95 backdrop-blur-md">
+          <h2 className="text-5xl font-headline font-black text-red-500 mb-2 uppercase tracking-tight drop-shadow-[0_0_20px_rgba(239,68,68,0.8)]">Game Over Total</h2>
+          <p className="text-slate-400 text-xl mb-8">Você esgotou todas as tentativas para esta fase.</p>
+          <Button onClick={() => router.push('/ritmo-insano')} className="px-10 py-8 rounded-full bg-red-600 hover:bg-red-500 text-white text-2xl font-bold shadow-[0_0_30px_rgba(239,68,68,0.5)]">
             Voltar para o Menu
           </Button>
         </div>
       )}
 
       {status === 'level_complete' && (
-        <div className="fixed inset-0 bg-brand-black/90 z-[100] flex flex-col items-center justify-center p-6 text-center backdrop-blur-sm animate-in fade-in duration-500">
-          <h2 className="text-4xl font-black text-brand-gold mb-2 uppercase tracking-widest drop-shadow-lg">Concluído!</h2>
+        <div className="fixed inset-0 bg-slate-950/90 z-[100] flex flex-col items-center justify-center p-6 text-center backdrop-blur-md animate-in fade-in duration-500">
+          <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-green-400 mb-2 uppercase tracking-widest drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]">Concluído!</h2>
           <div className="text-white text-xl mb-4 font-bold flex items-center justify-center gap-2">
-            Precisão: <span className={accuracy >= 80 ? 'text-green-400 text-2xl' : accuracy >= 50 ? 'text-yellow-400 text-2xl' : 'text-red-400 text-2xl'}>{accuracy}%</span>
+            Precisão: <span className={accuracy >= 80 ? 'text-green-400 text-2xl drop-shadow-[0_0_10px_rgba(74,222,128,0.5)]' : accuracy >= 50 ? 'text-yellow-400 text-2xl' : 'text-red-400 text-2xl'}>{accuracy}%</span>
           </div>
           {accuracy >= 98 && (
-            <div className="mb-6 bg-brand-gold/20 text-brand-gold px-4 py-2 rounded-full font-bold flex items-center gap-2 animate-bounce">
-              <Zap className="w-5 h-5 fill-brand-gold" />
+            <div className="mb-6 bg-cyan-500/20 text-cyan-300 px-4 py-2 rounded-full font-bold flex items-center gap-2 animate-bounce border border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+              <Zap className="w-5 h-5 fill-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
               +1 Cachê Bônus! (&ge; 98%)
             </div>
           )}
           <div className="flex flex-col sm:flex-row gap-4 mt-6">
-            <Button onClick={() => startLevel(level, bpm, true)} className="px-8 py-4 bg-brand-graphite text-white font-bold rounded-xl">Repetir</Button>
-            <Button onClick={nextLevel} className="px-8 py-4 bg-brand-gold text-brand-black font-bold rounded-xl">Avançar</Button>
+            <Button onClick={() => startLevel(level, bpm, true)} className="px-8 py-4 bg-slate-800/80 text-cyan-300 font-bold rounded-xl border border-cyan-500/30 hover:bg-cyan-500/20">Repetir</Button>
+            <Button onClick={nextLevel} className="px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.5)]">Avançar</Button>
           </div>
-          <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="mt-4 text-brand-gray hover:text-white hover:bg-white/10 px-8 py-2 rounded-full font-bold">
+          <Button onClick={() => router.push('/ritmo-insano')} variant="ghost" className="mt-4 text-slate-400 hover:text-white hover:bg-white/10 px-8 py-2 rounded-full font-bold">
             Sair para o Menu
           </Button>
         </div>

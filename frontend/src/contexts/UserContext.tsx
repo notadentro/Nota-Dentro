@@ -19,7 +19,7 @@ import {
   User as FirebaseUser
 } from 'firebase/auth';
 import { db, auth } from '@/lib/firebase';
-import { addXPServer, updateProgressServer, updateSimulatorProgressServer, updateLivesServer, updateCacheServer } from '@/app/actions/gamification';
+import { addXPServer, addSimulatorXPServer, updateProgressServer, updateSimulatorProgressServer, updateLivesServer, updateCacheServer } from '@/app/actions/gamification';
 
 interface User {
   uid: string;
@@ -56,6 +56,7 @@ interface UserContextType {
   loginWithGoogle: () => Promise<boolean>;
   logout: () => Promise<void>;
   addXP: (amount: number) => Promise<void>;
+  addSimulatorXP: (amount: number, bpm: number) => Promise<void>;
   updateProgress: (completedLessons: string[], unlockedLessons: string[]) => Promise<void>;
   updateSimulatorProgress: (bpm: number, completedLessons: string[], unlockedLessons: string[]) => Promise<void>;
   deductLife: () => Promise<void>;
@@ -94,7 +95,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
               level: data.stats?.level || 1, 
               streak: data.stats?.streak || 0,
               lives: data.stats?.lives ?? 3,
-              cache: data.stats?.cache ?? 100
+              cache: data.stats?.cache ?? 100,
+              // dynamic simulator stats will be stored here in Firebase, but we keep it open in the interface via progress or stats mapping
+              // For type checking, we can just spread them or allow any keys if we update the interface
+              ...Object.keys(data.stats || {}).filter(k => k.startsWith('simulator_')).reduce((obj: any, key) => {
+                obj[key] = data.stats[key];
+                return obj;
+              }, {})
             },
             achievements: data.achievements || [],
             progress: data.progress || {},
@@ -216,9 +223,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const loginWithGoogle = async (): Promise<boolean> => {
     const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    const additionalInfo = getAdditionalUserInfo(result);
-    return additionalInfo?.isNewUser ?? false;
+    await signInWithPopup(auth, provider);
+    return true;
   };
 
   const logout = async () => {
@@ -237,6 +243,35 @@ export function UserProvider({ children }: { children: ReactNode }) {
       console.error('Failed to add XP to server:', error);
       // Reverte caso dê erro no banco
       setUser(prev => prev ? { ...prev, stats: { ...prev.stats, xp: prev.stats.xp - amount } } : null);
+    }
+  };
+
+  const addSimulatorXP = async (amount: number, bpm: number) => {
+    if (!user?.uid) return;
+
+    // Atualização otimista na tela (UI)
+    setUser(prev => prev ? { 
+      ...prev, 
+      stats: { 
+        ...prev.stats, 
+        xp: prev.stats.xp + amount,
+        [`simulator_xp_${bpm}`]: (prev.stats as any)[`simulator_xp_${bpm}`] ? (prev.stats as any)[`simulator_xp_${bpm}`] + amount : amount
+      } 
+    } : null);
+
+    try {
+      await addSimulatorXPServer(user.uid, amount, bpm);
+    } catch (error) {
+      console.error(`Failed to add Simulator XP for ${bpm} BPM to server:`, error);
+      // Reverte caso dê erro no banco
+      setUser(prev => prev ? { 
+        ...prev, 
+        stats: { 
+          ...prev.stats, 
+          xp: prev.stats.xp - amount,
+          [`simulator_xp_${bpm}`]: (prev.stats as any)[`simulator_xp_${bpm}`] ? (prev.stats as any)[`simulator_xp_${bpm}`] - amount : 0
+        } 
+      } : null);
     }
   };
 
@@ -264,6 +299,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const updateSimulatorProgress = async (bpm: number, completedLessons: string[], unlockedLessons: string[]) => {
     if (!user?.uid) return;
 
+    const maxCompleted = completedLessons.length > 0 
+      ? Math.max(...completedLessons.map(l => parseInt(l))) 
+      : 0;
+
     // Atualização otimista na tela (UI)
     setUser(prev => prev ? {
       ...prev,
@@ -271,6 +310,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
         ...prev.progress,
         [`simulator_${bpm}_completed`]: completedLessons,
         [`simulator_${bpm}_unlocked`]: unlockedLessons
+      },
+      stats: {
+        ...prev.stats,
+        [`simulator_level_${bpm}`]: maxCompleted
       }
     } : null);
 
@@ -353,7 +396,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <UserContext.Provider value={{ user, isUserLoading, login, signup, checkEmailExists, sendMagicLink, finishMagicLinkSignup, loginWithGoogle, logout, addXP, updateProgress, updateSimulatorProgress, deductLife, buyLives, addCache, completeOnboarding }}>
+    <UserContext.Provider value={{ user, isUserLoading, login, signup, checkEmailExists, sendMagicLink, finishMagicLinkSignup, loginWithGoogle, logout, addXP, addSimulatorXP, updateProgress, updateSimulatorProgress, deductLife, buyLives, addCache, completeOnboarding }}>
       {children}
     </UserContext.Provider>
   );

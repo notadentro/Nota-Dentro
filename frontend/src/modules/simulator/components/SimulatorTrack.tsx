@@ -27,34 +27,34 @@ export function SimulatorTrack({
   const visualCells = buildVisualCells(sequence);
 
   const getResultColor = (r: BeatResult | undefined) => {
-    if (r === 'tied') return 'text-brand-gold border-brand-gold';
+    if (r === 'tied') return 'text-cyan-400 border-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]';
     switch (r) {
-      case 'perfect': return 'text-green-500 border-green-500';
-      case 'early': return 'text-yellow-500 border-yellow-500';
-      case 'late': return 'text-orange-500 border-orange-500';
-      case 'missed': return 'text-red-500 border-red-500';
-      case 'penalty': return 'text-purple-500 border-purple-500'; 
-      default: return 'text-brand-gray/30 border-transparent bg-brand-gray/10';
+      case 'perfect': return 'text-green-400 border-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]';
+      case 'early': return 'text-yellow-400 border-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]';
+      case 'late': return 'text-orange-400 border-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.8)]';
+      case 'missed': return 'text-red-500 border-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]';
+      case 'penalty': return 'text-pink-500 border-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)]'; 
+      default: return 'text-slate-300/40 border-slate-300/40 bg-slate-300/10';
     }
   };
 
   const getResultBg = (r: BeatResult | undefined) => {
-    if (r === 'tied') return 'bg-brand-gold/30';
+    if (r === 'tied') return 'bg-cyan-400/40';
     switch (r) {
-      case 'perfect': return 'bg-green-500/20';
-      case 'early': return 'bg-yellow-500/20';
-      case 'late': return 'bg-orange-500/20';
-      case 'missed': return 'bg-red-500/20';
-      case 'penalty': return 'bg-purple-500/20';
+      case 'perfect': return 'bg-green-400/40';
+      case 'early': return 'bg-yellow-400/40';
+      case 'late': return 'bg-orange-400/40';
+      case 'missed': return 'bg-red-500/40';
+      case 'penalty': return 'bg-pink-500/40';
       default: return 'bg-transparent';
     }
   };
 
   const renderProgressBar = (widthClass: string, ev: TapEvent | undefined) => {
     return (
-      <div className={cn(`${widthClass} h-2 mt-2 rounded-full border-2 overflow-hidden relative transition-colors`, getResultColor(ev?.result), getResultBg(ev?.result))}>
+      <div className={cn(`${widthClass} h-2.5 mt-2 rounded-full border-2 overflow-hidden relative transition-colors shadow-inner`, getResultColor(ev?.result), getResultBg(ev?.result))}>
         <div 
-          className={cn("absolute left-0 top-0 bottom-0", ev?.result === 'tied' ? 'bg-brand-gold' : 'bg-green-500')} 
+          className={cn("absolute left-0 top-0 bottom-0 shadow-[0_0_10px_currentColor]", ev?.result === 'tied' ? 'bg-cyan-400' : 'bg-green-400')} 
           style={{ 
             width: (ev?.isHeld || ev?.result === 'tied' || ev?.releaseResult === 'perfect' || ev?.releaseResult === 'early') ? '100%' : '0%', 
             transition: ev?.isHeld ? `width ${ev.duration * beatMs}ms linear` : 'none' 
@@ -75,7 +75,7 @@ export function SimulatorTrack({
     >
       {/* Fórmula de Compasso */}
       <div 
-        className="absolute flex flex-col items-center justify-center h-full text-brand-graphite font-headline font-black text-5xl select-none z-0"
+        className="absolute flex flex-col items-center justify-center h-full text-slate-800/80 font-headline font-black text-5xl select-none z-0"
         style={{ left: `${(-0.8 + prepBeats) * 80}px` }}
       >
         <span className="leading-none">{levelDef.timeSignature[0]}</span>
@@ -104,9 +104,9 @@ export function SimulatorTrack({
           const shouldCenter = isFullMeasure && isOtherTrackSimple;
 
           const isNoteActive = (ev: TapEvent | undefined) => isNoteActiveGlobal(ev, visualBeatFloat);
-          const getColorCode = (ev: TapEvent | undefined, isActive: boolean) => getColorCodeGlobal(ev, isActive);
-          const getBgClass = (ev: TapEvent | undefined, isActive: boolean) => getBgClassGlobal(ev, isActive);
-          const renderLigaduraDynamic = () => renderLigaduraDynamicGlobal(cellRaw);
+          const getColorCode = (ev: TapEvent | undefined, isActive: boolean) => getColorCodeGlobal(ev, isActive, trackId);
+          const getBgClass = (ev: TapEvent | undefined, isActive: boolean) => getBgClassGlobal(ev, isActive, trackId);
+          const renderLigaduraDynamic = () => renderLigaduraDynamicGlobal(cellRaw, trackId);
 
           return (
             <div 
@@ -122,7 +122,7 @@ export function SimulatorTrack({
                   >
                     <div className={cn("absolute inset-0 transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/semibreve.svg)', maskImage: 'url(/assets/svg/semibreve.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
-                  {isPontuada && <div className="absolute -right-3 top-6 w-2 h-2 rounded-full bg-brand-gold" />}
+                  {isPontuada && <div className={cn("absolute -right-3 top-6 w-2 h-2 rounded-full", trackId === 'lower' ? "bg-system-info" : "bg-brand-gold")} />}
                   {isLigada && renderLigaduraDynamic()}
                   {renderProgressBar("w-16", cellEvents[0])}
                 </div>
@@ -135,7 +135,7 @@ export function SimulatorTrack({
                   >
                     <div className={cn("absolute inset-0 transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/minima.svg)', maskImage: 'url(/assets/svg/minima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
-                  {isPontuada && <div className="absolute -right-3 top-6 w-2 h-2 rounded-full bg-brand-gold" />}
+                  {isPontuada && <div className={cn("absolute -right-3 top-6 w-2 h-2 rounded-full", trackId === 'lower' ? "bg-system-info" : "bg-brand-gold")} />}
                   {isLigada && renderLigaduraDynamic()}
                   {renderProgressBar("w-12", cellEvents[0])}
                 </div>
@@ -145,7 +145,7 @@ export function SimulatorTrack({
                   <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                     <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/seminima.svg)', maskImage: 'url(/assets/svg/seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
-                  {isPontuada && <div className="absolute -right-3 top-6 w-2 h-2 rounded-full bg-brand-gold" />}
+                  {isPontuada && <div className={cn("absolute -right-3 top-6 w-2 h-2 rounded-full", trackId === 'lower' ? "bg-system-info" : "bg-brand-gold")} />}
                   {isLigada && renderLigaduraDynamic()}
                   {renderProgressBar("w-8", cellEvents[0])}
                 </div>
@@ -171,7 +171,7 @@ export function SimulatorTrack({
                   <div className={cn("w-6 h-10 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                     <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
-                  {isPontuada && <div className="absolute -right-3 top-6 w-2 h-2 rounded-full bg-brand-gold" />}
+                  {isPontuada && <div className={cn("absolute -right-3 top-6 w-2 h-2 rounded-full", trackId === 'lower' ? "bg-system-info" : "bg-brand-gold")} />}
                   {isLigada && renderLigaduraDynamic()}
                   {renderProgressBar("w-4", cellEvents[0])}
                 </div>
@@ -190,6 +190,7 @@ export function SimulatorTrack({
                 
                 if (color0 === color1) {
                   if (color0 === "#F2D349") bgClass = "bg-brand-gold";
+                  else if (color0 === "#5B9BD5") bgClass = "bg-system-info";
                   else if (color0 === "#ef4444") bgClass = "bg-red-500";
                   else bgClass = "bg-[#1A1A1A]";
                 } else {
@@ -242,8 +243,9 @@ export function SimulatorTrack({
 
                 if (c0 === c1 && c1 === c2 && c2 === c3) {
                   if (c0 === "#F2D349") bgClass = "bg-brand-gold";
+                  else if (c0 === "#5B9BD5") bgClass = "bg-system-info";
                   else if (c0 === "#ef4444") bgClass = "bg-red-500";
-                  else bgClass = "bg-black";
+                  else bgClass = "bg-[#1A1A1A]";
                 } else {
                   style = { background: `linear-gradient(to right, ${c0} 25%, ${c1} 25% 50%, ${c2} 50% 75%, ${c3} 75%)` };
                 }

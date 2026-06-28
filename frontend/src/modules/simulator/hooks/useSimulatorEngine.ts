@@ -21,7 +21,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
   const { user, isUserLoading, addXP, updateSimulatorProgress, deductLife, addCache } = useUser();
 
   const [level, setLevel] = useState(1);
-  const [lives, setLives] = useState(INITIAL_LIVES);
+  const [levelHearts, setLevelHearts] = useState(INITIAL_LIVES);
   const [retries, setRetries] = useState(INITIAL_RETRIES);
   const [bpm, setBpm] = useState(INITIAL_BPM);
   const [leftPadActive, setLeftPadActive] = useState(false);
@@ -72,7 +72,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
   const startTimeRef = useRef<number>(0);
   const animationRef = useRef<number>(0);
   const eventsRef = useRef<TapEvent[]>([]);
-  const livesRef = useRef<number>(user ? user.stats.lives : INITIAL_LIVES);
+  const levelHeartsRef = useRef<number>(INITIAL_LIVES);
   const scheduledOscillatorsRef = useRef<OscillatorNode[]>([]);
   const penalizedBeatsRef = useRef<Set<string>>(new Set());
 
@@ -82,13 +82,12 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
   };
 
   useEffect(() => { eventsRef.current = events; }, [events]);
-  useEffect(() => { if (user?.stats?.lives !== undefined) setLives(user.stats.lives); }, [user?.stats?.lives]);
-  useEffect(() => { livesRef.current = lives; }, [lives]);
+  useEffect(() => { levelHeartsRef.current = levelHearts; }, [levelHearts]);
 
   const tickRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    if (!isUserLoading && initialLevel && initialDifficulty && status === 'idle') {
+    if (!isUserLoading && initialLevel !== undefined && initialDifficulty && status === 'idle') {
       const simUnlocked = user?.progress?.[`simulator_${initialDifficulty}_unlocked`] || ['1'];
       const highestUnlocked = Math.max(...simUnlocked.map(Number));
       const cappedLevel = Math.min(initialLevel, highestUnlocked);
@@ -101,7 +100,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
   }, [initialLevel, initialDifficulty, isUserLoading, user]);
 
   useEffect(() => {
-    if (status === 'level_failed' || status === 'game_over') {
+    if (status === 'level_failed' || status === 'gameover') {
       scheduledOscillatorsRef.current.forEach(osc => {
         try { osc.stop(); osc.disconnect(); } catch (e) {}
       });
@@ -188,23 +187,32 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
     }
 
     // Se a fase já foi concluída, o erro não cobra vida (Modo Treino)
+    // O nível 0 (Tutorial) também nunca cobra vida!
     const isAlreadyCompleted = user?.progress?.[`simulator_${bpm}_completed`]?.includes(level.toString());
-    if (isAlreadyCompleted) {
+    if (isAlreadyCompleted || level === 0) {
       return;
     }
 
-    if (user) {
-      deductLife();
-      livesRef.current -= 1;
-    } else {
-      setLives(prev => prev - 1);
+    levelHeartsRef.current -= 1;
+    setLevelHearts(levelHeartsRef.current);
+
+    if (levelHeartsRef.current <= 0) {
+      if (retries > 0) {
+        setStatus('level_failed');
+      } else {
+        setStatus('gameover');
+        if (user) deductLife(); // deduct global life on total game over
+      }
     }
   };
 
   useEffect(() => { tickRef.current = tick; });
 
   const tick = () => {
-    if (status === 'game_over' || status === 'level_complete' || status === 'level_failed' || status === 'paused') return;
+    if (status === 'gameover' || status === 'level_complete' || status === 'level_failed' || status === 'paused') return;
+    
+    // Safety check in case events try to process after failing
+    if (levelHeartsRef.current <= 0) return;
 
     const beatMs = (60 / bpm) * 1000;
     const elapsed = getCurrentTimeMs() - startTimeRef.current;
@@ -261,9 +269,9 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
     if (allProcessed && status === 'playing') {
        if ((elapsed / beatMs) >= levelTotalBeats) {
          const finalAccuracy = calculateAccuracy(updatedEvents);
-         if (finalAccuracy >= 80) setStatus('level_complete');
+         if (level === 0 || finalAccuracy >= 80) setStatus('level_complete');
          else if (retries > 0) setStatus('level_failed');
-         else setStatus('game_over');
+         else setStatus('gameover');
          return;
        }
     }
@@ -294,27 +302,37 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
     let totalBeats = 0;
 
     if (!keepSequence) {
-      const index = Math.min(currentLevel - 1, GAME_LEVELS.length - 1);
-      const pInfo = GAME_LEVELS[index];
+      const pInfo = GAME_LEVELS.find(l => l.id === currentLevel) || GAME_LEVELS[0];
       setLevelDef(pInfo);
 
       const upperEvents = flattenSequence(pInfo.upperVoice, 'upper');
       const lowerEvents = flattenSequence(pInfo.lowerVoice, 'lower');
       const allEvents = [...upperEvents, ...lowerEvents].sort((a, b) => a.beatAbsolute - b.beatAbsolute);
       setEvents(allEvents);
+      setLevelHearts(INITIAL_LIVES);
+      levelHeartsRef.current = INITIAL_LIVES;
       totalBeats = Math.ceil(calculateTotalBeats(allEvents, pInfo.timeSignature[0]));
       setLevelTotalBeats(totalBeats);
     } else {
       const resetEvents = eventsRef.current.map(e => ({ ...e, result: (e.result === 'tied' ? 'tied' : null) as BeatResult, releaseResult: (e.releaseResult === 'tied' ? 'tied' : null) as BeatResult, isHeld: false }));
       setEvents(resetEvents);
-      setLives(INITIAL_LIVES);
+      setLevelHearts(INITIAL_LIVES);
+      levelHeartsRef.current = INITIAL_LIVES;
       totalBeats = Math.ceil(calculateTotalBeats(resetEvents as TapEvent[], levelDef.timeSignature[0]));
       setLevelTotalBeats(totalBeats);
     }
-    
-    setStatus('instruction');
+    const currentLevelDef = GAME_LEVELS.find(l => l.id === currentLevel);
+    if (currentLevelDef?.isTutorial) {
+      setStatus('tutorial');
+    } else {
+      setStatus('instruction');
+    }
     if (animationRef.current) cancelAnimationFrame(animationRef.current);
     penalizedBeatsRef.current.clear();
+  };
+
+  const finishTutorial = () => {
+    acceptInstruction();
   };
 
   const beginPrep = (currentBpm: number, totalBeats: number, ctx: AudioContext | null, prepBts: number) => {
@@ -372,7 +390,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
       setRetries(r => r - 1);
       startLevel(level, bpm, true);
     } else {
-      setStatus('game_over');
+      setStatus('gameover');
     }
   };
 
@@ -381,7 +399,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
     const b = overrideBpm ?? INITIAL_BPM;
 
     const isAlreadyCompleted = user?.progress?.[`simulator_${b}_completed`]?.includes(l.toString());
-    const currentLives = user ? user.stats.lives : lives;
+    const currentLives = user ? user.stats.lives : INITIAL_LIVES;
     
     if (currentLives <= 0 && !isAlreadyCompleted) {
       setShowStore(true);
@@ -389,7 +407,6 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
     }
 
     setLevel(l);
-    setLives(currentLives);
     setRetries(INITIAL_RETRIES);
     setBpm(b);
     startLevel(l, b);
@@ -413,7 +430,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
       }
     }
 
-    if (status === 'game_over' || status === 'level_complete' || status === 'level_failed' || status === 'idle' || status === 'instruction') return;
+    if (status === 'gameover' || status === 'level_complete' || status === 'level_failed' || status === 'idle' || status === 'instruction' || status === 'tutorial') return;
 
     const beatMs = (60 / bpm) * 1000;
     const elapsed = getCurrentTimeMs() - startTimeRef.current - LATENCY_OFFSET_MS;
@@ -437,28 +454,35 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
        const expectedTimeMs = ev.beatAbsolute * beatMs;
        const delta = elapsed - expectedTimeMs;
 
+       let type: BeatResult = 'perfect';
+       let isPenalty = false;
+
        setEvents(prev => {
           const next = [...prev];
           if (ev.type === 'rest') {
              next[closestEventIndex] = { ...ev, result: 'penalty' };
-             showGhostMsg('penalty');
-             loseLife(ev.id);
+             isPenalty = true;
           } else {
-             let type: BeatResult = 'perfect';
              if (delta < -TOLERANCE_MS / 3) type = 'early';
              else if (delta > TOLERANCE_MS / 3) type = 'late';
              else type = 'perfect';
 
              next[closestEventIndex] = { ...ev, result: type, isHeld: ev.duration >= 1.0 };
-             showGhostMsg(type, delta);
           }
           return next;
        });
+
+       if (isPenalty) {
+          showGhostMsg('penalty');
+          loseLife(ev.id);
+       } else {
+          showGhostMsg(type, delta);
+       }
     }
   };
 
   const handleRelease = (track: 'upper' | 'lower') => {
-    if (status === 'game_over' || status === 'level_complete' || status === 'level_failed' || status === 'idle' || status === 'instruction') return;
+    if (status === 'gameover' || status === 'level_complete' || status === 'level_failed' || status === 'idle' || status === 'instruction' || status === 'tutorial') return;
 
     const beatMs = (60 / bpm) * 1000;
     const elapsed = getCurrentTimeMs() - startTimeRef.current - LATENCY_OFFSET_MS;
@@ -471,19 +495,24 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
        const delta = elapsed - expectedEndTimeMs;
        
        const earlyTolerance = TOLERANCE_MS + (ev.duration * beatMs * 0.20);
+       const isEarly = delta < -earlyTolerance;
 
        setEvents(prev => {
           const next = [...prev];
-          if (delta < -earlyTolerance) {
+          if (isEarly) {
              next[heldEventIndex] = { ...ev, isHeld: false, releaseResult: 'early' };
-             showGhostMsg('early');
-             loseLife(`${ev.id}-release`);
           } else {
              next[heldEventIndex] = { ...ev, isHeld: false, releaseResult: 'perfect' };
-             showGhostMsg('perfect');
           }
           return next;
        });
+
+       if (isEarly) {
+          showGhostMsg('early');
+          loseLife(`${ev.id}-release`);
+       } else {
+          showGhostMsg('perfect');
+       }
     }
   };
 
@@ -537,8 +566,8 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
   }, []);
 
   return {
-    level, lives, retries, bpm, leftPadActive, rightPadActive, levelDef, events, levelTotalBeats, status, elapsedTime, ghostMsg, accuracy,
+    level, lives: levelHearts, retries, bpm, leftPadActive, rightPadActive, levelDef, events, levelTotalBeats, status, elapsedTime, ghostMsg, accuracy,
     setLeftPadActive, setRightPadActive,
-    startGame, repeatLevel, nextLevel, pauseGame, resumeGame, acceptInstruction, handleTap, handleRelease
+    startGame, repeatLevel, nextLevel, pauseGame, resumeGame, acceptInstruction, finishTutorial, handleTap, handleRelease
   };
 }

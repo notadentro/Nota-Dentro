@@ -18,22 +18,25 @@ export const buildVisualCells = (sequence: RhythmCell[]) => {
   return visuals;
 };
 
-export const getColorCodeGlobal = (ev: TapEvent | undefined, isActive: boolean) => {
-  if (!ev) return isActive ? "#F2D349" : "#1A1A1A";
+export const getColorCodeGlobal = (ev: TapEvent | undefined, isActive: boolean, trackId?: 'upper' | 'lower') => {
+  const activeColor = trackId === 'lower' ? "#5B9BD5" : "#F2D349";
+  if (!ev) return isActive ? activeColor : "#1A1A1A";
   if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "#ef4444";
-  if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "#F2D349";
+  if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return activeColor;
   return "#1A1A1A";
 };
 
-export const getBgClassGlobal = (ev: TapEvent | undefined, isActive: boolean) => {
-  if (!ev) return isActive ? "bg-brand-gold" : "bg-[#1A1A1A]";
+export const getBgClassGlobal = (ev: TapEvent | undefined, isActive: boolean, trackId?: 'upper' | 'lower') => {
+  const activeClass = trackId === 'lower' ? "bg-system-info" : "bg-brand-gold";
+  if (!ev) return isActive ? activeClass : "bg-[#1A1A1A]";
   if (ev.result === 'missed' || ev.result === 'penalty' || ev.releaseResult === 'early') return "bg-red-500";
-  if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return "bg-brand-gold";
+  if (ev.isHeld || ev.result === 'perfect' || ev.result === 'early' || ev.result === 'late' || ev.result === 'tied' || isActive) return activeClass;
   return "bg-[#1A1A1A]";
 };
 
-export const renderLigaduraDynamicGlobal = (cellRawStr: RhythmCell) => {
+export const renderLigaduraDynamicGlobal = (cellRawStr: RhythmCell, trackId?: 'upper' | 'lower') => {
   const tieWidth = Math.max(10, getCellDuration(cellRawStr) * 80 - 30);
+  const color = trackId === 'lower' ? "#5B9BD5" : "#F2D349";
   return (
     <svg 
       className="absolute top-[60%] z-10 pointer-events-none overflow-visible" 
@@ -43,7 +46,7 @@ export const renderLigaduraDynamicGlobal = (cellRawStr: RhythmCell) => {
       <path 
         d={`M 0 0 Q ${tieWidth / 2} 24 ${tieWidth} 0`} 
         fill="transparent" 
-        stroke="#F2D349" 
+        stroke={color} 
         strokeWidth="3" 
         strokeLinecap="round" 
         opacity="0.6" 

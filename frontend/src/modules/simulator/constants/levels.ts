@@ -18,6 +18,19 @@ export type RhythmCellBase =
 
 export type RhythmCell = RhythmCellBase | `${RhythmCellBase}_ligada`;
 
+export type LevelDef = {
+  id: number;
+  name: string;
+  timeSignature: [number, number]; // [numBeats, beatValue]
+  upperVoice: RhythmCell[];
+  lowerVoice: RhythmCell[];
+  isTutorial?: boolean;
+  instruction?: {
+    title: string;
+    text: string;
+  }
+};
+
 export interface LevelDefinition {
   id: number;
   name: string;
@@ -28,9 +41,59 @@ export interface LevelDefinition {
     title: string;
     text: string;
   };
+  isTutorial?: boolean;
 }
 
-export const GAME_LEVELS: LevelDefinition[] = [  // ============================================================================
+export const GAME_LEVELS: LevelDefinition[] = [
+  // ============================================================================
+  // MUNDO 0: TUTORIAL BÁSICO
+  // ============================================================================
+  {
+    id: 0,
+    name: "Tutorial de Controles",
+    timeSignature: [4, 4],
+    isTutorial: true,
+    upperVoice: [
+      // Mão Direita Sozinha (M1, M2)
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      // Espera Mão Esquerda (M3, M4)
+      'pausa_minima', 'pausa_minima',
+      'pausa_minima', 'pausa_minima',
+      // Juntas (M5)
+      'seminima', 'seminima', 'seminima', 'seminima',
+      // Mínimas (M6)
+      'minima', 'minima',
+      // Semibreve (M7)
+      'semibreve',
+      // Contratempos (M8)
+      'pausa', 'seminima', 'pausa', 'seminima',
+      // Fim (M9)
+      'semibreve'
+    ],
+    lowerVoice: [
+      // Espera Mão Direita (M1, M2)
+      'pausa_minima', 'pausa_minima',
+      'pausa_minima', 'pausa_minima',
+      // Mão Esquerda Sozinha (M3, M4)
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      // Juntas (M5, M6, M7)
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      'seminima', 'seminima', 'seminima', 'seminima',
+      // Contratempos (M8)
+      'seminima', 'pausa', 'seminima', 'pausa',
+      // Fim (M9)
+      'semibreve'
+    ],
+    instruction: {
+      title: "Introdução",
+      text: "Siga o tutorial para aprender os controles básicos do Ritmo Insano."
+    }
+  },
+
+  // ============================================================================
   // MUNDO 1: O TODO E AS METADES (A Beleza das Notas Longas)
   // Foco: 8 Compassos (32 tempos) usando APENAS Semibreves e Mínimas. 
   // O aluno vivencia a Unidade e a respiração antes da agilidade.
@@ -180,7 +243,7 @@ export const GAME_LEVELS: LevelDefinition[] = [  // ============================
     upperVoice: [
       'semibreve', 'pausa_minima', 'minima',
       'semibreve', 'minima', 'pausa_minima',
-      'semibreve', 'semibreve', 'pausa_minima', 'minima'
+      'semibreve', 'semibreve', 'pausa_minima', 'minima', 'minima', 'minima'
     ],
     // Mão esquerda inabalável por 8 compassos
     lowerVoice: [
@@ -1335,5 +1398,7 @@ export const GAME_LEVELS: LevelDefinition[] = [  // ============================
       title: "O Ponto e o Laço",
       text: "O Boss Final! Um teste absoluto de resistência. Intercalamos pontos de aumento com ligaduras de prolongação. A sua mão precisará de vida própria para sobreviver aos 8 compassos."
     }
-  }
+  },
+
+  // ============================================================================
 ];

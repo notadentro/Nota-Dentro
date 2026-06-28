@@ -1,4 +1,4 @@
-export type GameState = 'idle' | 'instruction' | 'prep' | 'playing' | 'level_complete' | 'level_failed' | 'game_over' | 'paused';
+export type GameState = 'idle' | 'tutorial' | 'instruction' | 'prep' | 'playing' | 'level_complete' | 'level_failed' | 'gameover' | 'paused';
 export type BeatResult = 'perfect' | 'early' | 'late' | 'missed' | 'penalty' | 'tied' | null;
 
 export interface TapEvent {
