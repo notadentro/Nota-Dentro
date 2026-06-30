@@ -7,6 +7,7 @@ import { SimulatorTrack } from './SimulatorTrack';
 import { SimulatorControls } from './SimulatorControls';
 import { SimulatorModals } from './SimulatorModals';
 import { TutorialOverlay } from './TutorialOverlay';
+import { GameplayTutorialOverlay } from './GameplayTutorialOverlay';
 import { useSimulatorEngine } from '../hooks/useSimulatorEngine';
 
 interface PerformanceSimulatorProps {
@@ -25,6 +26,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: Perfor
 
   const {
     level, lives, retries, bpm, leftPadActive, rightPadActive, levelDef, events, levelTotalBeats, status, elapsedTime, ghostMsg, accuracy,
+    tutorialStep, isTutorialPaused, hitFlashUpper, hitFlashLower,
     setLeftPadActive, setRightPadActive,
     startGame, repeatLevel, nextLevel, pauseGame, resumeGame, acceptInstruction, handleTap, handleRelease
   } = engine;
@@ -114,7 +116,52 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: Perfor
 
           {/* Pauta Polirrítmica */}
           <div id="track-container" className="w-full h-72 relative bg-slate-100 rounded-2xl mb-2 flex flex-col overflow-hidden border-2 border-brand-gold/50 shadow-[0_0_30px_rgba(255,215,0,0.2)]">
-          
+            
+            {/* ZONA DE ACERTO VISUAL FIXA EM 25% */}
+            <div className="absolute top-0 bottom-0 left-[25%] w-24 -ml-12 flex flex-col pointer-events-none z-10">
+              {/* Laser Line */}
+              <div className="absolute top-0 bottom-0 left-1/2 -ml-[2px] w-[4px] bg-gradient-to-b from-transparent via-white to-transparent shadow-[0_0_20px_rgba(255,255,255,0.9)] z-0" />
+              
+              {isSingleTrack ? (
+                <div className="flex-1 flex items-center justify-center relative z-10">
+                  <div className={cn(
+                    "w-16 h-16 rounded-full border-[3px] transition-all duration-100 flex items-center justify-center backdrop-blur-md",
+                    hitFlashUpper === 'perfect' ? "border-green-400 shadow-[0_0_30px_#4ade80] scale-110 bg-green-500/30" :
+                    hitFlashUpper === 'early' || hitFlashUpper === 'late' ? "border-yellow-400 shadow-[0_0_20px_#facc15] scale-105 bg-yellow-500/30" :
+                    hitFlashUpper === 'penalty' || hitFlashUpper === 'missed' ? "border-red-500 shadow-[0_0_20px_#ef4444] scale-95 bg-red-500/30" :
+                    "border-brand-gold bg-black/50 shadow-[0_0_15px_rgba(255,215,0,0.4)]"
+                  )}>
+                    <span className="text-white/90 text-sm font-bold shadow-black drop-shadow-md">J/F</span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="flex-1 flex items-center justify-center relative z-10">
+                    <div className={cn(
+                      "w-16 h-16 rounded-full border-[3px] transition-all duration-100 flex items-center justify-center backdrop-blur-md",
+                      hitFlashUpper === 'perfect' ? "border-green-400 shadow-[0_0_30px_#4ade80] scale-110 bg-green-500/30" :
+                      hitFlashUpper === 'early' || hitFlashUpper === 'late' ? "border-yellow-400 shadow-[0_0_20px_#facc15] scale-105 bg-yellow-500/30" :
+                      hitFlashUpper === 'penalty' || hitFlashUpper === 'missed' ? "border-red-500 shadow-[0_0_20px_#ef4444] scale-95 bg-red-500/30" :
+                      "border-brand-gold bg-black/50 shadow-[0_0_15px_rgba(255,215,0,0.4)]"
+                    )}>
+                      <span className="text-white/90 text-sm font-bold shadow-black drop-shadow-md">J</span>
+                    </div>
+                  </div>
+                  <div className="flex-1 flex items-center justify-center relative z-10">
+                    <div className={cn(
+                      "w-16 h-16 rounded-full border-[3px] transition-all duration-100 flex items-center justify-center backdrop-blur-md",
+                      hitFlashLower === 'perfect' ? "border-green-400 shadow-[0_0_30px_#4ade80] scale-110 bg-green-500/30" :
+                      hitFlashLower === 'early' || hitFlashLower === 'late' ? "border-yellow-400 shadow-[0_0_20px_#facc15] scale-105 bg-yellow-500/30" :
+                      hitFlashLower === 'penalty' || hitFlashLower === 'missed' ? "border-red-500 shadow-[0_0_20px_#ef4444] scale-95 bg-red-500/30" :
+                      "border-system-info bg-black/50 shadow-[0_0_15px_rgba(91,155,213,0.4)]"
+                    )}>
+                      <span className="text-white/90 text-sm font-bold shadow-black drop-shadow-md">F</span>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
             {/* Fundo do Grid com Barras de Compasso */}
             <div 
               className="absolute inset-0 flex"
@@ -127,10 +174,14 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: Perfor
                {/* Batidas preparatórias */}
                {Array.from({ length: prepBeats }).map((_, i) => {
                  const prepBeat = -prepBeats + i;
+                 const isCurrentPrep = Math.floor(visualBeatFloat) === prepBeat;
                  return (
                    <div 
                      key={`prep-${prepBeat}`}
-                     className="absolute flex flex-col items-center h-full justify-center"
+                     className={cn(
+                       "absolute flex flex-col items-center h-full justify-center transition-colors duration-75",
+                       isCurrentPrep ? "bg-gradient-to-b from-transparent via-brand-gold/10 to-transparent" : ""
+                     )}
                      style={{ left: `${(prepBeat + prepBeats) * 80}px`, width: '80px' }}
                    >
                      <div className={cn(
@@ -142,16 +193,20 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: Perfor
                })}
 
                {/* Linhas de grade e compasso */}
-               {Array.from({ length: levelTotalBeats }).map((_, beatIndex) => (
-                  <div 
-                    key={`grid-${beatIndex}`}
-                    className={cn(
-                      "absolute h-full border-r border-brand-gold/20", 
-                      beatIndex % levelDef.timeSignature[0] === 0 ? "border-l-4 border-l-system-info/60 shadow-[0_0_10px_rgba(91,155,213,0.3)]" : ""
-                    )}
-                    style={{ left: `${(beatIndex + prepBeats) * 80}px`, width: '80px' }}
-                  />
-               ))}
+               {Array.from({ length: levelTotalBeats }).map((_, beatIndex) => {
+                  const isCurrentBeat = Math.floor(visualBeatFloat) === beatIndex;
+                  return (
+                    <div 
+                      key={`grid-${beatIndex}`}
+                      className={cn(
+                        "absolute h-full border-r border-brand-gold/20 transition-colors duration-75", 
+                        beatIndex % levelDef.timeSignature[0] === 0 ? "border-l-4 border-l-system-info/60 shadow-[0_0_10px_rgba(91,155,213,0.3)]" : "",
+                        isCurrentBeat ? "bg-gradient-to-b from-transparent via-brand-gold/15 to-transparent" : ""
+                      )}
+                      style={{ left: `${(beatIndex + prepBeats) * 80}px`, width: '80px' }}
+                    />
+                  );
+               })}
 
                {/* Barra Final Dupla */}
                <div 
@@ -227,8 +282,13 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: Perfor
 
       </div>
 
-      {status === 'tutorial' && (
+
+      {status === 'tutorial' && level !== 0 && (
         <TutorialOverlay onFinish={engine.finishTutorial} />
+      )}
+
+      {isTutorialPaused && (level === 0 || level === 3) && (
+        <GameplayTutorialOverlay step={tutorialStep} level={level} />
       )}
     </div>
   );

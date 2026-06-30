@@ -47,49 +47,15 @@ export interface LevelDefinition {
 export const GAME_LEVELS: LevelDefinition[] = [
   // ============================================================================
   // MUNDO 0: TUTORIAL BÁSICO
-  // ============================================================================
   {
     id: 0,
-    name: "Tutorial de Controles",
+    name: "Tutorial: O Primeiro Som",
     timeSignature: [4, 4],
-    isTutorial: true,
-    upperVoice: [
-      // Mão Direita Sozinha (M1, M2)
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      // Espera Mão Esquerda (M3, M4)
-      'pausa_minima', 'pausa_minima',
-      'pausa_minima', 'pausa_minima',
-      // Juntas (M5)
-      'seminima', 'seminima', 'seminima', 'seminima',
-      // Mínimas (M6)
-      'minima', 'minima',
-      // Semibreve (M7)
-      'semibreve',
-      // Contratempos (M8)
-      'pausa', 'seminima', 'pausa', 'seminima',
-      // Fim (M9)
-      'semibreve'
-    ],
-    lowerVoice: [
-      // Espera Mão Direita (M1, M2)
-      'pausa_minima', 'pausa_minima',
-      'pausa_minima', 'pausa_minima',
-      // Mão Esquerda Sozinha (M3, M4)
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      // Juntas (M5, M6, M7)
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      'seminima', 'seminima', 'seminima', 'seminima',
-      // Contratempos (M8)
-      'seminima', 'pausa', 'seminima', 'pausa',
-      // Fim (M9)
-      'semibreve'
-    ],
+    upperVoice: ['seminima', 'pausa', 'minima', 'semibreve'], 
+    lowerVoice: [],
     instruction: {
-      title: "Introdução",
-      text: "Siga o tutorial para aprender os controles básicos do Ritmo Insano."
+      title: "Vamos Jogar!",
+      text: "A música vai começar. Siga os comandos na tela!"
     }
   },
 
@@ -110,7 +76,7 @@ export const GAME_LEVELS: LevelDefinition[] = [
     lowerVoice: [],
     instruction: {
       title: "Respire com a Música",
-      text: "Bem-vindo ao Mundo 1! A Semibreve é o Todo (a Unidade). Quando ela atingir o alvo, pressione J e SEGURE firmemente por 4 tempos inteiros. Sinta a beleza da nota longa!"
+      text: "Vamos começar juntos! Na música, temos sons curtos e sons longos. Essa primeira nota gordinha é a Semibreve, e ela é bem longa! Quando ela passar pela linha, pressione a tecla e segure o botão enquanto a barra enche. Sinta a vibração!"
     }
   },
   {
@@ -143,7 +109,7 @@ export const GAME_LEVELS: LevelDefinition[] = [
     ],
     instruction: {
       title: "O Espelho",
-      text: "A tela dividiu! Use F (esquerda) e J (direita) EXATAMENTE ao mesmo tempo. Suas mãos devem trabalhar em simetria por 8 compassos."
+      text: "A tela dividiu! Use a mão esquerda e a mão direita EXATAMENTE ao mesmo tempo. Suas mãos devem trabalhar em simetria por 8 compassos."
     }
   },
   {

@@ -26,7 +26,10 @@ export const adminDb = admin.apps.length > 0 ? admin.firestore() : {
       set: async () => {},
       update: async () => {},
       get: async () => ({ exists: false, data: () => ({}) }),
-    })
+    }),
+    orderBy: function() { return this; },
+    limit: function() { return this; },
+    get: async () => ({ docs: [] })
   })
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as any;

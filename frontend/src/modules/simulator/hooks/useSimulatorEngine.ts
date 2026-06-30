@@ -33,6 +33,11 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
   const [status, setStatus] = useState<GameState>('idle');
   const [elapsedTime, setElapsedTime] = useState(0);
   const [ghostMsg, setGhostMsg] = useState<{ text: string, id: number, type: BeatResult } | null>(null);
+  
+  const [tutorialStep, setTutorialStep] = useState<number>(0);
+  const [isTutorialPaused, setIsTutorialPaused] = useState<boolean>(false);
+  const [hitFlashUpper, setHitFlashUpper] = useState<BeatResult | null>(null);
+  const [hitFlashLower, setHitFlashLower] = useState<BeatResult | null>(null);
 
   const accuracy = calculateAccuracy(events);
 
@@ -216,6 +221,31 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
 
     const beatMs = (60 / bpm) * 1000;
     const elapsed = getCurrentTimeMs() - startTimeRef.current;
+    
+    // LÓGICA DO TUTORIAL (FASE 0 E FASE 3)
+    if ((level === 0 || level === 3) && !isTutorialPaused && status === 'playing') {
+      const visualBeatFloat = elapsed / beatMs;
+      
+      if (level === 0) {
+        const currentStepEvent = eventsRef.current.filter(e => e.type === 'note')[tutorialStep];
+        if (currentStepEvent && currentStepEvent.result === null) {
+           if (visualBeatFloat >= currentStepEvent.beatAbsolute) {
+              if (audioCtxRef.current) audioCtxRef.current.suspend();
+              setIsTutorialPaused(true);
+           }
+        }
+      } else if (level === 3 && tutorialStep === 0) {
+        // Na Fase 3 (O Espelho), pausar apenas no primeiro acorde (beatAbsolute 0)
+        const firstNotes = eventsRef.current.filter(e => e.type === 'note' && e.beatAbsolute === 0);
+        if (firstNotes.length > 0 && firstNotes.every(e => e.result === null)) {
+           if (visualBeatFloat >= 0) {
+              if (audioCtxRef.current) audioCtxRef.current.suspend();
+              setIsTutorialPaused(true);
+           }
+        }
+      }
+    }
+
     setElapsedTime(elapsed);
 
     if (elapsed < 0) {
@@ -262,7 +292,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
     const allProcessed = updatedEvents.every(ev => {
       if (ev.type === 'rest') return ev.result !== null;
       if (ev.result === 'tied') return true;
-      if (ev.duration >= 1.0) return ev.result !== null && (ev.releaseResult !== null || ev.result === 'missed');
+      if (ev.duration > 1.0) return ev.result !== null && (ev.releaseResult !== null || ev.result === 'missed');
       return ev.result !== null;
     });
 
@@ -321,6 +351,8 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
       totalBeats = Math.ceil(calculateTotalBeats(resetEvents as TapEvent[], levelDef.timeSignature[0]));
       setLevelTotalBeats(totalBeats);
     }
+    setTutorialStep(0);
+    setIsTutorialPaused(false);
     const currentLevelDef = GAME_LEVELS.find(l => l.id === currentLevel);
     if (currentLevelDef?.isTutorial) {
       setStatus('tutorial');
@@ -420,6 +452,25 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
   };
 
   const handleTap = (track: 'upper' | 'lower') => {
+    if (isTutorialPaused && (level === 0 || level === 3)) {
+      if (level === 0) {
+        const currentStepEvent = eventsRef.current.filter(e => e.type === 'note')[tutorialStep];
+        if (currentStepEvent && (currentStepEvent.track === track || levelDef.lowerVoice.length === 0)) {
+          setIsTutorialPaused(false);
+          setTutorialStep(s => s + 1);
+          if (audioCtxRef.current) audioCtxRef.current.resume();
+        } else {
+          return; // ignora tecla errada no tutorial 0
+        }
+      } else if (level === 3) {
+        // No tutorial do nível 3, qualquer tecla correta despausa.
+        // A engine lidará naturalmente com o delay da segunda tecla pressionada.
+        setIsTutorialPaused(false);
+        setTutorialStep(1); // Já passou a única pausa deste nível
+        if (audioCtxRef.current) audioCtxRef.current.resume();
+      }
+    }
+
     if (audioCtxRef.current) {
       scheduleClick(audioCtxRef.current, track === 'upper' ? 600 : 400, audioCtxRef.current.currentTime);
     } else {
@@ -467,7 +518,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
              else if (delta > TOLERANCE_MS / 3) type = 'late';
              else type = 'perfect';
 
-             next[closestEventIndex] = { ...ev, result: type, isHeld: ev.duration >= 1.0 };
+             next[closestEventIndex] = { ...ev, result: type, isHeld: ev.duration > 1.0 };
           }
           return next;
        });
@@ -475,8 +526,16 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
        if (isPenalty) {
           showGhostMsg('penalty');
           loseLife(ev.id);
+          if (track === 'upper') setHitFlashUpper('penalty');
+          else setHitFlashLower('penalty');
        } else {
           showGhostMsg(type, delta);
+          if (track === 'upper') setHitFlashUpper(type);
+          else setHitFlashLower(type);
+          setTimeout(() => {
+            if (track === 'upper') setHitFlashUpper(null);
+            else setHitFlashLower(null);
+          }, 150);
        }
     }
   };
@@ -567,6 +626,7 @@ export function useSimulatorEngine({ initialLevel, initialDifficulty, setShowSto
 
   return {
     level, lives: levelHearts, retries, bpm, leftPadActive, rightPadActive, levelDef, events, levelTotalBeats, status, elapsedTime, ghostMsg, accuracy,
+    tutorialStep, isTutorialPaused, hitFlashUpper, hitFlashLower,
     setLeftPadActive, setRightPadActive,
     startGame, repeatLevel, nextLevel, pauseGame, resumeGame, acceptInstruction, finishTutorial, handleTap, handleRelease
   };
