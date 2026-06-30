@@ -123,39 +123,39 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: Perfor
               <div className="absolute top-0 bottom-0 left-1/2 -ml-[2px] w-[4px] bg-gradient-to-b from-transparent via-white to-transparent shadow-[0_0_20px_rgba(255,255,255,0.9)] z-0" />
               
               {isSingleTrack ? (
-                <div className="flex-1 flex items-center justify-center relative z-10">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center z-20">
                   <div className={cn(
-                    "w-16 h-16 rounded-full border-[3px] transition-all duration-100 flex items-center justify-center backdrop-blur-md",
-                    hitFlashUpper === 'perfect' ? "border-green-400 shadow-[0_0_30px_#4ade80] scale-110 bg-green-500/30" :
-                    hitFlashUpper === 'early' || hitFlashUpper === 'late' ? "border-yellow-400 shadow-[0_0_20px_#facc15] scale-105 bg-yellow-500/30" :
-                    hitFlashUpper === 'penalty' || hitFlashUpper === 'missed' ? "border-red-500 shadow-[0_0_20px_#ef4444] scale-95 bg-red-500/30" :
-                    "border-brand-gold bg-black/50 shadow-[0_0_15px_rgba(255,215,0,0.4)]"
+                    "w-10 h-10 rounded-full border-2 transition-all duration-100 flex items-center justify-center backdrop-blur-md",
+                    hitFlashUpper === 'perfect' || hitFlashLower === 'perfect' ? "border-green-400 shadow-[0_0_15px_#4ade80] bg-green-500/30" :
+                    hitFlashUpper === 'early' || hitFlashLower === 'early' || hitFlashUpper === 'late' || hitFlashLower === 'late' ? "border-yellow-400 shadow-[0_0_15px_#facc15] bg-yellow-500/30" :
+                    hitFlashUpper === 'penalty' || hitFlashLower === 'penalty' || hitFlashUpper === 'missed' || hitFlashLower === 'missed' ? "border-red-500 shadow-[0_0_15px_#ef4444] bg-red-500/30" :
+                    "border-brand-gold/50 bg-black/40"
                   )}>
-                    <span className="text-white/90 text-sm font-bold shadow-black drop-shadow-md">J/F</span>
+                    <span className="text-white/80 text-[10px] font-bold">J/F</span>
                   </div>
                 </div>
               ) : (
                 <>
-                  <div className="flex-1 flex items-center justify-center relative z-10">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center justify-center z-20">
                     <div className={cn(
-                      "w-16 h-16 rounded-full border-[3px] transition-all duration-100 flex items-center justify-center backdrop-blur-md",
-                      hitFlashUpper === 'perfect' ? "border-green-400 shadow-[0_0_30px_#4ade80] scale-110 bg-green-500/30" :
-                      hitFlashUpper === 'early' || hitFlashUpper === 'late' ? "border-yellow-400 shadow-[0_0_20px_#facc15] scale-105 bg-yellow-500/30" :
-                      hitFlashUpper === 'penalty' || hitFlashUpper === 'missed' ? "border-red-500 shadow-[0_0_20px_#ef4444] scale-95 bg-red-500/30" :
-                      "border-brand-gold bg-black/50 shadow-[0_0_15px_rgba(255,215,0,0.4)]"
+                      "w-10 h-10 rounded-full border-2 transition-all duration-100 flex items-center justify-center backdrop-blur-md",
+                      hitFlashUpper === 'perfect' ? "border-green-400 shadow-[0_0_15px_#4ade80] bg-green-500/30" :
+                      hitFlashUpper === 'early' || hitFlashUpper === 'late' ? "border-yellow-400 shadow-[0_0_15px_#facc15] bg-yellow-500/30" :
+                      hitFlashUpper === 'penalty' || hitFlashUpper === 'missed' ? "border-red-500 shadow-[0_0_15px_#ef4444] bg-red-500/30" :
+                      "border-brand-gold/50 bg-black/40"
                     )}>
-                      <span className="text-white/90 text-sm font-bold shadow-black drop-shadow-md">J</span>
+                      <span className="text-white/80 text-[10px] font-bold">J</span>
                     </div>
                   </div>
-                  <div className="flex-1 flex items-center justify-center relative z-10">
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center z-20">
                     <div className={cn(
-                      "w-16 h-16 rounded-full border-[3px] transition-all duration-100 flex items-center justify-center backdrop-blur-md",
-                      hitFlashLower === 'perfect' ? "border-green-400 shadow-[0_0_30px_#4ade80] scale-110 bg-green-500/30" :
-                      hitFlashLower === 'early' || hitFlashLower === 'late' ? "border-yellow-400 shadow-[0_0_20px_#facc15] scale-105 bg-yellow-500/30" :
-                      hitFlashLower === 'penalty' || hitFlashLower === 'missed' ? "border-red-500 shadow-[0_0_20px_#ef4444] scale-95 bg-red-500/30" :
-                      "border-system-info bg-black/50 shadow-[0_0_15px_rgba(91,155,213,0.4)]"
+                      "w-10 h-10 rounded-full border-2 transition-all duration-100 flex items-center justify-center backdrop-blur-md",
+                      hitFlashLower === 'perfect' ? "border-green-400 shadow-[0_0_15px_#4ade80] bg-green-500/30" :
+                      hitFlashLower === 'early' || hitFlashLower === 'late' ? "border-yellow-400 shadow-[0_0_15px_#facc15] bg-yellow-500/30" :
+                      hitFlashLower === 'penalty' || hitFlashLower === 'missed' ? "border-red-500 shadow-[0_0_15px_#ef4444] bg-red-500/30" :
+                      "border-system-info/50 bg-black/40"
                     )}>
-                      <span className="text-white/90 text-sm font-bold shadow-black drop-shadow-md">F</span>
+                      <span className="text-white/80 text-[10px] font-bold">F</span>
                     </div>
                   </div>
                 </>
@@ -167,7 +167,7 @@ export function PerformanceSimulator({ initialLevel, initialDifficulty }: Perfor
               className="absolute inset-0 flex"
               style={{
                  left: '25%', 
-                 transform: `translateX(-${(visualBeatFloat + prepBeats) * 80}px)`, 
+                 transform: `translateX(-${(visualBeatFloat + prepBeats) * 80 + 40}px)`, 
                  transition: 'transform 0.05s linear'
               }}
             >

@@ -50,14 +50,31 @@ export function SimulatorTrack({
     }
   };
 
-  const renderProgressBar = (widthClass: string, ev: TapEvent | undefined) => {
+  const renderProgressBar = (ev: TapEvent | undefined, cellBeatIndex: number) => {
+    if (!ev || ev.type === 'rest') return null;
+    // Só renderiza a barra de duração se a nota for longa (> 1 beat) ou se for ligada
+    if (ev.duration <= 1.0 && ev.result !== 'tied' && !ev.isHeld) return null;
+
+    const startBeatOffset = ev.beatAbsolute - cellBeatIndex;
+    const startX = startBeatOffset * 80;
+    const width = ev.duration * 80;
+
     return (
-      <div className={cn(`${widthClass} h-2.5 mt-2 rounded-full border-2 overflow-hidden relative transition-colors shadow-inner`, getResultColor(ev?.result), getResultBg(ev?.result))}>
+      <div 
+        key={`prog-${ev.id}`}
+        className={cn("absolute h-3 rounded-r-full border-y-2 border-r-2 overflow-hidden transition-colors shadow-inner z-0", getResultColor(ev.result), getResultBg(ev.result))}
+        style={{ 
+          left: `${startX}px`, 
+          width: `${width}px`,
+          top: '65%',
+          borderLeft: 'none'
+        }}
+      >
         <div 
-          className={cn("absolute left-0 top-0 bottom-0 shadow-[0_0_10px_currentColor]", ev?.result === 'tied' ? 'bg-cyan-400' : 'bg-green-400')} 
+          className={cn("absolute left-0 top-0 bottom-0 shadow-[0_0_10px_currentColor]", ev.result === 'tied' ? 'bg-cyan-400' : 'bg-green-400')} 
           style={{ 
-            width: (ev?.isHeld || ev?.result === 'tied' || ev?.releaseResult === 'perfect' || ev?.releaseResult === 'early') ? '100%' : '0%', 
-            transition: ev?.isHeld ? `width ${ev.duration * beatMs}ms linear` : 'none' 
+            width: (ev.isHeld || ev.result === 'tied' || ev.releaseResult === 'perfect' || ev.releaseResult === 'early') ? '100%' : '0%', 
+            transition: ev.isHeld ? `width ${ev.duration * beatMs}ms linear` : 'none' 
           }} 
         />
       </div>
@@ -69,7 +86,7 @@ export function SimulatorTrack({
       className="absolute h-full flex items-center top-0 bottom-0"
       style={{
          left: '25%', 
-         transform: `translateX(-${(visualBeatFloat + prepBeats) * 80}px)`, 
+         transform: `translateX(-${(visualBeatFloat + prepBeats) * 80 + 40}px)`, 
          transition: 'transform 0.05s linear'
       }}
     >
@@ -111,11 +128,17 @@ export function SimulatorTrack({
           return (
             <div 
               key={`${trackId}-${cellIndex}`} 
-              className={cn("absolute flex flex-row items-center h-full gap-1", shouldCenter ? "justify-center" : "justify-start pl-6")}
+              className="absolute h-full"
               style={{ left: `${(beatIndex + prepBeats) * 80}px`, width: `${getCellDuration(cellRaw) * 80}px` }}
             >
+              {/* Progress Bars (trilhas visuais de duração) */}
+              {cellEvents.map(ev => renderProgressBar(ev, beatIndex))}
+
+              {/* Graphics Container */}
+              <div className="absolute inset-0 top-0 bottom-0">
+              
               {baseName === 'semibreve' && (
-                <div className="flex flex-col items-center relative">
+                <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-50%)', top: '50%', marginTop: '-28px' }}>
                   <div 
                     className={cn("w-20 h-14 transition-all flex items-center justify-center relative", isNoteActive(cellEvents[0]) && !cellEvents[0]?.isHeld ? "-translate-y-2 scale-110 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}
                     style={shouldWiggle ? { animation: 'wiggle 0.2s ease-in-out infinite', filter: 'drop-shadow(0 0 15px rgba(242,211,73,0.8))' } : {}}
@@ -124,11 +147,10 @@ export function SimulatorTrack({
                   </div>
                   {isPontuada && <div className={cn("absolute -right-3 top-6 w-2 h-2 rounded-full", trackId === 'lower' ? "bg-system-info" : "bg-brand-gold")} />}
                   {isLigada && renderLigaduraDynamic()}
-                  {renderProgressBar("w-16", cellEvents[0])}
                 </div>
               )}
               {baseName === 'minima' && (
-                <div className="flex flex-col items-center relative">
+                <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-50%)', top: '50%', marginTop: '-28px' }}>
                   <div 
                     className={cn("w-14 h-14 transition-all flex items-center justify-center relative", isNoteActive(cellEvents[0]) && !cellEvents[0]?.isHeld ? "-translate-y-2 scale-110 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}
                     style={shouldWiggle ? { animation: 'wiggle 0.2s ease-in-out infinite', filter: 'drop-shadow(0 0 15px rgba(242,211,73,0.8))' } : {}}
@@ -137,43 +159,38 @@ export function SimulatorTrack({
                   </div>
                   {isPontuada && <div className={cn("absolute -right-3 top-6 w-2 h-2 rounded-full", trackId === 'lower' ? "bg-system-info" : "bg-brand-gold")} />}
                   {isLigada && renderLigaduraDynamic()}
-                  {renderProgressBar("w-12", cellEvents[0])}
                 </div>
               )}
               {baseName === 'seminima' && (
-                <div className="flex flex-col items-center relative">
+                <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-50%)', top: '50%', marginTop: '-28px' }}>
                   <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                     <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/seminima.svg)', maskImage: 'url(/assets/svg/seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
                   {isPontuada && <div className={cn("absolute -right-3 top-6 w-2 h-2 rounded-full", trackId === 'lower' ? "bg-system-info" : "bg-brand-gold")} />}
                   {isLigada && renderLigaduraDynamic()}
-                  {renderProgressBar("w-8", cellEvents[0])}
                 </div>
               )}
               {baseName === 'pausa' && (
-                <div className="flex flex-col items-center">
+                <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-50%)', top: '50%', marginTop: '-28px' }}>
                   <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                     <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/pausa-seminima.svg)', maskImage: 'url(/assets/svg/pausa-seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
-                  {renderProgressBar("w-8", cellEvents[0])}
                 </div>
               )}
               {baseName === 'pausa_minima' && (
-                <div className="flex flex-col items-center">
+                <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-50%)', top: '50%', marginTop: '-28px' }}>
                   <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                     <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/pausa-minima.svg)', maskImage: 'url(/assets/svg/pausa-minima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
-                  {renderProgressBar("w-12", cellEvents[0])}
                 </div>
               )}
               {baseName === 'colcheia' && (
-                <div className="flex flex-col items-center relative">
+                <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-50%)', top: '50%', marginTop: '-20px' }}>
                   <div className={cn("w-6 h-10 transition-all flex items-center justify-center", isNoteActive(cellEvents[0]) ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                     <div className={cn("w-full h-full transition-colors", getBgClass(cellEvents[0], isNoteActive(cellEvents[0])))} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                   </div>
                   {isPontuada && <div className={cn("absolute -right-3 top-6 w-2 h-2 rounded-full", trackId === 'lower' ? "bg-system-info" : "bg-brand-gold")} />}
                   {isLigada && renderLigaduraDynamic()}
-                  {renderProgressBar("w-4", cellEvents[0])}
                 </div>
               )}
               {baseName === 'duas_colcheias' && (() => {
@@ -200,7 +217,7 @@ export function SimulatorTrack({
                 const anyActive = active0 || active1;
                 
                 return (
-                  <div className="flex flex-col items-center relative">
+                  <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-8px)', top: '50%', marginTop: '-24px' }}>
                     <div className={cn("w-14 h-12 transition-all flex items-center justify-center", anyActive ? "-translate-y-1 scale-110 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                       <div 
                         className={cn("w-full h-full transition-colors", bgClass)} 
@@ -213,10 +230,6 @@ export function SimulatorTrack({
                           WebkitMaskPosition: 'center' 
                         }} 
                       />
-                    </div>
-                    <div className="flex flex-row w-full justify-evenly mt-1">
-                      {renderProgressBar("w-4", ev0)}
-                      {renderProgressBar("w-4", ev1)}
                     </div>
                     {isLigada && renderLigaduraDynamic()}
                   </div>
@@ -251,7 +264,7 @@ export function SimulatorTrack({
                 }
 
                 return (
-                  <div className="flex flex-col items-center relative w-full">
+                  <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-10px)', top: '50%', marginTop: '-24px' }}>
                     <div className={cn("w-20 h-12 transition-all flex items-center justify-center", anyActive ? "-translate-y-1 scale-110 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                       <div 
                         className={cn("w-full h-full transition-colors", bgClass)} 
@@ -265,12 +278,6 @@ export function SimulatorTrack({
                         }} 
                       />
                     </div>
-                    <div className="flex flex-row w-full justify-evenly mt-1 px-1">
-                      {renderProgressBar("w-3", ev0)}
-                      {renderProgressBar("w-3", ev1)}
-                      {renderProgressBar("w-3", ev2)}
-                      {renderProgressBar("w-3", ev3)}
-                    </div>
                     {isLigada && renderLigaduraDynamic()}
                   </div>
                 );
@@ -280,29 +287,28 @@ export function SimulatorTrack({
                 const ev1 = cellEvents[1];
                 const ev2 = cellEvents[2];
                 return (
-                  <div className="flex flex-row items-end gap-2 relative">
-                    <div className="flex flex-col items-center">
+                  <>
+                    <div className="absolute flex flex-col items-center" style={{ left: '40px', transform: 'translateX(-50%)', top: '50%', marginTop: '-20px' }}>
                       <div className={cn("w-6 h-10 transition-all flex items-center justify-center", isNoteActive(ev0) ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                         <div className={cn("w-full h-full transition-colors", getBgClass(ev0, isNoteActive(ev0)))} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                       </div>
-                      {renderProgressBar("w-4", ev0)}
                     </div>
-                    <div className="flex flex-col items-center">
+                    <div className="absolute flex flex-col items-center" style={{ left: '80px', transform: 'translateX(-50%)', top: '50%', marginTop: '-28px' }}>
                       <div className={cn("w-10 h-14 transition-all flex items-center justify-center", isNoteActive(ev1) ? "-translate-y-2 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                         <div className={cn("w-full h-full transition-colors", getBgClass(ev1, isNoteActive(ev1)))} style={{ WebkitMaskImage: 'url(/assets/svg/seminima.svg)', maskImage: 'url(/assets/svg/seminima.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                       </div>
-                      {renderProgressBar("w-8", ev1)}
                     </div>
-                    <div className="flex flex-col items-center">
+                    <div className="absolute flex flex-col items-center" style={{ left: '160px', transform: 'translateX(-50%)', top: '50%', marginTop: '-20px' }}>
                       <div className={cn("w-6 h-10 transition-all flex items-center justify-center", isNoteActive(ev2) ? "-translate-y-1 scale-125 drop-shadow-[0_0_15px_rgba(242,211,73,0.6)]" : "")}>
                         <div className={cn("w-full h-full transition-colors", getBgClass(ev2, isNoteActive(ev2)))} style={{ WebkitMaskImage: 'url(/assets/svg/colcheia.svg)', maskImage: 'url(/assets/svg/colcheia.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
                       </div>
-                      {renderProgressBar("w-4", ev2)}
                     </div>
-                    {isLigada && renderLigaduraDynamic()}
-                  </div>
+                    {isLigada && <div className="absolute" style={{left: '40px'}}>{renderLigaduraDynamic()}</div>}
+                  </>
                 );
               })()}
+              
+              </div>
             </div>
           );
         });
