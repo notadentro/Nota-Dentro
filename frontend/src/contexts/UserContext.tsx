@@ -10,6 +10,7 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
@@ -136,6 +137,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
         
         // Define cookie de sessão para o Middleware reconhecer
         document.cookie = `user_session=true; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 dias
+        
+        // Verifica se há um redirecionamento pendente de um login via Google (mobile fallback)
+        const pendingRedirect = window.localStorage.getItem('authRedirectPath');
+        if (pendingRedirect) {
+          window.localStorage.removeItem('authRedirectPath');
+          window.location.href = pendingRedirect;
+        }
       } else {
         // Ninguém logado
         setUser(null);
@@ -224,11 +232,38 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const loginWithGoogle = async (): Promise<boolean> => {
+  const loginWithGoogle = async (redirectPath?: string): Promise<boolean> => {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-    document.cookie = "user_session=true; path=/; max-age=86400";
-    return true;
+    
+    if (redirectPath) {
+      window.localStorage.setItem('authRedirectPath', redirectPath);
+    }
+    
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      await signInWithRedirect(auth, provider);
+      // O código para aqui pois a página redireciona
+      return false; 
+    } else {
+      try {
+        await signInWithPopup(auth, provider);
+        document.cookie = "user_session=true; path=/; max-age=86400";
+        
+        if (redirectPath) {
+          window.localStorage.removeItem('authRedirectPath');
+        }
+        return true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+          // Fallback para redirect se o popup for bloqueado no desktop
+          await signInWithRedirect(auth, provider);
+          return false;
+        }
+        throw error;
+      }
+    }
   };
 
   const logout = async () => {

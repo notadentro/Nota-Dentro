@@ -47,11 +47,9 @@ function LoginForm() {
     setIsSubmitting(true);
     setErrorMsg('');
     try {
-      const success = await loginWithGoogle();
+      const success = await loginWithGoogle(redirectPath);
       if (success) {
         router.push(redirectPath);
-      } else {
-        setErrorMsg('Erro ao autenticar com Google.');
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
