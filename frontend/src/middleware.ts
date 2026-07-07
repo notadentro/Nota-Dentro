@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
   if (!isLoggedIn && !isPublicRoute) {
     // Redirecionamos para a tela de login, mas guardamos de onde ele veio no parâmetro redirect
     const redirectUrl = new URL('/auth/login', nextUrl);
-    redirectUrl.searchParams.set('redirect', nextUrl.pathname);
+    redirectUrl.searchParams.set('redirect', nextUrl.pathname + nextUrl.search);
     return NextResponse.redirect(redirectUrl);
   }
 

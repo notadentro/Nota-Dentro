@@ -149,11 +149,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
+    document.cookie = "user_session=true; path=/; max-age=86400";
   };
 
   const signup = async (name: string, username: string, email: string, password: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const firebaseUser = userCredential.user;
+    document.cookie = "user_session=true; path=/; max-age=86400";
     
     // Logo após criar a conta no Auth, já criamos o perfil no Firestore
     const userRef = doc(db, 'users', firebaseUser.uid);
@@ -195,6 +197,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (isSignInWithEmailLink(auth, windowUrl)) {
       const result = await signInWithEmailLink(auth, email, windowUrl);
       const firebaseUser = result.user;
+      document.cookie = "user_session=true; path=/; max-age=86400";
       
       // Cria o documento do usuário se for novo (isNewUser)
       const additionalInfo = getAdditionalUserInfo(result);
@@ -224,6 +227,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const loginWithGoogle = async (): Promise<boolean> => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
+    document.cookie = "user_session=true; path=/; max-age=86400";
     return true;
   };
 
