@@ -349,7 +349,7 @@ export function BlogComments({ slug }: { slug: string }) {
             <p className="text-muted-foreground mb-4 font-body">
               Junte-se à comunidade Nota Dentro para deixar o seu comentário.
             </p>
-            <Button onClick={loginWithGoogle} className="bg-white text-black hover:bg-gray-100">
+            <Button onClick={() => loginWithGoogle()} className="bg-white text-black hover:bg-gray-100">
               Entrar com o Google
             </Button>
           </div>

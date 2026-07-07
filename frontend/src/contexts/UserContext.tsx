@@ -10,6 +10,7 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
@@ -53,7 +54,7 @@ interface UserContextType {
   checkEmailExists: (email: string) => Promise<boolean>;
   sendMagicLink: (email: string) => Promise<void>;
   finishMagicLinkSignup: (email: string, windowUrl: string) => Promise<void>;
-  loginWithGoogle: () => Promise<boolean>;
+  loginWithGoogle: (redirectPath?: string) => Promise<boolean>;
   logout: () => Promise<void>;
   addXP: (amount: number) => Promise<void>;
   addSimulatorXP: (amount: number, bpm: number) => Promise<void>;
@@ -136,6 +137,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
         
         // Define cookie de sessão para o Middleware reconhecer
         document.cookie = `user_session=true; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 dias
+        
+        // Verifica se há um redirecionamento pendente de um login via Google (mobile fallback)
+        const pendingRedirect = window.localStorage.getItem('authRedirectPath');
+        if (pendingRedirect) {
+          window.localStorage.removeItem('authRedirectPath');
+          window.location.href = pendingRedirect;
+        }
       } else {
         // Ninguém logado
         setUser(null);
@@ -149,11 +157,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
+    document.cookie = "user_session=true; path=/; max-age=86400";
   };
 
   const signup = async (name: string, username: string, email: string, password: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const firebaseUser = userCredential.user;
+    document.cookie = "user_session=true; path=/; max-age=86400";
     
     // Logo após criar a conta no Auth, já criamos o perfil no Firestore
     const userRef = doc(db, 'users', firebaseUser.uid);
@@ -195,6 +205,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (isSignInWithEmailLink(auth, windowUrl)) {
       const result = await signInWithEmailLink(auth, email, windowUrl);
       const firebaseUser = result.user;
+      document.cookie = "user_session=true; path=/; max-age=86400";
       
       // Cria o documento do usuário se for novo (isNewUser)
       const additionalInfo = getAdditionalUserInfo(result);
@@ -221,10 +232,38 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const loginWithGoogle = async (): Promise<boolean> => {
+  const loginWithGoogle = async (redirectPath?: string): Promise<boolean> => {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-    return true;
+    
+    if (redirectPath) {
+      window.localStorage.setItem('authRedirectPath', redirectPath);
+    }
+    
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      await signInWithRedirect(auth, provider);
+      // O código para aqui pois a página redireciona
+      return false; 
+    } else {
+      try {
+        await signInWithPopup(auth, provider);
+        document.cookie = "user_session=true; path=/; max-age=86400";
+        
+        if (redirectPath) {
+          window.localStorage.removeItem('authRedirectPath');
+        }
+        return true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+          // Fallback para redirect se o popup for bloqueado no desktop
+          await signInWithRedirect(auth, provider);
+          return false;
+        }
+        throw error;
+      }
+    }
   };
 
   const logout = async () => {
