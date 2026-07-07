@@ -54,7 +54,7 @@ interface UserContextType {
   checkEmailExists: (email: string) => Promise<boolean>;
   sendMagicLink: (email: string) => Promise<void>;
   finishMagicLinkSignup: (email: string, windowUrl: string) => Promise<void>;
-  loginWithGoogle: () => Promise<boolean>;
+  loginWithGoogle: (redirectPath?: string) => Promise<boolean>;
   logout: () => Promise<void>;
   addXP: (amount: number) => Promise<void>;
   addSimulatorXP: (amount: number, bpm: number) => Promise<void>;
