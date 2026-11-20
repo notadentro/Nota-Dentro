@@ -34,6 +34,7 @@ interface User {
     streak: number;
     lives: number;
     cache: number;
+    dailyXp?: Record<string, number>;
   };
   achievements: string[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,6 +97,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
               streak: data.stats?.streak || 0,
               lives: data.stats?.lives ?? 3,
               cache: data.stats?.cache ?? 100,
+              dailyXp: data.stats?.dailyXp || {},
               // dynamic simulator stats will be stored here in Firebase, but we keep it open in the interface via progress or stats mapping
               // For type checking, we can just spread them or allow any keys if we update the interface
               ...Object.keys(data.stats || {}).filter(k => k.startsWith('simulator_')).reduce((obj: any, key) => {

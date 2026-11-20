@@ -14,10 +14,12 @@ export async function addXPServer(userId: string, amount: number) {
 
   try {
     const userRef = adminDb.collection('users').doc(userId);
+    const today = new Date().toISOString().split('T')[0];
     
     // Using FieldValue.increment from the admin SDK to securely add XP
     await userRef.update({
-      'stats.xp': FieldValue.increment(amount)
+      'stats.xp': FieldValue.increment(amount),
+      [`stats.dailyXp.${today}`]: FieldValue.increment(amount)
     });
 
     return { success: true };
@@ -38,10 +40,12 @@ export async function addSimulatorXPServer(userId: string, amount: number, bpm: 
 
   try {
     const userRef = adminDb.collection('users').doc(userId);
+    const today = new Date().toISOString().split('T')[0];
     
     await userRef.update({
       'stats.xp': FieldValue.increment(amount),
-      [`stats.simulator_xp_${bpm}`]: FieldValue.increment(amount)
+      [`stats.simulator_xp_${bpm}`]: FieldValue.increment(amount),
+      [`stats.dailyXp.${today}`]: FieldValue.increment(amount)
     });
 
     return { success: true };
